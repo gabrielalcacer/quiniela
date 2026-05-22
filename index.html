@@ -16,7 +16,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-siz
 .tabs{display:flex;border-bottom:1px solid var(--border);overflow-x:auto;margin-bottom:1.5rem}
 .tab{padding:10px 14px;cursor:pointer;font-size:13px;color:var(--text2);border:none;background:none;border-bottom:2px solid transparent;margin-bottom:-1px;white-space:nowrap}
 .tab.active{color:var(--text);border-bottom:2px solid var(--text);font-weight:500}
-h2{font-size:20px;font-weight:500;margin-bottom:1rem}
 h3{font-size:15px;font-weight:500;margin-bottom:.75rem}
 .card{background:var(--bg);border:0.5px solid var(--border);border-radius:var(--rl);padding:1rem 1.25rem;margin-bottom:1rem}
 .badge{display:inline-block;padding:2px 8px;border-radius:var(--r);font-size:11px;font-weight:500}
@@ -42,7 +41,7 @@ hr{border:none;border-top:0.5px solid var(--border);margin:1.25rem 0}
 .mc{background:var(--bg2);border-radius:var(--r);padding:10px 12px;margin-bottom:6px;display:flex;align-items:center;gap:8px}
 .mt{flex:1;font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .mt.r{text-align:right}
-.scorebadge{background:var(--bg);border:0.5px solid var(--border);border-radius:var(--r);padding:3px 8px;font-size:12px;min-width:48px;text-align:center;flex-shrink:0}
+.sbadge{background:var(--bg);border:0.5px solid var(--border);border-radius:var(--r);padding:3px 8px;font-size:12px;min-width:48px;text-align:center;flex-shrink:0}
 input[type=number].si{width:50px;text-align:center;flex-shrink:0;height:34px}
 .rg .rn{color:#B8860B}.rs .rn{color:#808080}.rbr .rn{color:#A0522D}
 .rn{font-size:17px;font-weight:500;width:26px;text-align:center;flex-shrink:0}
@@ -52,10 +51,11 @@ input[type=number].si{width:50px;text-align:center;flex-shrink:0;height:34px}
 #toast{position:fixed;bottom:1.5rem;left:50%;transform:translateX(-50%);background:var(--text);color:var(--bg);padding:8px 18px;border-radius:var(--r);font-size:13px;display:none;z-index:200}
 .sp{display:inline-block;width:14px;height:14px;border:2px solid var(--border2);border-top-color:var(--text);border-radius:50%;animation:spin .6s linear infinite;vertical-align:middle;margin-right:6px}
 @keyframes spin{to{transform:rotate(360deg)}}
-.hero-img{width:100%;display:block;max-height:380px;object-fit:cover;object-position:top}
-.hero-banner{background:#c0392b;padding:12px 16px;display:flex;align-items:center;justify-content:center;gap:10px}
-.hero-banner h1{color:#fff;font-size:20px;font-weight:700;margin:0}
-.hero-banner span{color:#f5e94a;font-size:13px}
+.hero-wrap{position:relative;background:#0a1628}
+.hero-img{width:100%;height:auto;display:block}
+.hero-overlay{position:absolute;bottom:0;left:0;right:0;background:linear-gradient(transparent,rgba(0,0,0,0.75));padding:1.5rem 1rem 1rem}
+.hero-overlay h1{color:#fff;font-size:22px;font-weight:700;margin-bottom:2px}
+.hero-overlay p{color:#f5e94a;font-size:13px}
 </style>
 </head>
 <body>
@@ -63,9 +63,12 @@ input[type=number].si{width:50px;text-align:center;flex-shrink:0;height:34px}
 
 <!-- LOGIN -->
 <div id="login-screen" class="view active">
-  <img src="hero.png" class="hero-img" alt="Quiniela Mundial 2026">
-  <div class="hero-banner">
-    <h1>⚽ Quiniela Mundial 2026</h1>
+  <div class="hero-wrap">
+    <img src="hero.png" class="hero-img" alt="Quiniela Mundial 2026">
+    <div class="hero-overlay">
+      <h1>⚽ Quiniela Mundial 2026</h1>
+      <p>EE.UU. · México · Canadá — 11 jun al 19 jul</p>
+    </div>
   </div>
   <div class="inner">
     <div class="card">
@@ -128,7 +131,7 @@ input[type=number].si{width:50px;text-align:center;flex-shrink:0;height:34px}
 <div id="admin-view" class="view">
   <div class="inner">
     <div style="display:flex;align-items:center;gap:10px;margin-bottom:1.5rem">
-      <div class="av" style="background:var(--d-bg);color:var(--d-t)">A</div>
+      <div class="av" style="background:var(--d-bg);color:var(--d-t)">AD</div>
       <div><div style="font-weight:500">Panel de administrador</div><div class="muted">Gestiona resultados y participantes</div></div>
       <div style="margin-left:auto"><button class="btn-sm" onclick="logout()">Salir</button></div>
     </div>
@@ -202,9 +205,9 @@ const fbApp=initializeApp({
 });
 const db=getFirestore(fbApp);
 
-// GRUPOS REALES Mundial 2026 - sorteo oficial 5 dic 2025
+// Grupos reales - sorteo oficial 5 dic 2025
 const GROUPS={
-  A:['México','Sudáfrica','Corea del Sur','Chequia'],
+  A:['México','Sudáfrica','Corea del Sur','Rep. Checa'],
   B:['Canadá','Bosnia-Herz.','Qatar','Suiza'],
   C:['Brasil','Marruecos','Haití','Escocia'],
   D:['EE.UU.','Paraguay','Australia','Turquía'],
@@ -219,6 +222,20 @@ const GROUPS={
 };
 const ALL_TEAMS=Object.values(GROUPS).flat();
 
+// Partidos de fase eliminatoria — se muestran con etiqueta de ronda
+// home/away usan etiqueta legible, no se filtran por longitud
+const KO_LABELS={
+  D1:'D16 P1',D2:'D16 P2',D3:'D16 P3',D4:'D16 P4',
+  D5:'D16 P5',D6:'D16 P6',D7:'D16 P7',D8:'D16 P8',
+  D9:'D16 P9',D10:'D16 P10',D11:'D16 P11',D12:'D16 P12',
+  D13:'D16 P13',D14:'D16 P14',D15:'D16 P15',D16:'D16 P16',
+  O1:'Oct P1',O2:'Oct P2',O3:'Oct P3',O4:'Oct P4',
+  O5:'Oct P5',O6:'Oct P6',O7:'Oct P7',O8:'Oct P8',
+  Q1:'Ctos P1',Q2:'Ctos P2',Q3:'Ctos P3',Q4:'Ctos P4',
+  S1:'Semi P1',S2:'Semi P2',
+  F1:'Final'
+};
+
 function makeMatches(){
   const ms=[];let id=1;
   for(const[g,teams]of Object.entries(GROUPS))
@@ -226,50 +243,45 @@ function makeMatches(){
       for(let j=i+1;j<teams.length;j++)
         ms.push({id:'G'+id++,group:g,phase:'Grupos',home:teams[i],away:teams[j],homeGoals:'',awayGoals:'',played:false});
 
-  // DIECISEISAVOS (32 equipos: 1os, 2os de cada grupo + 8 mejores terceros)
-  const d16=[
-    {id:'D1',phase:'Dieciseisavos',home:'1A',away:'2B'},
-    {id:'D2',phase:'Dieciseisavos',home:'1B',away:'2A'},
-    {id:'D3',phase:'Dieciseisavos',home:'1C',away:'2D'},
-    {id:'D4',phase:'Dieciseisavos',home:'1D',away:'2C'},
-    {id:'D5',phase:'Dieciseisavos',home:'1E',away:'2F'},
-    {id:'D6',phase:'Dieciseisavos',home:'1F',away:'2E'},
-    {id:'D7',phase:'Dieciseisavos',home:'1G',away:'2H'},
-    {id:'D8',phase:'Dieciseisavos',home:'1H',away:'2G'},
-    {id:'D9',phase:'Dieciseisavos',home:'1I',away:'2J'},
-    {id:'D10',phase:'Dieciseisavos',home:'1J',away:'2I'},
-    {id:'D11',phase:'Dieciseisavos',home:'1K',away:'2L'},
-    {id:'D12',phase:'Dieciseisavos',home:'1L',away:'2K'},
-    {id:'D13',phase:'Dieciseisavos',home:'3ABC',away:'3DEF'},
-    {id:'D14',phase:'Dieciseisavos',home:'3GHI',away:'3JKL'},
-    {id:'D15',phase:'Dieciseisavos',home:'3ABF',away:'3CDG'},
-    {id:'D16',phase:'Dieciseisavos',home:'3EHL',away:'3IJK'},
+  const ko=[
+    // Dieciseisavos (16 partidos)
+    {id:'D1',phase:'Dieciseisavos',home:'1º A',away:'2º B'},
+    {id:'D2',phase:'Dieciseisavos',home:'1º B',away:'2º A'},
+    {id:'D3',phase:'Dieciseisavos',home:'1º C',away:'2º D'},
+    {id:'D4',phase:'Dieciseisavos',home:'1º D',away:'2º C'},
+    {id:'D5',phase:'Dieciseisavos',home:'1º E',away:'2º F'},
+    {id:'D6',phase:'Dieciseisavos',home:'1º F',away:'2º E'},
+    {id:'D7',phase:'Dieciseisavos',home:'1º G',away:'2º H'},
+    {id:'D8',phase:'Dieciseisavos',home:'1º H',away:'2º G'},
+    {id:'D9',phase:'Dieciseisavos',home:'1º I',away:'2º J'},
+    {id:'D10',phase:'Dieciseisavos',home:'1º J',away:'2º I'},
+    {id:'D11',phase:'Dieciseisavos',home:'1º K',away:'2º L'},
+    {id:'D12',phase:'Dieciseisavos',home:'1º L',away:'2º K'},
+    {id:'D13',phase:'Dieciseisavos',home:'3º ABC',away:'3º DEF'},
+    {id:'D14',phase:'Dieciseisavos',home:'3º GHI',away:'3º JKL'},
+    {id:'D15',phase:'Dieciseisavos',home:'3º ABF',away:'3º CDG'},
+    {id:'D16',phase:'Dieciseisavos',home:'3º EHL',away:'3º IJK'},
+    // Octavos (8 partidos)
+    {id:'O1',phase:'Octavos',home:'Gan. D1',away:'Gan. D2'},
+    {id:'O2',phase:'Octavos',home:'Gan. D3',away:'Gan. D4'},
+    {id:'O3',phase:'Octavos',home:'Gan. D5',away:'Gan. D6'},
+    {id:'O4',phase:'Octavos',home:'Gan. D7',away:'Gan. D8'},
+    {id:'O5',phase:'Octavos',home:'Gan. D9',away:'Gan. D10'},
+    {id:'O6',phase:'Octavos',home:'Gan. D11',away:'Gan. D12'},
+    {id:'O7',phase:'Octavos',home:'Gan. D13',away:'Gan. D14'},
+    {id:'O8',phase:'Octavos',home:'Gan. D15',away:'Gan. D16'},
+    // Cuartos (4 partidos)
+    {id:'Q1',phase:'Cuartos',home:'Gan. O1',away:'Gan. O2'},
+    {id:'Q2',phase:'Cuartos',home:'Gan. O3',away:'Gan. O4'},
+    {id:'Q3',phase:'Cuartos',home:'Gan. O5',away:'Gan. O6'},
+    {id:'Q4',phase:'Cuartos',home:'Gan. O7',away:'Gan. O8'},
+    // Semis (2 partidos)
+    {id:'S1',phase:'Semis',home:'Gan. Q1',away:'Gan. Q2'},
+    {id:'S2',phase:'Semis',home:'Gan. Q3',away:'Gan. Q4'},
+    // Final (1 partido)
+    {id:'F1',phase:'Final',home:'Gan. S1',away:'Gan. S2'},
   ];
-  // OCTAVOS
-  const oct=[
-    {id:'O1',phase:'Octavos',home:'D1w',away:'D2w'},
-    {id:'O2',phase:'Octavos',home:'D3w',away:'D4w'},
-    {id:'O3',phase:'Octavos',home:'D5w',away:'D6w'},
-    {id:'O4',phase:'Octavos',home:'D7w',away:'D8w'},
-    {id:'O5',phase:'Octavos',home:'D9w',away:'D10w'},
-    {id:'O6',phase:'Octavos',home:'D11w',away:'D12w'},
-    {id:'O7',phase:'Octavos',home:'D13w',away:'D14w'},
-    {id:'O8',phase:'Octavos',home:'D15w',away:'D16w'},
-  ];
-  const qf=[
-    {id:'Q1',phase:'Cuartos',home:'O1w',away:'O2w'},
-    {id:'Q2',phase:'Cuartos',home:'O3w',away:'O4w'},
-    {id:'Q3',phase:'Cuartos',home:'O5w',away:'O6w'},
-    {id:'Q4',phase:'Cuartos',home:'O7w',away:'O8w'},
-  ];
-  const sf=[
-    {id:'S1',phase:'Semis',home:'Q1w',away:'Q2w'},
-    {id:'S2',phase:'Semis',home:'Q3w',away:'Q4w'},
-  ];
-  const fin=[
-    {id:'F1',phase:'Final',home:'S1w',away:'S2w'},
-  ];
-  return ms.concat(d16,oct,qf,sf,fin);
+  return ms.concat(ko);
 }
 
 let STATE={players:{},matches:makeMatches(),realSpecial:{champion:'',scorer:''}};
@@ -379,7 +391,7 @@ function renderPlayerMatches(){
   const phases=['Grupos','Dieciseisavos','Octavos','Cuartos','Semis','Final'];
   let html='';
   phases.forEach(phase=>{
-    const ms=STATE.matches.filter(m=>m.phase===phase&&m.home.length>3);
+    const ms=STATE.matches.filter(m=>m.phase===phase);
     if(!ms.length)return;
     if(phase==='Grupos'){
       const grps={};
@@ -393,7 +405,7 @@ function renderPlayerMatches(){
       ms.forEach(m=>html+=matchRow(m,picks));
     }
   });
-  document.getElementById('pv-ml').innerHTML=html||'<p class="muted">Sin partidos disponibles.</p>';
+  document.getElementById('pv-ml').innerHTML=html||'<p class="muted">Sin partidos.</p>';
 }
 
 function matchRow(m,picks){
@@ -414,7 +426,7 @@ function matchRow(m,picks){
   return`<div class="mc">
     <div class="mt r">${m.home}</div>
     <div style="display:flex;flex-direction:column;align-items:center;gap:2px;flex-shrink:0">
-      <div class="scorebadge">${res}</div>
+      <div class="sbadge">${res}</div>
       <span style="font-size:10px;color:var(--text3)">pick:${myPick}</span>
     </div>
     <div class="mt">${m.away}</div>
@@ -505,7 +517,7 @@ function renderAdminMatches(){
   const phases=['Grupos','Dieciseisavos','Octavos','Cuartos','Semis','Final'];
   let html='';
   phases.forEach(phase=>{
-    const ms=STATE.matches.filter(m=>m.phase===phase&&m.home.length>3);
+    const ms=STATE.matches.filter(m=>m.phase===phase);
     if(!ms.length)return;
     if(phase==='Grupos'){
       const grps={};
