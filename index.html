@@ -48,14 +48,21 @@ input[type=number].si{width:50px;text-align:center;flex-shrink:0;height:34px}
 #mo{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:100;align-items:center;justify-content:center;padding:1rem}
 #mo.open{display:flex}
 #mb{background:var(--bg);border-radius:var(--rl);padding:1.5rem;width:100%;max-width:340px;border:0.5px solid var(--border)}
+#rules-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:100;align-items:flex-start;justify-content:center;padding:1rem;overflow-y:auto}
+#rules-modal.open{display:flex}
+#rules-box{background:var(--bg);border-radius:var(--rl);padding:1.5rem;width:100%;max-width:480px;border:0.5px solid var(--border);margin:auto}
 #toast{position:fixed;bottom:1.5rem;left:50%;transform:translateX(-50%);background:var(--text);color:var(--bg);padding:8px 18px;border-radius:var(--r);font-size:13px;display:none;z-index:200}
 .sp{display:inline-block;width:14px;height:14px;border:2px solid var(--border2);border-top-color:var(--text);border-radius:50%;animation:spin .6s linear infinite;vertical-align:middle;margin-right:6px}
 @keyframes spin{to{transform:rotate(360deg)}}
 .hero-wrap{position:relative;background:#0a1628}
 .hero-img{width:100%;height:auto;display:block}
-.hero-overlay{position:absolute;bottom:0;left:0;right:0;background:linear-gradient(transparent,rgba(0,0,0,0.75));padding:1.5rem 1rem 1rem}
-.hero-overlay h1{color:#fff;font-size:22px;font-weight:700;margin-bottom:2px}
-.hero-overlay p{color:#f5e94a;font-size:13px}
+.hero-overlay{background:#c0392b;padding:10px 16px;display:flex;align-items:center;justify-content:space-between}
+.hero-overlay h1{color:#fff;font-size:18px;font-weight:700}
+.rules-row{display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:0.5px solid var(--border)}
+.rules-row:last-child{border-bottom:none}
+.rules-row .pts{font-size:18px;font-weight:700;color:var(--s-t);background:var(--s-bg);padding:4px 10px;border-radius:var(--r);min-width:52px;text-align:center}
+.rules-row .desc{font-size:13px;flex:1;margin-right:12px}
+.rules-section{font-size:11px;font-weight:500;color:var(--text2);text-transform:uppercase;letter-spacing:.5px;margin:1rem 0 .5rem}
 </style>
 </head>
 <body>
@@ -67,7 +74,7 @@ input[type=number].si{width:50px;text-align:center;flex-shrink:0;height:34px}
     <img src="hero.png" class="hero-img" alt="Quiniela Mundial 2026">
     <div class="hero-overlay">
       <h1>⚽ Quiniela Mundial 2026</h1>
-      <p>EE.UU. · México · Canadá — 11 jun al 19 jul</p>
+      <button class="btn-sm" onclick="openRules()" style="background:rgba(255,255,255,0.2);border-color:rgba(255,255,255,0.4);color:#fff"><i class="ti ti-info-circle"></i> Normas</button>
     </div>
   </div>
   <div class="inner">
@@ -94,7 +101,10 @@ input[type=number].si{width:50px;text-align:center;flex-shrink:0;height:34px}
     <div style="display:flex;align-items:center;gap:10px;margin-bottom:1.5rem">
       <div class="av" id="pv-av">--</div>
       <div><div style="font-weight:500" id="pv-name">-</div><div class="muted">Mis pronósticos</div></div>
-      <div style="margin-left:auto"><button class="btn-sm" onclick="logout()">Salir</button></div>
+      <div style="margin-left:auto;display:flex;gap:6px">
+        <button class="btn-sm" onclick="openRules()" title="Ver normas"><i class="ti ti-info-circle"></i></button>
+        <button class="btn-sm" onclick="logout()">Salir</button>
+      </div>
     </div>
     <div class="grid2">
       <div class="metric"><div class="lbl">Puntos</div><div class="num" id="pv-pts">0</div></div>
@@ -113,16 +123,24 @@ input[type=number].si{width:50px;text-align:center;flex-shrink:0;height:34px}
       <div class="card">
         <h3>Pronósticos especiales</h3>
         <div style="margin-bottom:1rem">
-          <label style="font-size:12px;color:var(--text2);display:block;margin-bottom:6px">🏆 Campeón del mundial <span class="badge bw">+5 pts</span></label>
+          <label style="font-size:12px;color:var(--text2);display:block;margin-bottom:6px">🏆 Campeón del mundial <span class="badge bs">+20 pts</span></label>
           <select id="pv-champ" style="width:100%"><option value="">Sin pronosticar</option></select>
         </div>
         <div style="margin-bottom:1rem">
-          <label style="font-size:12px;color:var(--text2);display:block;margin-bottom:6px">⚽ Goleador del torneo <span class="badge bi">+3 pts</span></label>
+          <label style="font-size:12px;color:var(--text2);display:block;margin-bottom:6px">⚽ Goleador del torneo <span class="badge bw">+10 pts</span></label>
           <input type="text" id="pv-scorer" placeholder="Nombre del jugador" style="width:100%">
+        </div>
+        <div style="margin-bottom:1rem">
+          <label style="font-size:12px;color:var(--text2);display:block;margin-bottom:6px">🧤 Mejor portero <span class="badge bw">+10 pts</span></label>
+          <input type="text" id="pv-keeper" placeholder="Nombre del portero" style="width:100%">
+        </div>
+        <div style="margin-bottom:1rem">
+          <label style="font-size:12px;color:var(--text2);display:block;margin-bottom:6px">⭐ MVP del torneo <span class="badge bw">+10 pts</span></label>
+          <input type="text" id="pv-mvp" placeholder="Nombre del jugador" style="width:100%">
         </div>
         <button class="primary" onclick="saveSpecial()">Guardar especiales</button>
       </div>
-      <div class="card" id="pv-sr" style="display:none"><h3>Resultado especiales</h3><div id="pv-srb"></div></div>
+      <div class="card" id="pv-sr" style="display:none"><h3>Resultados especiales</h3><div id="pv-srb"></div></div>
     </div>
   </div>
 </div>
@@ -164,6 +182,14 @@ input[type=number].si{width:50px;text-align:center;flex-shrink:0;height:34px}
           <label style="font-size:12px;color:var(--text2);display:block;margin-bottom:6px">⚽ Goleador real</label>
           <input type="text" id="ad-rs" placeholder="Nombre del jugador" style="width:100%">
         </div>
+        <div style="margin-bottom:1rem">
+          <label style="font-size:12px;color:var(--text2);display:block;margin-bottom:6px">🧤 Mejor portero real</label>
+          <input type="text" id="ad-rk2" placeholder="Nombre del portero" style="width:100%">
+        </div>
+        <div style="margin-bottom:1rem">
+          <label style="font-size:12px;color:var(--text2);display:block;margin-bottom:6px">⭐ MVP real</label>
+          <input type="text" id="ad-rm" placeholder="Nombre del jugador" style="width:100%">
+        </div>
         <button class="primary" onclick="saveRealSpecial()">Guardar</button>
       </div>
     </div>
@@ -173,6 +199,7 @@ input[type=number].si{width:50px;text-align:center;flex-shrink:0;height:34px}
 
 </div>
 
+<!-- PICK MODAL -->
 <div id="mo" onclick="if(event.target===this)closePick()">
   <div id="mb">
     <h3 id="mo-t" style="margin-bottom:1rem">Pronóstico</h3>
@@ -189,6 +216,50 @@ input[type=number].si{width:50px;text-align:center;flex-shrink:0;height:34px}
     </div>
   </div>
 </div>
+
+<!-- RULES MODAL -->
+<div id="rules-modal" onclick="if(event.target===this)closeRules()">
+  <div id="rules-box">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.25rem">
+      <h3 style="margin:0">📋 Sistema de puntuación</h3>
+      <button class="btn-sm" onclick="closeRules()"><i class="ti ti-x"></i></button>
+    </div>
+
+    <div class="rules-section">Partidos</div>
+    <div class="rules-row">
+      <div class="desc"><strong>Resultado exacto</strong> — aciertas el marcador completo</div>
+      <div class="pts">5 pts</div>
+    </div>
+    <div class="rules-row">
+      <div class="desc"><strong>Ganador o empate correcto</strong> — aciertas quién gana o que habrá empate, pero no el marcador exacto</div>
+      <div class="pts">3 pts</div>
+    </div>
+
+    <div class="rules-section">Especiales — se puntúan al final del torneo</div>
+    <div class="rules-row">
+      <div class="desc"><strong>🏆 Campeón del mundial</strong></div>
+      <div class="pts" style="background:var(--w-bg);color:var(--w-t)">20 pts</div>
+    </div>
+    <div class="rules-row">
+      <div class="desc"><strong>⚽ Goleador del torneo</strong></div>
+      <div class="pts" style="background:var(--i-bg);color:var(--i-t)">10 pts</div>
+    </div>
+    <div class="rules-row">
+      <div class="desc"><strong>🧤 Mejor portero</strong></div>
+      <div class="pts" style="background:var(--i-bg);color:var(--i-t)">10 pts</div>
+    </div>
+    <div class="rules-row">
+      <div class="desc"><strong>⭐ MVP del torneo</strong></div>
+      <div class="pts" style="background:var(--i-bg);color:var(--i-t)">10 pts</div>
+    </div>
+
+    <hr style="margin:1.25rem 0">
+    <p style="font-size:12px;color:var(--text2)">Los pronósticos de partido solo se pueden hacer <strong>antes</strong> de que el admin confirme el resultado. Los especiales se pueden cambiar hasta que el admin defina los ganadores reales.</p>
+
+    <button class="primary" style="width:100%;margin-top:1rem" onclick="closeRules()">Entendido</button>
+  </div>
+</div>
+
 <div id="toast"></div>
 
 <script type="module">
@@ -205,7 +276,6 @@ const fbApp=initializeApp({
 });
 const db=getFirestore(fbApp);
 
-// Grupos reales - sorteo oficial 5 dic 2025
 const GROUPS={
   A:['México','Sudáfrica','Corea del Sur','Rep. Checa'],
   B:['Canadá','Bosnia-Herz.','Qatar','Suiza'],
@@ -222,29 +292,13 @@ const GROUPS={
 };
 const ALL_TEAMS=Object.values(GROUPS).flat();
 
-// Partidos de fase eliminatoria — se muestran con etiqueta de ronda
-// home/away usan etiqueta legible, no se filtran por longitud
-const KO_LABELS={
-  D1:'D16 P1',D2:'D16 P2',D3:'D16 P3',D4:'D16 P4',
-  D5:'D16 P5',D6:'D16 P6',D7:'D16 P7',D8:'D16 P8',
-  D9:'D16 P9',D10:'D16 P10',D11:'D16 P11',D12:'D16 P12',
-  D13:'D16 P13',D14:'D16 P14',D15:'D16 P15',D16:'D16 P16',
-  O1:'Oct P1',O2:'Oct P2',O3:'Oct P3',O4:'Oct P4',
-  O5:'Oct P5',O6:'Oct P6',O7:'Oct P7',O8:'Oct P8',
-  Q1:'Ctos P1',Q2:'Ctos P2',Q3:'Ctos P3',Q4:'Ctos P4',
-  S1:'Semi P1',S2:'Semi P2',
-  F1:'Final'
-};
-
 function makeMatches(){
   const ms=[];let id=1;
   for(const[g,teams]of Object.entries(GROUPS))
     for(let i=0;i<teams.length;i++)
       for(let j=i+1;j<teams.length;j++)
         ms.push({id:'G'+id++,group:g,phase:'Grupos',home:teams[i],away:teams[j],homeGoals:'',awayGoals:'',played:false});
-
   const ko=[
-    // Dieciseisavos (16 partidos)
     {id:'D1',phase:'Dieciseisavos',home:'1º A',away:'2º B'},
     {id:'D2',phase:'Dieciseisavos',home:'1º B',away:'2º A'},
     {id:'D3',phase:'Dieciseisavos',home:'1º C',away:'2º D'},
@@ -261,7 +315,6 @@ function makeMatches(){
     {id:'D14',phase:'Dieciseisavos',home:'3º GHI',away:'3º JKL'},
     {id:'D15',phase:'Dieciseisavos',home:'3º ABF',away:'3º CDG'},
     {id:'D16',phase:'Dieciseisavos',home:'3º EHL',away:'3º IJK'},
-    // Octavos (8 partidos)
     {id:'O1',phase:'Octavos',home:'Gan. D1',away:'Gan. D2'},
     {id:'O2',phase:'Octavos',home:'Gan. D3',away:'Gan. D4'},
     {id:'O3',phase:'Octavos',home:'Gan. D5',away:'Gan. D6'},
@@ -270,32 +323,32 @@ function makeMatches(){
     {id:'O6',phase:'Octavos',home:'Gan. D11',away:'Gan. D12'},
     {id:'O7',phase:'Octavos',home:'Gan. D13',away:'Gan. D14'},
     {id:'O8',phase:'Octavos',home:'Gan. D15',away:'Gan. D16'},
-    // Cuartos (4 partidos)
     {id:'Q1',phase:'Cuartos',home:'Gan. O1',away:'Gan. O2'},
     {id:'Q2',phase:'Cuartos',home:'Gan. O3',away:'Gan. O4'},
     {id:'Q3',phase:'Cuartos',home:'Gan. O5',away:'Gan. O6'},
     {id:'Q4',phase:'Cuartos',home:'Gan. O7',away:'Gan. O8'},
-    // Semis (2 partidos)
     {id:'S1',phase:'Semis',home:'Gan. Q1',away:'Gan. Q2'},
     {id:'S2',phase:'Semis',home:'Gan. Q3',away:'Gan. Q4'},
-    // Final (1 partido)
     {id:'F1',phase:'Final',home:'Gan. S1',away:'Gan. S2'},
   ];
   return ms.concat(ko);
 }
 
-let STATE={players:{},matches:makeMatches(),realSpecial:{champion:'',scorer:''}};
+let STATE={players:{},matches:makeMatches(),realSpecial:{champion:'',scorer:'',keeper:'',mvp:''}};
 let currentUser=null,isAdmin=false,editingMatchId=null;
 let unsubs=[];
 
 function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.style.display='block';setTimeout(()=>t.style.display='none',2200);}
+
+window.openRules=function(){document.getElementById('rules-modal').classList.add('open');}
+window.closeRules=function(){document.getElementById('rules-modal').classList.remove('open');}
 
 async function loadFromFirebase(){
   try{
     const ms=await getDoc(doc(db,'quiniela','matches'));
     if(ms.exists())STATE.matches=ms.data().list;
     const sp=await getDoc(doc(db,'quiniela','special'));
-    if(sp.exists())STATE.realSpecial=sp.data();
+    if(sp.exists())STATE.realSpecial={...STATE.realSpecial,...sp.data()};
     const ps=await getDocs(collection(db,'players'));
     STATE.players={};
     ps.forEach(d=>STATE.players[d.id]=d.data());
@@ -320,7 +373,7 @@ function subscribeRT(){
     if(isAdmin){renderPlayersList();renderRanking('ad-rkl');}
   }));
   unsubs.push(onSnapshot(doc(db,'quiniela','special'),s=>{
-    if(s.exists())STATE.realSpecial=s.data();
+    if(s.exists())STATE.realSpecial={...STATE.realSpecial,...s.data()};
     if(currentUser&&!isAdmin)renderSpecialPlayer();
   }));
 }
@@ -335,7 +388,7 @@ window.doLogin=function(){
   if(pw==='2026'){isAdmin=true;currentUser='admin';showView('admin-view');renderAdmin();subscribeRT();return;}
   if(!sel){alert('Selecciona tu nombre');return;}
   currentUser=sel;isAdmin=false;
-  if(!STATE.players[currentUser])STATE.players[currentUser]={picks:{},special:{champion:'',scorer:''}};
+  if(!STATE.players[currentUser])STATE.players[currentUser]={picks:{},special:{champion:'',scorer:'',keeper:'',mvp:''}};
   showView('player-view');renderPlayer();subscribeRT();
 };
 window.logout=function(){unsubs.forEach(u=>u());unsubs=[];currentUser=null;isAdmin=false;showView('login-screen');};
@@ -364,12 +417,15 @@ function calcPts(player){
     const rH=parseInt(m.homeGoals),rA=parseInt(m.awayGoals);
     const pH=parseInt(pick.home),pA=parseInt(pick.away);
     const rW=rH>rA?'h':rH<rA?'a':'d',pW=pH>pA?'h':pH<pA?'a':'d';
-    if(pick.home==m.homeGoals&&pick.away==m.awayGoals){total+=3;exact++;winners++;}
-    else if(rW===pW){total+=1;winners++;}
+    if(pick.home==m.homeGoals&&pick.away==m.awayGoals){total+=5;exact++;winners++;}
+    else if(rW===pW){total+=3;winners++;}
   });
   const sp=STATE.players[player]?.special||{};
-  if(STATE.realSpecial.champion&&sp.champion===STATE.realSpecial.champion)total+=5;
-  if(STATE.realSpecial.scorer&&sp.scorer&&sp.scorer.trim().toLowerCase()===STATE.realSpecial.scorer.trim().toLowerCase())total+=3;
+  const rs=STATE.realSpecial;
+  if(rs.champion&&sp.champion===rs.champion)total+=20;
+  if(rs.scorer&&sp.scorer&&sp.scorer.trim().toLowerCase()===rs.scorer.trim().toLowerCase())total+=10;
+  if(rs.keeper&&sp.keeper&&sp.keeper.trim().toLowerCase()===rs.keeper.trim().toLowerCase())total+=10;
+  if(rs.mvp&&sp.mvp&&sp.mvp.trim().toLowerCase()===rs.mvp.trim().toLowerCase())total+=10;
   return{total,exact,winners};
 }
 function getRanking(){return Object.keys(STATE.players).map(p=>({name:p,...calcPts(p)})).sort((a,b)=>b.total-a.total);}
@@ -416,8 +472,8 @@ function matchRow(m,picks){
     const pH=parseInt(pick.home),pA=parseInt(pick.away);
     const rW=rH>rA?'h':rH<rA?'a':'d',pW=pH>pA?'h':pH<pA?'a':'d';
     let pts=0,cls='bd';
-    if(pick.home==m.homeGoals&&pick.away==m.awayGoals){pts=3;cls='bs';}
-    else if(rW===pW){pts=1;cls='bw';}
+    if(pick.home==m.homeGoals&&pick.away==m.awayGoals){pts=5;cls='bs';}
+    else if(rW===pW){pts=3;cls='bw';}
     ptsHtml=`<span class="badge ${cls}">${pts}p</span>`;
   }
   const res=m.played?`${m.homeGoals}-${m.awayGoals}`:'?-?';
@@ -464,17 +520,24 @@ function renderSpecialPlayer(){
   if(sel.options.length<=1)ALL_TEAMS.forEach(t=>sel.add(new Option(t,t)));
   sel.value=sp.champion||'';
   document.getElementById('pv-scorer').value=sp.scorer||'';
-  if(STATE.realSpecial.champion||STATE.realSpecial.scorer){
+  document.getElementById('pv-keeper').value=sp.keeper||'';
+  document.getElementById('pv-mvp').value=sp.mvp||'';
+  const rs=STATE.realSpecial;
+  if(rs.champion||rs.scorer||rs.keeper||rs.mvp){
     document.getElementById('pv-sr').style.display='block';
     let html='';
-    if(STATE.realSpecial.champion){
-      const ok=sp.champion===STATE.realSpecial.champion;
-      html+=`<div style="display:flex;align-items:center;gap:8px;margin-bottom:8px"><span style="flex:1">Campeón: <strong>${STATE.realSpecial.champion}</strong></span><span class="badge ${ok?'bs':'bd'}">${ok?'+5pts':'✗'}</span></div>`;
-    }
-    if(STATE.realSpecial.scorer){
-      const ok=sp.scorer&&sp.scorer.trim().toLowerCase()===STATE.realSpecial.scorer.trim().toLowerCase();
-      html+=`<div style="display:flex;align-items:center;gap:8px"><span style="flex:1">Goleador: <strong>${STATE.realSpecial.scorer}</strong></span><span class="badge ${ok?'bs':'bd'}">${ok?'+3pts':'✗'}</span></div>`;
-    }
+    const row=(label,real,guess,pts)=>{
+      if(!real)return'';
+      const ok=guess&&guess.trim().toLowerCase()===real.trim().toLowerCase();
+      return`<div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
+        <span style="flex:1">${label}: <strong>${real}</strong></span>
+        <span class="badge ${ok?'bs':'bd'}">${ok?'+'+pts+'pts':'✗'}</span>
+      </div>`;
+    };
+    html+=row('🏆 Campeón',rs.champion,sp.champion,20);
+    html+=row('⚽ Goleador',rs.scorer,sp.scorer,10);
+    html+=row('🧤 Portero',rs.keeper,sp.keeper,10);
+    html+=row('⭐ MVP',rs.mvp,sp.mvp,10);
     document.getElementById('pv-srb').innerHTML=html;
   }
 }
@@ -483,6 +546,8 @@ window.saveSpecial=async function(){
   if(!STATE.players[currentUser].special)STATE.players[currentUser].special={};
   STATE.players[currentUser].special.champion=document.getElementById('pv-champ').value;
   STATE.players[currentUser].special.scorer=document.getElementById('pv-scorer').value;
+  STATE.players[currentUser].special.keeper=document.getElementById('pv-keeper').value;
+  STATE.players[currentUser].special.mvp=document.getElementById('pv-mvp').value;
   await savePlayer(currentUser);toast('Especiales guardados ✓');renderPlayer();
 };
 
@@ -509,8 +574,11 @@ function renderAdmin(){
   renderAdminMatches();renderPlayersList();renderRanking('ad-rkl');
   const sel=document.getElementById('ad-rc');
   if(sel.options.length<=1)ALL_TEAMS.forEach(t=>sel.add(new Option(t,t)));
-  sel.value=STATE.realSpecial.champion||'';
-  document.getElementById('ad-rs').value=STATE.realSpecial.scorer||'';
+  const rs=STATE.realSpecial;
+  sel.value=rs.champion||'';
+  document.getElementById('ad-rs').value=rs.scorer||'';
+  document.getElementById('ad-rk2').value=rs.keeper||'';
+  document.getElementById('ad-rm').value=rs.mvp||'';
 }
 
 function renderAdminMatches(){
@@ -569,7 +637,7 @@ window.addPlayer=async function(){
   const n=document.getElementById('np').value.trim();
   if(!n){alert('Escribe un nombre');return;}
   if(STATE.players[n]){alert('Ya existe');return;}
-  STATE.players[n]={picks:{},special:{champion:'',scorer:''}};
+  STATE.players[n]={picks:{},special:{champion:'',scorer:'',keeper:'',mvp:''}};
   await savePlayer(n);
   document.getElementById('np').value='';
   toast(`${n} añadido ✓`);
@@ -597,6 +665,8 @@ function renderPlayersList(){
 window.saveRealSpecial=async function(){
   STATE.realSpecial.champion=document.getElementById('ad-rc').value;
   STATE.realSpecial.scorer=document.getElementById('ad-rs').value;
+  STATE.realSpecial.keeper=document.getElementById('ad-rk2').value;
+  STATE.realSpecial.mvp=document.getElementById('ad-rm').value;
   await saveSpecialReal();toast('Guardado ✓');renderRanking('ad-rkl');
 };
 
