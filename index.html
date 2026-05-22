@@ -48,6 +48,20 @@ input[type=number].si{width:50px;text-align:center;flex-shrink:0;height:34px}
 .locked-msg{font-size:11px;color:var(--d-t);background:var(--d-bg);padding:3px 8px;border-radius:var(--r);flex-shrink:0}
 .ko-locked{font-size:11px;color:var(--text3);font-style:italic}
 .match-time{font-size:10px;color:var(--text3);margin-top:2px}
+.match-card-big{background:var(--bg2);border-radius:var(--rl);padding:12px 14px;margin-bottom:10px;border:0.5px solid var(--border)}
+.mcb-header{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:8px}
+.mcb-teams{display:flex;align-items:center;gap:6px;flex:1;min-width:0}
+.mcb-team{font-size:13px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mcb-vs{font-size:11px;color:var(--text3);flex-shrink:0}
+.match-times-block{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:8px;padding:6px 0;border-top:0.5px solid var(--border);border-bottom:0.5px solid var(--border)}
+.match-times-block span{font-size:11px;color:var(--text2)}
+.mcb-scores{display:flex;flex-direction:column;gap:6px}
+.mcb-score-row{display:flex;align-items:center;gap:8px;background:var(--bg);border-radius:var(--r);padding:8px 10px}
+.pick-row{border-left:3px solid var(--w-t)}
+.result-row{border-left:3px solid var(--s-t)}
+.mcb-score-label{font-size:11px;color:var(--text2);width:120px;flex-shrink:0}
+.mcb-score-val{font-size:15px;font-weight:500;flex:1}
+.mcb-score-val.empty{font-size:13px;color:var(--text3);font-weight:400}
 /* group standings mini table */
 .gtable{width:100%;border-collapse:collapse;font-size:12px;margin-top:.5rem}
 .gtable th{padding:4px 6px;font-size:11px;color:var(--text2);border-bottom:0.5px solid var(--border);font-weight:500}
@@ -430,9 +444,15 @@ function isKOPlaceholder(m){
 
 function timeLabel(matchId){
   const t=MATCH_TIMES[matchId];
-  if(!t) return '';
+  if(!t) return null;
   const d=new Date(t);
-  return d.toLocaleString([], {weekday:'short', day:'numeric', month:'short', hour:'2-digit', minute:'2-digit'});
+  const fmt=(tz)=>d.toLocaleString('es',{weekday:'short',day:'numeric',month:'short',hour:'2-digit',minute:'2-digit',timeZone:tz});
+  return {
+    es: fmt('Europe/Madrid'),
+    us: fmt('America/New_York'),
+    ve: fmt('America/Caracas'),
+    raw: d
+  };
 }
 
 let STATE={players:{},matches:makeMatches(),realSpecial:{champion:'',scorer:'',keeper:'',mvp:''}};
@@ -569,7 +589,11 @@ function matchRow(m,picks){
   const pick=picks[m.id]||{home:'',away:''};
   const isKOPH=isKOPlaceholder(m);
   const locked=!canPick(m.id);
+  const tl=timeLabel(m.id);
+
+  // Points calculation
   let ptsHtml='';
+  let ptsCls='';
   if(m.played&&pick.home!==''&&pick.away!==''){
     const rH=parseInt(m.homeGoals),rA=parseInt(m.awayGoals);
     const pH=parseInt(pick.home),pA=parseInt(pick.away);
@@ -577,34 +601,64 @@ function matchRow(m,picks){
     let pts=0,cls='bd';
     if(pick.home==m.homeGoals&&pick.away==m.awayGoals){pts=5;cls='bs';}
     else if(rW===pW){pts=3;cls='bw';}
-    ptsHtml=`<span class="badge ${cls}">${pts}p</span>`;
+    ptsHtml=`<span class="badge ${cls}" style="font-size:12px;padding:3px 10px">${pts} pts</span>`;
   }
-  const res=m.played?`${m.homeGoals}-${m.awayGoals}`:'?-?';
-  const myPick=(pick.home!==''&&pick.away!=='')?`${pick.home}-${pick.away}`:'—';
-  const tl=timeLabel(m.id);
 
-  let actionHtml='';
+  // Status badge
+  let statusHtml='';
   if(isKOPH){
-    actionHtml=`<span class="ko-locked">Por definir</span>`;
+    statusHtml=`<span class="badge bi">Por definir</span>`;
   }else if(m.played){
-    actionHtml='';
+    statusHtml=`<span class="badge bs">Finalizado</span>`;
   }else if(locked){
-    actionHtml=`<span class="locked-msg">🔒 Cerrado</span>`;
+    statusHtml=`<span class="badge bd">🔒 Cerrado</span>`;
   }else{
-    actionHtml=`<button class="btn-sm" onclick="openPickModal('${m.id}')"><i class="ti ti-edit"></i></button>`;
+    statusHtml=`<span class="badge bw">Abierto</span>`;
   }
 
-  return`<div class="mc">
-    <div style="display:flex;flex-direction:column;flex:1;min-width:0;align-items:flex-end">
-      <div class="mt r">${m.home}</div>
-      ${tl?`<div class="match-time">${tl}</div>`:''}
+  // Edit button
+  const editBtn=(!isKOPH&&!m.played&&!locked)
+    ?`<button class="btn-sm" onclick="openPickModal('${m.id}')" style="margin-left:6px"><i class="ti ti-edit"></i> Editar pick</button>`
+    :'';
+
+  // Scores
+  const myPick=(pick.home!==''&&pick.away!=='')?`${pick.home} - ${pick.away}`:'Sin rellenar';
+  const official=m.played?`${m.homeGoals} - ${m.awayGoals}`:'Pendiente';
+
+  // Time rows
+  let timeHtml='';
+  if(tl){
+    timeHtml=`<div class="match-times-block">
+      <span>🇪🇸 ${tl.es}</span>
+      <span>🇺🇸 ${tl.us}</span>
+      <span>🇻🇪 ${tl.ve}</span>
+    </div>`;
+  }
+
+  return`<div class="match-card-big">
+    <div class="mcb-header">
+      <div class="mcb-teams">
+        <span class="mcb-team">${m.home}</span>
+        <span class="mcb-vs">vs</span>
+        <span class="mcb-team">${m.away}</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:6px;flex-shrink:0">
+        ${statusHtml}
+        ${ptsHtml}
+      </div>
     </div>
-    <div style="display:flex;flex-direction:column;align-items:center;gap:2px;flex-shrink:0">
-      <div class="sbadge">${res}</div>
-      <span style="font-size:10px;color:var(--text3)">pick:${myPick}</span>
+    ${timeHtml}
+    <div class="mcb-scores">
+      <div class="mcb-score-row pick-row">
+        <span class="mcb-score-label">Tu pick</span>
+        <span class="mcb-score-val ${pick.home===''?'empty':''}">${myPick}</span>
+        ${editBtn}
+      </div>
+      <div class="mcb-score-row result-row">
+        <span class="mcb-score-label">Resultado oficial</span>
+        <span class="mcb-score-val ${!m.played?'empty':''}">${official}</span>
+      </div>
     </div>
-    <div class="mt">${m.away}</div>
-    ${ptsHtml}${actionHtml}
   </div>`;
 }
 
@@ -662,7 +716,8 @@ window.openPickModal=function(id){
   document.getElementById('mo-t').textContent=`${m.home} vs ${m.away}`;
   document.getElementById('mo-h').textContent=m.home;
   document.getElementById('mo-a').textContent=m.away;
-  document.getElementById('mo-time').textContent=timeLabel(id)?`⏱ ${timeLabel(id)}`:'';
+  const tl2=timeLabel(id);
+  document.getElementById('mo-time').textContent=tl2?`🇪🇸 ${tl2.es}  🇺🇸 ${tl2.us}  🇻🇪 ${tl2.ve}`:'';
   document.getElementById('pm-h').value=pick.home;
   document.getElementById('pm-a').value=pick.away;
   document.getElementById('mo').classList.add('open');
@@ -792,8 +847,9 @@ function adminRow(m){
     ?`<input type="text" id="aa-nm-${m.id}" value="${m.away}" style="flex:1;height:32px;font-size:12px" ${m.played?'disabled':''} oninput="updateTeam('${m.id}','away',this.value)">`
     :`<div style="flex:1;font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${m.away}</div>`;
   const tl=timeLabel(m.id);
+  const tlStr=tl?`🇪🇸 ${tl.es} · 🇺🇸 ${tl.us} · 🇻🇪 ${tl.ve}`:'';
   return`<div style="background:var(--bg2);border-radius:var(--r);padding:10px 12px;margin-bottom:8px">
-    ${tl?`<div style="font-size:10px;color:var(--text3);margin-bottom:4px">⏱ ${tl}</div>`:''}
+    ${tlStr?`<div style="font-size:10px;color:var(--text3);margin-bottom:4px">⏱ ${tlStr}</div>`:''}
     <div style="display:flex;align-items:center;gap:8px">
       ${homeInput}
       <input type="number" min="0" max="20" id="ah-sc-${m.id}" value="${m.homeGoals}" class="si" ${m.played?'disabled':''} oninput="updateResult('${m.id}')">
