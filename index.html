@@ -45,30 +45,37 @@ hr{border:none;border-top:0.5px solid var(--border);margin:1.25rem 0}
 input[type=number].si{width:50px;text-align:center;flex-shrink:0;height:34px}
 .rg .rn{color:#B8860B}.rs .rn{color:#808080}.rbr .rn{color:#A0522D}
 .rn{font-size:17px;font-weight:500;width:26px;text-align:center;flex-shrink:0}
-#mo{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:100;align-items:center;justify-content:center;padding:1rem}
-#mo.open{display:flex}
-#mb{background:var(--bg);border-radius:var(--rl);padding:1.5rem;width:100%;max-width:340px;border:0.5px solid var(--border)}
-#rules-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:100;align-items:flex-start;justify-content:center;padding:1rem;overflow-y:auto}
-#rules-modal.open{display:flex}
+.locked-msg{font-size:11px;color:var(--d-t);background:var(--d-bg);padding:3px 8px;border-radius:var(--r);flex-shrink:0}
+.ko-locked{font-size:11px;color:var(--text3);font-style:italic}
+.match-time{font-size:10px;color:var(--text3);margin-top:2px}
+/* group standings mini table */
+.gtable{width:100%;border-collapse:collapse;font-size:12px;margin-top:.5rem}
+.gtable th{padding:4px 6px;font-size:11px;color:var(--text2);border-bottom:0.5px solid var(--border);font-weight:500}
+.gtable td{padding:4px 6px;border-bottom:0.5px solid var(--border)}
+.gtable tr:last-child td{border-bottom:none}
+.gtable .qualify{background:var(--s-bg)}
+/* modals */
+#mo,#rules-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:100;align-items:flex-start;justify-content:center;padding:1rem;overflow-y:auto}
+#mo.open,#rules-modal.open{display:flex}
+#mb{background:var(--bg);border-radius:var(--rl);padding:1.5rem;width:100%;max-width:340px;border:0.5px solid var(--border);margin:auto}
 #rules-box{background:var(--bg);border-radius:var(--rl);padding:1.5rem;width:100%;max-width:480px;border:0.5px solid var(--border);margin:auto}
 #toast{position:fixed;bottom:1.5rem;left:50%;transform:translateX(-50%);background:var(--text);color:var(--bg);padding:8px 18px;border-radius:var(--r);font-size:13px;display:none;z-index:200}
 .sp{display:inline-block;width:14px;height:14px;border:2px solid var(--border2);border-top-color:var(--text);border-radius:50%;animation:spin .6s linear infinite;vertical-align:middle;margin-right:6px}
 @keyframes spin{to{transform:rotate(360deg)}}
-.hero-wrap{position:relative;background:#0a1628}
+.hero-wrap{background:#0a1628}
 .hero-img{width:100%;height:auto;display:block}
 .hero-overlay{background:#c0392b;padding:10px 16px;display:flex;align-items:center;justify-content:space-between}
 .hero-overlay h1{color:#fff;font-size:18px;font-weight:700}
 .rules-row{display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:0.5px solid var(--border)}
 .rules-row:last-child{border-bottom:none}
-.rules-row .pts{font-size:18px;font-weight:700;color:var(--s-t);background:var(--s-bg);padding:4px 10px;border-radius:var(--r);min-width:52px;text-align:center}
+.rules-row .pts{font-size:16px;font-weight:700;padding:4px 10px;border-radius:var(--r);min-width:52px;text-align:center;flex-shrink:0}
 .rules-row .desc{font-size:13px;flex:1;margin-right:12px}
-.rules-section{font-size:11px;font-weight:500;color:var(--text2);text-transform:uppercase;letter-spacing:.5px;margin:1rem 0 .5rem}
+.rsec{font-size:11px;font-weight:500;color:var(--text2);text-transform:uppercase;letter-spacing:.5px;margin:1rem 0 .5rem}
 </style>
 </head>
 <body>
 <div class="app" id="app">
 
-<!-- LOGIN -->
 <div id="login-screen" class="view active">
   <div class="hero-wrap">
     <img src="hero.png" class="hero-img" alt="Quiniela Mundial 2026">
@@ -85,24 +92,21 @@ input[type=number].si{width:50px;text-align:center;flex-shrink:0;height:34px}
       </div>
       <div style="margin-bottom:1rem">
         <label style="font-size:12px;color:var(--text2);display:block;margin-bottom:6px">¿Eres el admin?</label>
-        <input type="password" id="admin-pw" placeholder="Contraseña admin (opcional)" style="width:100%">
+        <input type="password" id="admin-pw" placeholder="Contraseña admin">
       </div>
       <button class="primary" style="width:100%;height:40px;font-size:14px" onclick="doLogin()">Entrar →</button>
-      <hr>
-      <p style="font-size:11px;color:var(--text3);text-align:center">Pin del admin: <strong>2026</strong></p>
     </div>
-    <p id="lmsg" style="text-align:center;color:var(--text2);font-size:13px"><span class="sp"></span>Cargando participantes...</p>
+    <p id="lmsg" style="text-align:center;color:var(--text2);font-size:13px"><span class="sp"></span>Cargando...</p>
   </div>
 </div>
 
-<!-- PLAYER VIEW -->
 <div id="player-view" class="view">
   <div class="inner">
     <div style="display:flex;align-items:center;gap:10px;margin-bottom:1.5rem">
       <div class="av" id="pv-av">--</div>
       <div><div style="font-weight:500" id="pv-name">-</div><div class="muted">Mis pronósticos</div></div>
       <div style="margin-left:auto;display:flex;gap:6px">
-        <button class="btn-sm" onclick="openRules()" title="Ver normas"><i class="ti ti-info-circle"></i></button>
+        <button class="btn-sm" onclick="openRules()" title="Normas"><i class="ti ti-info-circle"></i></button>
         <button class="btn-sm" onclick="logout()">Salir</button>
       </div>
     </div>
@@ -114,10 +118,12 @@ input[type=number].si{width:50px;text-align:center;flex-shrink:0;height:34px}
     </div>
     <div class="tabs">
       <button class="tab active" onclick="pvTab(this,'pv-picks')">Mis picks</button>
+      <button class="tab" onclick="pvTab(this,'pv-groups')">Grupos</button>
       <button class="tab" onclick="pvTab(this,'pv-ranking')">Ranking</button>
       <button class="tab" onclick="pvTab(this,'pv-special')">Especiales</button>
     </div>
     <div id="pv-picks" class="pvp"><div id="pv-ml"></div></div>
+    <div id="pv-groups" class="pvp" style="display:none"><div id="pv-gl"></div></div>
     <div id="pv-ranking" class="pvp" style="display:none"><div id="pv-rl"></div></div>
     <div id="pv-special" class="pvp" style="display:none">
       <div class="card">
@@ -145,12 +151,11 @@ input[type=number].si{width:50px;text-align:center;flex-shrink:0;height:34px}
   </div>
 </div>
 
-<!-- ADMIN VIEW -->
 <div id="admin-view" class="view">
   <div class="inner">
     <div style="display:flex;align-items:center;gap:10px;margin-bottom:1.5rem">
       <div class="av" style="background:var(--d-bg);color:var(--d-t)">AD</div>
-      <div><div style="font-weight:500">Panel de administrador</div><div class="muted">Gestiona resultados y participantes</div></div>
+      <div><div style="font-weight:500">Administrador</div><div class="muted">Gestiona resultados y participantes</div></div>
       <div style="margin-left:auto"><button class="btn-sm" onclick="logout()">Salir</button></div>
     </div>
     <div class="tabs">
@@ -160,7 +165,7 @@ input[type=number].si{width:50px;text-align:center;flex-shrink:0;height:34px}
       <button class="tab" onclick="adminTab(this,'ad-rk')">Ranking</button>
     </div>
     <div id="ad-res" class="adp">
-      <p class="muted" style="margin-bottom:1rem">Introduce el marcador y pulsa <strong>OK</strong> para confirmar.</p>
+      <p class="muted" style="margin-bottom:1rem">Introduce el marcador y pulsa <strong>OK</strong>. Para fases KO puedes editar los equipos directamente.</p>
       <div id="ad-ml"></div>
     </div>
     <div id="ad-pl" class="adp" style="display:none">
@@ -180,15 +185,15 @@ input[type=number].si{width:50px;text-align:center;flex-shrink:0;height:34px}
         </div>
         <div style="margin-bottom:1rem">
           <label style="font-size:12px;color:var(--text2);display:block;margin-bottom:6px">⚽ Goleador real</label>
-          <input type="text" id="ad-rs" placeholder="Nombre del jugador" style="width:100%">
+          <input type="text" id="ad-rs" placeholder="Nombre" style="width:100%">
         </div>
         <div style="margin-bottom:1rem">
           <label style="font-size:12px;color:var(--text2);display:block;margin-bottom:6px">🧤 Mejor portero real</label>
-          <input type="text" id="ad-rk2" placeholder="Nombre del portero" style="width:100%">
+          <input type="text" id="ad-rk2" placeholder="Nombre" style="width:100%">
         </div>
         <div style="margin-bottom:1rem">
           <label style="font-size:12px;color:var(--text2);display:block;margin-bottom:6px">⭐ MVP real</label>
-          <input type="text" id="ad-rm" placeholder="Nombre del jugador" style="width:100%">
+          <input type="text" id="ad-rm" placeholder="Nombre" style="width:100%">
         </div>
         <button class="primary" onclick="saveRealSpecial()">Guardar</button>
       </div>
@@ -196,13 +201,13 @@ input[type=number].si{width:50px;text-align:center;flex-shrink:0;height:34px}
     <div id="ad-rk" class="adp" style="display:none"><div id="ad-rkl"></div></div>
   </div>
 </div>
-
 </div>
 
 <!-- PICK MODAL -->
 <div id="mo" onclick="if(event.target===this)closePick()">
   <div id="mb">
-    <h3 id="mo-t" style="margin-bottom:1rem">Pronóstico</h3>
+    <h3 id="mo-t" style="margin-bottom:.25rem">Pronóstico</h3>
+    <p id="mo-time" class="muted" style="margin-bottom:1rem;font-size:11px"></p>
     <div style="display:flex;align-items:center;gap:10px;margin-bottom:1.25rem">
       <div style="flex:1;text-align:right;font-size:13px" id="mo-h">-</div>
       <input type="number" min="0" max="20" id="pm-h" class="si">
@@ -224,38 +229,34 @@ input[type=number].si{width:50px;text-align:center;flex-shrink:0;height:34px}
       <h3 style="margin:0">📋 Sistema de puntuación</h3>
       <button class="btn-sm" onclick="closeRules()"><i class="ti ti-x"></i></button>
     </div>
-
-    <div class="rules-section">Partidos</div>
+    <div class="rsec">Partidos</div>
     <div class="rules-row">
       <div class="desc"><strong>Resultado exacto</strong> — aciertas el marcador completo</div>
-      <div class="pts">5 pts</div>
+      <div class="pts bs">5 pts</div>
     </div>
     <div class="rules-row">
-      <div class="desc"><strong>Ganador o empate correcto</strong> — aciertas quién gana o que habrá empate, pero no el marcador exacto</div>
-      <div class="pts">3 pts</div>
+      <div class="desc"><strong>Ganador o empate correcto</strong> — aciertas quién gana o que habrá empate, sin acertar el marcador</div>
+      <div class="pts bw">3 pts</div>
     </div>
-
-    <div class="rules-section">Especiales — se puntúan al final del torneo</div>
+    <div class="rsec">Especiales — se puntúan al final del torneo</div>
     <div class="rules-row">
       <div class="desc"><strong>🏆 Campeón del mundial</strong></div>
-      <div class="pts" style="background:var(--w-bg);color:var(--w-t)">20 pts</div>
+      <div class="pts bs">20 pts</div>
     </div>
     <div class="rules-row">
       <div class="desc"><strong>⚽ Goleador del torneo</strong></div>
-      <div class="pts" style="background:var(--i-bg);color:var(--i-t)">10 pts</div>
+      <div class="pts bw">10 pts</div>
     </div>
     <div class="rules-row">
       <div class="desc"><strong>🧤 Mejor portero</strong></div>
-      <div class="pts" style="background:var(--i-bg);color:var(--i-t)">10 pts</div>
+      <div class="pts bw">10 pts</div>
     </div>
     <div class="rules-row">
       <div class="desc"><strong>⭐ MVP del torneo</strong></div>
-      <div class="pts" style="background:var(--i-bg);color:var(--i-t)">10 pts</div>
+      <div class="pts bw">10 pts</div>
     </div>
-
-    <hr style="margin:1.25rem 0">
-    <p style="font-size:12px;color:var(--text2)">Los pronósticos de partido solo se pueden hacer <strong>antes</strong> de que el admin confirme el resultado. Los especiales se pueden cambiar hasta que el admin defina los ganadores reales.</p>
-
+    <hr>
+    <p style="font-size:12px;color:var(--text2);line-height:1.6">⏱ Los picks de cada partido se cierran <strong>1 hora antes</strong> del inicio. Las fases eliminatorias se desbloquean cuando el admin confirma los equipos clasificados. Los especiales se pueden modificar hasta que el admin defina los ganadores reales.</p>
     <button class="primary" style="width:100%;margin-top:1rem" onclick="closeRules()">Entendido</button>
   </div>
 </div>
@@ -275,6 +276,86 @@ const fbApp=initializeApp({
   appId:"1:1069209810424:web:6a6461c344e138d93c120d"
 });
 const db=getFirestore(fbApp);
+
+// Horarios en UTC. España CEST = UTC+2. Ej: 21:00 España = 19:00 UTC
+// El navegador de cada usuario convierte a su hora local automáticamente.
+const MATCH_TIMES={
+  // Jornada 1
+  'G1': '2026-06-11T19:00:00Z', // México vs Sudáfrica
+  'G2': '2026-06-12T02:00:00Z', // Corea Sur vs Rep.Checa
+  'G7': '2026-06-12T19:00:00Z', // Canadá vs Bosnia-Herz.
+  'G13':'2026-06-13T01:00:00Z', // EE.UU. vs Paraguay
+  'G8': '2026-06-13T19:00:00Z', // Qatar vs Suiza
+  'G19':'2026-06-13T22:00:00Z', // Brasil vs Marruecos
+  'G20':'2026-06-14T01:00:00Z', // Haití vs Escocia
+  'G14':'2026-06-14T16:00:00Z', // Australia vs Turquía
+  'G25':'2026-06-14T17:00:00Z', // Alemania vs Curazao
+  'G31':'2026-06-14T20:00:00Z', // Países Bajos vs Japón
+  'G26':'2026-06-14T23:00:00Z', // Costa Marfil vs Ecuador
+  'G32':'2026-06-15T02:00:00Z', // Suecia vs Túnez
+  'G43':'2026-06-15T16:00:00Z', // España vs Cabo Verde
+  'G37':'2026-06-15T19:00:00Z', // Bélgica vs Egipto
+  'G44':'2026-06-15T22:00:00Z', // Arabia Saudita vs Uruguay
+  'G38':'2026-06-16T01:00:00Z', // Irán vs Nueva Zelanda
+  'G49':'2026-06-16T19:00:00Z', // Francia vs Senegal
+  'G50':'2026-06-16T22:00:00Z', // Irak vs Noruega
+  'G55':'2026-06-17T01:00:00Z', // Argentina vs Argelia
+  'G56':'2026-06-17T04:00:00Z', // Austria vs Jordania
+  'G61':'2026-06-17T17:00:00Z', // Portugal vs R.D.Congo
+  'G67':'2026-06-17T20:00:00Z', // Inglaterra vs Croacia
+  'G68':'2026-06-17T23:00:00Z', // Ghana vs Panamá
+  'G62':'2026-06-18T02:00:00Z', // Uzbekistán vs Colombia
+  // Jornada 2 (aproximaciones basadas en el patrón del torneo)
+  'G3': '2026-06-15T19:00:00Z', // México vs Corea Sur
+  'G4': '2026-06-15T22:00:00Z', // Sudáfrica vs Rep.Checa
+  'G9': '2026-06-16T16:00:00Z', // Canadá vs Qatar
+  'G10':'2026-06-16T19:00:00Z', // Bosnia-Herz. vs Suiza
+  'G21':'2026-06-17T19:00:00Z', // Brasil vs Haití
+  'G22':'2026-06-17T22:00:00Z', // Marruecos vs Escocia
+  'G15':'2026-06-18T16:00:00Z', // EE.UU. vs Australia
+  'G16':'2026-06-18T19:00:00Z', // Paraguay vs Turquía
+  'G27':'2026-06-19T17:00:00Z', // Alemania vs Costa Marfil
+  'G28':'2026-06-19T20:00:00Z', // Curazao vs Ecuador
+  'G33':'2026-06-19T17:00:00Z', // Países Bajos vs Suecia
+  'G34':'2026-06-19T20:00:00Z', // Japón vs Túnez
+  'G39':'2026-06-20T17:00:00Z', // Bélgica vs Irán
+  'G40':'2026-06-20T20:00:00Z', // Egipto vs Nueva Zelanda
+  'G45':'2026-06-21T16:00:00Z', // España vs Arabia Saudita
+  'G46':'2026-06-21T19:00:00Z', // Cabo Verde vs Uruguay
+  'G51':'2026-06-22T16:00:00Z', // Francia vs Irak
+  'G52':'2026-06-22T19:00:00Z', // Senegal vs Noruega
+  'G57':'2026-06-23T17:00:00Z', // Argentina vs Austria
+  'G58':'2026-06-23T20:00:00Z', // Argelia vs Jordania
+  'G63':'2026-06-23T20:00:00Z', // Portugal vs Uzbekistán
+  'G64':'2026-06-23T17:00:00Z', // R.D.Congo vs Colombia
+  'G69':'2026-06-24T16:00:00Z', // Inglaterra vs Ghana
+  'G70':'2026-06-24T19:00:00Z', // Croacia vs Panamá
+  // Jornada 3
+  'G5': '2026-06-24T19:00:00Z', // Rep.Checa vs México
+  'G6': '2026-06-24T19:00:00Z', // Sudáfrica vs Corea Sur
+  'G11':'2026-06-25T19:00:00Z', // Bosnia-Herz. vs Qatar
+  'G12':'2026-06-25T19:00:00Z', // Suiza vs Canadá
+  'G23':'2026-06-25T22:00:00Z', // Brasil vs Escocia
+  'G24':'2026-06-25T22:00:00Z', // Marruecos vs Haití
+  'G17':'2026-06-26T19:00:00Z', // EE.UU. vs Turquía
+  'G18':'2026-06-26T19:00:00Z', // Paraguay vs Australia
+  'G29':'2026-06-26T19:00:00Z', // Alemania vs Ecuador
+  'G30':'2026-06-26T19:00:00Z', // Curazao vs Costa Marfil
+  'G35':'2026-06-26T22:00:00Z', // Países Bajos vs Túnez
+  'G36':'2026-06-26T22:00:00Z', // Japón vs Suecia
+  'G41':'2026-06-27T19:00:00Z', // Bélgica vs Nueva Zelanda
+  'G42':'2026-06-27T19:00:00Z', // Irán vs Egipto
+  'G47':'2026-06-27T22:00:00Z', // España vs Uruguay
+  'G48':'2026-06-27T22:00:00Z', // Cabo Verde vs Arabia Saudita
+  'G53':'2026-06-27T19:00:00Z', // Francia vs Noruega
+  'G54':'2026-06-27T19:00:00Z', // Senegal vs Irak
+  'G59':'2026-06-27T22:00:00Z', // Argentina vs Jordania
+  'G60':'2026-06-27T22:00:00Z', // Argelia vs Austria
+  'G65':'2026-06-27T19:00:00Z', // Portugal vs Colombia
+  'G66':'2026-06-27T19:00:00Z', // R.D.Congo vs Uzbekistán
+  'G71':'2026-06-27T22:00:00Z', // Inglaterra vs Panamá
+  'G72':'2026-06-27T22:00:00Z', // Croacia vs Ghana
+};
 
 const GROUPS={
   A:['México','Sudáfrica','Corea del Sur','Rep. Checa'],
@@ -334,12 +415,30 @@ function makeMatches(){
   return ms.concat(ko);
 }
 
+// Returns true if pick is allowed (match hasn't started - 1h buffer)
+function canPick(matchId){
+  const t=MATCH_TIMES[matchId];
+  if(!t) return true; // KO matches: only allow if admin has set real teams (not placeholder)
+  return Date.now() < new Date(t).getTime() - 60*60*1000;
+}
+
+function isKOPlaceholder(m){
+  // A KO match is still a placeholder if home/away contain 'º' or 'Gan.'
+  return m.phase!=='Grupos' && (m.home.includes('º')||m.home.includes('Gan.')||m.away.includes('º')||m.away.includes('Gan.'));
+}
+
+function timeLabel(matchId){
+  const t=MATCH_TIMES[matchId];
+  if(!t) return '';
+  const d=new Date(t);
+  return d.toLocaleString([], {weekday:'short', day:'numeric', month:'short', hour:'2-digit', minute:'2-digit'});
+}
+
 let STATE={players:{},matches:makeMatches(),realSpecial:{champion:'',scorer:'',keeper:'',mvp:''}};
 let currentUser=null,isAdmin=false,editingMatchId=null;
 let unsubs=[];
 
 function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.style.display='block';setTimeout(()=>t.style.display='none',2200);}
-
 window.openRules=function(){document.getElementById('rules-modal').classList.add('open');}
 window.closeRules=function(){document.getElementById('rules-modal').classList.remove('open');}
 
@@ -363,7 +462,7 @@ async function loadFromFirebase(){
 function subscribeRT(){
   unsubs.push(onSnapshot(doc(db,'quiniela','matches'),s=>{
     if(s.exists())STATE.matches=s.data().list;
-    if(currentUser&&!isAdmin)renderPlayer();
+    if(currentUser&&!isAdmin){renderPlayer();renderGroupStandings();}
     if(isAdmin)renderAdminMatches();
   }));
   unsubs.push(onSnapshot(collection(db,'players'),s=>{
@@ -389,7 +488,7 @@ window.doLogin=function(){
   if(!sel){alert('Selecciona tu nombre');return;}
   currentUser=sel;isAdmin=false;
   if(!STATE.players[currentUser])STATE.players[currentUser]={picks:{},special:{champion:'',scorer:'',keeper:'',mvp:''}};
-  showView('player-view');renderPlayer();subscribeRT();
+  showView('player-view');renderPlayer();renderGroupStandings();subscribeRT();
 };
 window.logout=function(){unsubs.forEach(u=>u());unsubs=[];currentUser=null;isAdmin=false;showView('login-screen');};
 function showView(v){document.querySelectorAll('#app>.view').forEach(e=>e.classList.remove('active'));document.getElementById(v).classList.add('active');}
@@ -399,6 +498,7 @@ window.pvTab=function(btn,id){
   btn.classList.add('active');
   document.querySelectorAll('.pvp').forEach(p=>p.style.display='none');
   document.getElementById(id).style.display='block';
+  if(id==='pv-groups')renderGroupStandings();
 };
 window.adminTab=function(btn,id){
   btn.closest('#admin-view').querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
@@ -466,6 +566,8 @@ function renderPlayerMatches(){
 
 function matchRow(m,picks){
   const pick=picks[m.id]||{home:'',away:''};
+  const isKOPH=isKOPlaceholder(m);
+  const locked=!canPick(m.id);
   let ptsHtml='';
   if(m.played&&pick.home!==''&&pick.away!==''){
     const rH=parseInt(m.homeGoals),rA=parseInt(m.awayGoals);
@@ -478,26 +580,88 @@ function matchRow(m,picks){
   }
   const res=m.played?`${m.homeGoals}-${m.awayGoals}`:'?-?';
   const myPick=(pick.home!==''&&pick.away!=='')?`${pick.home}-${pick.away}`:'—';
-  const editBtn=!m.played?`<button class="btn-sm" onclick="openPickModal('${m.id}')"><i class="ti ti-edit"></i></button>`:'';
+  const tl=timeLabel(m.id);
+
+  let actionHtml='';
+  if(isKOPH){
+    actionHtml=`<span class="ko-locked">Por definir</span>`;
+  }else if(m.played){
+    actionHtml='';
+  }else if(locked){
+    actionHtml=`<span class="locked-msg">🔒 Cerrado</span>`;
+  }else{
+    actionHtml=`<button class="btn-sm" onclick="openPickModal('${m.id}')"><i class="ti ti-edit"></i></button>`;
+  }
+
   return`<div class="mc">
-    <div class="mt r">${m.home}</div>
+    <div style="display:flex;flex-direction:column;flex:1;min-width:0;align-items:flex-end">
+      <div class="mt r">${m.home}</div>
+      ${tl?`<div class="match-time">${tl}</div>`:''}
+    </div>
     <div style="display:flex;flex-direction:column;align-items:center;gap:2px;flex-shrink:0">
       <div class="sbadge">${res}</div>
       <span style="font-size:10px;color:var(--text3)">pick:${myPick}</span>
     </div>
     <div class="mt">${m.away}</div>
-    ${ptsHtml}${editBtn}
+    ${ptsHtml}${actionHtml}
   </div>`;
+}
+
+// --- GROUP STANDINGS based on player's picks ---
+function calcGroupStandings(groupLetter){
+  const teams=GROUPS[groupLetter];
+  const picks=STATE.players[currentUser]?.picks||{};
+  const stats={};
+  teams.forEach(t=>stats[t]={pts:0,gf:0,ga:0,gd:0,played:0});
+  const ms=STATE.matches.filter(m=>m.group===groupLetter&&m.phase==='Grupos');
+  ms.forEach(m=>{
+    // Use real result if played, otherwise player's pick
+    let hg,ag;
+    if(m.played){hg=parseInt(m.homeGoals);ag=parseInt(m.awayGoals);}
+    else{
+      const pick=picks[m.id];
+      if(!pick||pick.home===''||pick.away==='')return;
+      hg=parseInt(pick.home);ag=parseInt(pick.away);
+    }
+    if(isNaN(hg)||isNaN(ag))return;
+    stats[m.home].played++;stats[m.away].played++;
+    stats[m.home].gf+=hg;stats[m.home].ga+=ag;stats[m.home].gd+=hg-ag;
+    stats[m.away].gf+=ag;stats[m.away].ga+=hg;stats[m.away].gd+=ag-hg;
+    if(hg>ag){stats[m.home].pts+=3;}
+    else if(hg<ag){stats[m.away].pts+=3;}
+    else{stats[m.home].pts+=1;stats[m.away].pts+=1;}
+  });
+  return Object.entries(stats)
+    .map(([name,s])=>({name,...s}))
+    .sort((a,b)=>b.pts-a.pts||b.gd-a.gd||b.gf-a.gf);
+}
+
+function renderGroupStandings(){
+  const container=document.getElementById('pv-gl');
+  if(!container)return;
+  let html='<p class="muted" style="margin-bottom:.75rem;font-size:12px">Clasificación provisional basada en tus picks y resultados confirmados.</p>';
+  Object.keys(GROUPS).forEach(g=>{
+    const standings=calcGroupStandings(g);
+    html+=`<div class="gl">Grupo ${g}</div>
+    <table class="gtable"><thead><tr><th>Equipo</th><th>J</th><th>Pts</th><th>GF</th><th>GC</th><th>DG</th></tr></thead><tbody>`;
+    standings.forEach((t,i)=>{
+      const cls=i<2?'qualify':'';
+      html+=`<tr class="${cls}"><td>${t.name}</td><td>${t.played}</td><td><strong>${t.pts}</strong></td><td>${t.gf}</td><td>${t.ga}</td><td>${t.gd>0?'+'+t.gd:t.gd}</td></tr>`;
+    });
+    html+='</tbody></table><div style="height:.75rem"></div>';
+  });
+  container.innerHTML=html;
 }
 
 window.openPickModal=function(id){
   const m=STATE.matches.find(x=>x.id===id);
-  if(!m||m.played)return;
+  if(!m||m.played||isKOPlaceholder(m)||!canPick(id))return;
   editingMatchId=id;
   const pick=STATE.players[currentUser]?.picks?.[id]||{home:'',away:''};
   document.getElementById('mo-t').textContent=`${m.home} vs ${m.away}`;
   document.getElementById('mo-h').textContent=m.home;
   document.getElementById('mo-a').textContent=m.away;
+  document.getElementById('mo-time').textContent=timeLabel(id)?`⏱ ${timeLabel(id)}`:'';
   document.getElementById('pm-h').value=pick.home;
   document.getElementById('pm-a').value=pick.away;
   document.getElementById('mo').classList.add('open');
@@ -508,6 +672,7 @@ window.savePick=async function(){
   const h=document.getElementById('pm-h').value;
   const a=document.getElementById('pm-a').value;
   if(h===''||a===''){alert('Rellena ambos marcadores');return;}
+  if(!canPick(editingMatchId)){alert('Este partido ya está cerrado para picks.');closePick();return;}
   if(!STATE.players[currentUser].picks)STATE.players[currentUser].picks={};
   STATE.players[currentUser].picks[editingMatchId]={home:h,away:a};
   await savePlayer(currentUser);
@@ -525,20 +690,16 @@ function renderSpecialPlayer(){
   const rs=STATE.realSpecial;
   if(rs.champion||rs.scorer||rs.keeper||rs.mvp){
     document.getElementById('pv-sr').style.display='block';
-    let html='';
     const row=(label,real,guess,pts)=>{
       if(!real)return'';
       const ok=guess&&guess.trim().toLowerCase()===real.trim().toLowerCase();
-      return`<div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
-        <span style="flex:1">${label}: <strong>${real}</strong></span>
-        <span class="badge ${ok?'bs':'bd'}">${ok?'+'+pts+'pts':'✗'}</span>
-      </div>`;
+      return`<div style="display:flex;align-items:center;gap:8px;margin-bottom:8px"><span style="flex:1">${label}: <strong>${real}</strong></span><span class="badge ${ok?'bs':'bd'}">${ok?'+'+pts+'pts':'✗'}</span></div>`;
     };
-    html+=row('🏆 Campeón',rs.champion,sp.champion,20);
-    html+=row('⚽ Goleador',rs.scorer,sp.scorer,10);
-    html+=row('🧤 Portero',rs.keeper,sp.keeper,10);
-    html+=row('⭐ MVP',rs.mvp,sp.mvp,10);
-    document.getElementById('pv-srb').innerHTML=html;
+    document.getElementById('pv-srb').innerHTML=
+      row('🏆 Campeón',rs.champion,sp.champion,20)+
+      row('⚽ Goleador',rs.scorer,sp.scorer,10)+
+      row('🧤 Portero',rs.keeper,sp.keeper,10)+
+      row('⭐ MVP',rs.mvp,sp.mvp,10);
   }
 }
 window.saveSpecial=async function(){
@@ -603,23 +764,37 @@ function renderAdminMatches(){
 }
 
 function adminRow(m){
+  const isKO=m.phase!=='Grupos';
+  const homeInput=isKO
+    ?`<input type="text" id="ah-${m.id}" value="${m.home}" style="flex:1;height:32px;font-size:12px;text-align:right" ${m.played?'disabled':''} oninput="updateTeam('${m.id}','home',this.value)">`
+    :`<div style="flex:1;font-size:12px;text-align:right;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${m.home}</div>`;
+  const awayInput=isKO
+    ?`<input type="text" id="aa-nm-${m.id}" value="${m.away}" style="flex:1;height:32px;font-size:12px" ${m.played?'disabled':''} oninput="updateTeam('${m.id}','away',this.value)">`
+    :`<div style="flex:1;font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${m.away}</div>`;
+  const tl=timeLabel(m.id);
   return`<div style="background:var(--bg2);border-radius:var(--r);padding:10px 12px;margin-bottom:8px">
+    ${tl?`<div style="font-size:10px;color:var(--text3);margin-bottom:4px">⏱ ${tl}</div>`:''}
     <div style="display:flex;align-items:center;gap:8px">
-      <div style="flex:1;font-size:12px;text-align:right;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${m.home}</div>
-      <input type="number" min="0" max="20" id="ah-${m.id}" value="${m.homeGoals}" class="si" ${m.played?'disabled':''} oninput="updateResult('${m.id}')">
+      ${homeInput}
+      <input type="number" min="0" max="20" id="ah-sc-${m.id}" value="${m.homeGoals}" class="si" ${m.played?'disabled':''} oninput="updateResult('${m.id}')">
       <span style="color:var(--text3);flex-shrink:0">-</span>
-      <input type="number" min="0" max="20" id="aa-${m.id}" value="${m.awayGoals}" class="si" ${m.played?'disabled':''} oninput="updateResult('${m.id}')">
-      <div style="flex:1;font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${m.away}</div>
+      <input type="number" min="0" max="20" id="aa-sc-${m.id}" value="${m.awayGoals}" class="si" ${m.played?'disabled':''} oninput="updateResult('${m.id}')">
+      ${awayInput}
       <button class="btn-sm ${m.played?'primary':''}" onclick="togglePlayed('${m.id}')">${m.played?'✓':'OK'}</button>
     </div>
   </div>`;
 }
 
+window.updateTeam=function(id,side,val){
+  const m=STATE.matches.find(x=>x.id===id);
+  if(!m)return;
+  m[side]=val;
+};
 window.updateResult=function(id){
   const m=STATE.matches.find(x=>x.id===id);
   if(!m)return;
-  m.homeGoals=document.getElementById('ah-'+id)?.value||'';
-  m.awayGoals=document.getElementById('aa-'+id)?.value||'';
+  m.homeGoals=document.getElementById('ah-sc-'+id)?.value||'';
+  m.awayGoals=document.getElementById('aa-sc-'+id)?.value||'';
 };
 window.togglePlayed=async function(id){
   const m=STATE.matches.find(x=>x.id===id);
