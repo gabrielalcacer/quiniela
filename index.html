@@ -48,6 +48,10 @@ input[type=number].si{width:50px;text-align:center;flex-shrink:0;height:34px}
 .locked-msg{font-size:11px;color:var(--d-t);background:var(--d-bg);padding:3px 8px;border-radius:var(--r);flex-shrink:0}
 .ko-locked{font-size:11px;color:var(--text3);font-style:italic}
 .match-time{font-size:10px;color:var(--text3);margin-top:2px}
+.tab-banner{width:100%;border-radius:var(--rl);margin-bottom:1rem;overflow:hidden;display:flex;align-items:center;gap:14px;padding:14px 16px}
+.tab-banner svg{flex-shrink:0}
+.tab-banner-text h4{font-size:15px;font-weight:600;margin-bottom:2px}
+.tab-banner-text p{font-size:12px;opacity:.85}
 .match-card-big{background:var(--bg2);border-radius:var(--rl);padding:12px 14px;margin-bottom:10px;border:0.5px solid var(--border)}
 .mcb-header{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:8px}
 .mcb-teams{display:flex;align-items:center;gap:6px;flex:1;min-width:0}
@@ -120,7 +124,7 @@ input[type=number].si{width:50px;text-align:center;flex-shrink:0;height:34px}
       <div class="av" id="pv-av">--</div>
       <div><div style="font-weight:500" id="pv-name">-</div><div class="muted">Mis pronósticos</div></div>
       <div style="margin-left:auto;display:flex;gap:6px">
-        <button class="btn-sm" onclick="openRules()" title="Normas"><i class="ti ti-info-circle"></i></button>
+        <button class="btn-sm" onclick="openRules()"><i class="ti ti-info-circle"></i> Normas</button>
         <button class="btn-sm" onclick="logout()">Salir</button>
       </div>
     </div>
@@ -136,10 +140,103 @@ input[type=number].si{width:50px;text-align:center;flex-shrink:0;height:34px}
       <button class="tab" onclick="pvTab(this,'pv-ranking')">Ranking</button>
       <button class="tab" onclick="pvTab(this,'pv-special')">Especiales</button>
     </div>
-    <div id="pv-picks" class="pvp"><div id="pv-ml"></div></div>
-    <div id="pv-groups" class="pvp" style="display:none"><div id="pv-gl"></div></div>
-    <div id="pv-ranking" class="pvp" style="display:none"><div id="pv-rl"></div></div>
-    <div id="pv-special" class="pvp" style="display:none">
+    <div id="pv-picks" class="pvp"><div class="tab-banner" style="background:linear-gradient(135deg,#c0392b,#e74c3c)">
+  <svg width="52" height="52" viewBox="0 0 52 52" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <!-- Luffy straw hat minimal -->
+    <ellipse cx="26" cy="18" rx="18" ry="5" fill="#f5c842" stroke="#c9962b" stroke-width="1.5"/>
+    <ellipse cx="26" cy="16" rx="12" ry="9" fill="#f5c842" stroke="#c9962b" stroke-width="1.5"/>
+    <!-- face -->
+    <circle cx="26" cy="28" r="9" fill="#f5c5a0" stroke="#c0704a" stroke-width="1.2"/>
+    <!-- scar -->
+    <path d="M30 27 Q31 29 30 31" stroke="#c0392b" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+    <!-- grin -->
+    <path d="M22 31 Q26 35 30 31" stroke="#c0392b" stroke-width="1.8" stroke-linecap="round" fill="none"/>
+    <!-- eyes determined -->
+    <ellipse cx="23" cy="27" rx="2" ry="2.5" fill="#1a1a2e"/>
+    <ellipse cx="29" cy="27" rx="2" ry="2.5" fill="#1a1a2e"/>
+    <!-- fist -->
+    <rect x="10" y="36" width="14" height="11" rx="4" fill="#f5c5a0" stroke="#c0704a" stroke-width="1.2"/>
+    <line x1="13" y1="36" x2="13" y2="47" stroke="#c0704a" stroke-width="0.8"/>
+    <line x1="16" y1="36" x2="16" y2="47" stroke="#c0704a" stroke-width="0.8"/>
+    <line x1="19" y1="36" x2="19" y2="47" stroke="#c0704a" stroke-width="0.8"/>
+    <!-- speed lines -->
+    <line x1="2" y1="40" x2="8" y2="40" stroke="rgba(255,255,255,0.5)" stroke-width="1.5" stroke-linecap="round"/>
+    <line x1="2" y1="43" x2="7" y2="43" stroke="rgba(255,255,255,0.4)" stroke-width="1" stroke-linecap="round"/>
+    <line x1="2" y1="37" x2="6" y2="37" stroke="rgba(255,255,255,0.3)" stroke-width="1" stroke-linecap="round"/>
+  </svg>
+  <div class="tab-banner-text" style="color:#fff">
+    <h4>Tus resultados</h4>
+    <p>Rellena antes de que empiece el partido</p>
+  </div>
+</div><div id="pv-ml"></div></div>
+    <div id="pv-groups" class="pvp" style="display:none"><div class="tab-banner" style="background:linear-gradient(135deg,#1a5276,#2980b9)">
+  <svg width="52" height="52" viewBox="0 0 52 52" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <!-- ocean waves -->
+    <rect x="0" y="30" width="52" height="22" rx="4" fill="#1a6fa0" opacity="0.5"/>
+    <path d="M0 32 Q6 28 12 32 Q18 36 24 32 Q30 28 36 32 Q42 36 52 32" stroke="#7ecef4" stroke-width="1.5" fill="none"/>
+    <path d="M0 37 Q8 33 16 37 Q24 41 32 37 Q40 33 52 37" stroke="#7ecef4" stroke-width="1" fill="none" opacity="0.6"/>
+    <!-- ship hull -->
+    <path d="M12 32 Q26 38 40 32 L38 26 Q26 30 14 26 Z" fill="#f5e6c8" stroke="#c9962b" stroke-width="1.2"/>
+    <!-- mast -->
+    <line x1="26" y1="10" x2="26" y2="30" stroke="#8B6914" stroke-width="2" stroke-linecap="round"/>
+    <!-- sail -->
+    <path d="M26 12 Q36 16 34 26 L26 26 Z" fill="#fff" stroke="#ddd" stroke-width="1"/>
+    <!-- flag -->
+    <path d="M26 10 L32 13 L26 16 Z" fill="#c0392b"/>
+    <!-- skull minimal on sail -->
+    <circle cx="31" cy="19" r="2.5" fill="#c0392b" opacity="0.4"/>
+  </svg>
+  <div class="tab-banner-text" style="color:#fff">
+    <h4>Clasificación de grupos</h4>
+    <p>Basada en tus picks y resultados confirmados</p>
+  </div>
+</div><div id="pv-gl"></div></div>
+    <div id="pv-ranking" class="pvp" style="display:none"><div class="tab-banner" style="background:linear-gradient(135deg,#7d6608,#d4ac0d)">
+  <svg width="52" height="52" viewBox="0 0 52 52" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <!-- three swords Zoro style -->
+    <line x1="26" y1="4" x2="26" y2="44" stroke="#e8e8e8" stroke-width="3" stroke-linecap="round"/>
+    <rect x="22" y="19" width="8" height="2.5" rx="1" fill="#c9962b"/>
+    <line x1="16" y1="8" x2="22" y2="44" stroke="#e8e8e8" stroke-width="2.5" stroke-linecap="round" transform="rotate(-12,26,26)"/>
+    <rect x="10" y="22" width="8" height="2.5" rx="1" fill="#c9962b" transform="rotate(-12,26,26)"/>
+    <line x1="36" y1="8" x2="30" y2="44" stroke="#e8e8e8" stroke-width="2.5" stroke-linecap="round" transform="rotate(12,26,26)"/>
+    <rect x="34" y="22" width="8" height="2.5" rx="1" fill="#c9962b" transform="rotate(12,26,26)"/>
+    <!-- bandana -->
+    <path d="M16 30 Q26 26 36 30" stroke="#2ecc71" stroke-width="2" fill="none" stroke-linecap="round"/>
+    <!-- medals -->
+    <circle cx="12" cy="44" r="5" fill="#FFD700" stroke="#c9962b" stroke-width="1"/>
+    <text x="12" y="47" text-anchor="middle" font-size="6" fill="#7d6608" font-weight="bold">1</text>
+    <circle cx="26" cy="46" r="4" fill="#C0C0C0" stroke="#888" stroke-width="1"/>
+    <text x="26" y="49" text-anchor="middle" font-size="6" fill="#555" font-weight="bold">2</text>
+    <circle cx="40" cy="44" r="3.5" fill="#cd7f32" stroke="#8B4513" stroke-width="1"/>
+    <text x="40" y="47" text-anchor="middle" font-size="6" fill="#4a2500" font-weight="bold">3</text>
+  </svg>
+  <div class="tab-banner-text" style="color:#fff">
+    <h4>Ranking</h4>
+    <p>¿Quién lidera la quiniela?</p>
+  </div>
+</div><div id="pv-rl"></div></div>
+    <div id="pv-special" class="pvp" style="display:none"><div class="tab-banner" style="background:linear-gradient(135deg,#4a235a,#8e44ad)">
+  <svg width="52" height="52" viewBox="0 0 52 52" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <!-- Robin flower / hands blooming -->
+    <circle cx="26" cy="26" r="10" fill="#6c3483" stroke="#a569bd" stroke-width="1"/>
+    <!-- petals -->
+    <ellipse cx="26" cy="12" rx="3.5" ry="6" fill="#f1c6f5" opacity="0.9"/>
+    <ellipse cx="26" cy="40" rx="3.5" ry="6" fill="#f1c6f5" opacity="0.9"/>
+    <ellipse cx="12" cy="26" rx="6" ry="3.5" fill="#f1c6f5" opacity="0.9"/>
+    <ellipse cx="40" cy="26" rx="6" ry="3.5" fill="#f1c6f5" opacity="0.9"/>
+    <ellipse cx="15" cy="15" rx="3" ry="5.5" fill="#d7bde2" opacity="0.8" transform="rotate(-45,15,15)"/>
+    <ellipse cx="37" cy="15" rx="3" ry="5.5" fill="#d7bde2" opacity="0.8" transform="rotate(45,37,15)"/>
+    <ellipse cx="15" cy="37" rx="3" ry="5.5" fill="#d7bde2" opacity="0.8" transform="rotate(45,15,37)"/>
+    <ellipse cx="37" cy="37" rx="3" ry="5.5" fill="#d7bde2" opacity="0.8" transform="rotate(-45,37,37)"/>
+    <!-- center star -->
+    <circle cx="26" cy="26" r="5" fill="#f5e94a"/>
+    <text x="26" y="29" text-anchor="middle" font-size="7" fill="#7d6608">★</text>
+  </svg>
+  <div class="tab-banner-text" style="color:#fff">
+    <h4>Especiales</h4>
+    <p>Campeón, goleador, portero y MVP</p>
+  </div>
+</div>
       <div class="card">
         <h3>Pronósticos especiales</h3>
         <div style="margin-bottom:1rem">
