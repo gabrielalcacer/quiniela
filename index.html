@@ -144,7 +144,8 @@ input[type=number].si{width:50px;text-align:center;flex-shrink:0;height:34px}
           <label style="font-size:12px;color:var(--text2);display:block;margin-bottom:6px">⭐ MVP del torneo <span class="badge bw">+10 pts</span></label>
           <input type="text" id="pv-mvp" placeholder="Nombre del jugador" style="width:100%">
         </div>
-        <button class="primary" onclick="saveSpecial()">Guardar especiales</button>
+        <button class="primary" onclick="saveSpecial()" id="btn-save-special">Guardar especiales</button>
+        <p id="special-closed-msg" style="display:none;margin-top:.75rem;font-size:12px;color:var(--d-t);background:var(--d-bg);padding:8px 10px;border-radius:var(--r)">🔒 El plazo para especiales cerró el 11 de junio a las 09:00h (España). Ya no se pueden modificar.</p>
       </div>
       <div class="card" id="pv-sr" style="display:none"><h3>Resultados especiales</h3><div id="pv-srb"></div></div>
     </div>
@@ -256,7 +257,7 @@ input[type=number].si{width:50px;text-align:center;flex-shrink:0;height:34px}
       <div class="pts bw">10 pts</div>
     </div>
     <hr>
-    <p style="font-size:12px;color:var(--text2);line-height:1.6">⏱ Los picks de cada partido se cierran <strong>1 hora antes</strong> del inicio. Las fases eliminatorias se desbloquean cuando el admin confirma los equipos clasificados. Los especiales se pueden modificar hasta que el admin defina los ganadores reales.</p>
+    <p style="font-size:12px;color:var(--text2);line-height:1.6">⏱ Los picks de cada partido se cierran <strong>1 hora antes</strong> del inicio. Las fases eliminatorias se desbloquean cuando el admin confirma los equipos clasificados.<br><br>🏆 Los pronósticos especiales (campeón, goleador, portero y MVP) se cierran <strong>12 horas antes</strong> del inicio del torneo: <strong>11 de junio a las 09:00 hora española</strong>. Después de esa hora no se pueden modificar.</p>
     <button class="primary" style="width:100%;margin-top:1rem" onclick="closeRules()">Entendido</button>
   </div>
 </div>
@@ -687,6 +688,16 @@ function renderSpecialPlayer(){
   document.getElementById('pv-scorer').value=sp.scorer||'';
   document.getElementById('pv-keeper').value=sp.keeper||'';
   document.getElementById('pv-mvp').value=sp.mvp||'';
+  // Lock UI if deadline passed
+  const closed=!specialsOpen();
+  ['pv-champ','pv-scorer','pv-keeper','pv-mvp'].forEach(id=>{
+    const el=document.getElementById(id);
+    if(el)el.disabled=closed;
+  });
+  const btn=document.getElementById('btn-save-special');
+  if(btn)btn.style.display=closed?'none':'block';
+  const msg=document.getElementById('special-closed-msg');
+  if(msg)msg.style.display=closed?'block':'none';
   const rs=STATE.realSpecial;
   if(rs.champion||rs.scorer||rs.keeper||rs.mvp){
     document.getElementById('pv-sr').style.display='block';
@@ -702,7 +713,16 @@ function renderSpecialPlayer(){
       row('⭐ MVP',rs.mvp,sp.mvp,10);
   }
 }
+// Especiales se cierran 12h antes del partido inaugural (11 jun 19:00 UTC = inicio - 1h)
+// 12h antes = 11 jun 07:00 UTC
+const SPECIALS_DEADLINE = new Date('2026-06-11T07:00:00Z');
+function specialsOpen(){ return Date.now() < SPECIALS_DEADLINE.getTime(); }
+
 window.saveSpecial=async function(){
+  if(!specialsOpen()){
+    alert('El plazo para pronósticos especiales ya ha cerrado (12h antes del inicio del torneo).');
+    return;
+  }
   if(!STATE.players[currentUser])return;
   if(!STATE.players[currentUser].special)STATE.players[currentUser].special={};
   STATE.players[currentUser].special.champion=document.getElementById('pv-champ').value;
