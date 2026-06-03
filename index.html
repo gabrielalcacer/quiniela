@@ -197,6 +197,11 @@ hr{border:none;border-top:0.5px solid var(--border);margin:1.25rem 0}
 
 /* ── Special fields ── */
 .special-field-group{background:var(--bg2);border-radius:var(--rl);padding:1rem;margin-bottom:.75rem;border:0.5px solid var(--border)}
+.player-selector{display:flex;flex-direction:column;gap:8px}
+.player-selector select{width:100%}
+.player-selector .team-sel{border-color:var(--navy)}
+.selected-player{font-size:13px;font-weight:600;color:var(--navy);padding:6px 10px;background:var(--i-bg);border-radius:var(--r);display:flex;align-items:center;justify-content:space-between}
+.selected-player span{color:var(--text2);font-size:11px;cursor:pointer}
 .special-field-group label{font-size:12px;font-weight:600;color:var(--text2);display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
 </style>
 </head>
@@ -300,23 +305,46 @@ hr{border:none;border-top:0.5px solid var(--border);margin:1.25rem 0}
         <div class="tab-banner-text" style="color:#fff"><h4>Especiales</h4><p>Campeón, goleador, portero y MVP · Cierre 11 jun 09:00h</p></div>
       </div>
       <div class="card">
+        <!-- CAMPEÓN -->
         <div class="special-field-group">
           <label>🏆 Campeón del mundial <span class="badge bs">+20 pts</span></label>
-          <select id="pv-champ" style="width:100%"><option value="">Sin pronosticar</option></select>
+          <div class="player-selector">
+            <select id="pv-champ" style="width:100%" class="team-sel">
+              <option value="">Selecciona un equipo...</option>
+            </select>
+          </div>
         </div>
+        <!-- GOLEADOR -->
         <div class="special-field-group">
           <label>⚽ Goleador del torneo <span class="badge bw">+10 pts</span></label>
-          <input type="text" id="pv-scorer" placeholder="Nombre del jugador" style="width:100%">
+          <div class="player-selector">
+            <select id="scorer-team" class="team-sel" onchange="loadPlayers('scorer-team','pv-scorer-sel','all')"><option value="">1. Elige el equipo...</option></select>
+            <select id="pv-scorer-sel" onchange="syncHidden('pv-scorer-sel','pv-scorer')"><option value="">2. Elige el jugador...</option></select>
+            <input type="hidden" id="pv-scorer">
+            <div id="scorer-preview" class="selected-player" style="display:none"></div>
+          </div>
         </div>
+        <!-- PORTERO -->
         <div class="special-field-group">
           <label>🧤 Mejor portero <span class="badge bw">+10 pts</span></label>
-          <input type="text" id="pv-keeper" placeholder="Nombre del portero" style="width:100%">
+          <div class="player-selector">
+            <select id="keeper-team" class="team-sel" onchange="loadPlayers('keeper-team','pv-keeper-sel','P')"><option value="">1. Elige el equipo...</option></select>
+            <select id="pv-keeper-sel" onchange="syncHidden('pv-keeper-sel','pv-keeper')"><option value="">2. Elige el portero...</option></select>
+            <input type="hidden" id="pv-keeper">
+            <div id="keeper-preview" class="selected-player" style="display:none"></div>
+          </div>
         </div>
+        <!-- MVP -->
         <div class="special-field-group">
           <label>⭐ MVP del torneo <span class="badge bw">+10 pts</span></label>
-          <input type="text" id="pv-mvp" placeholder="Nombre del jugador" style="width:100%">
+          <div class="player-selector">
+            <select id="mvp-team" class="team-sel" onchange="loadPlayers('mvp-team','pv-mvp-sel','all')"><option value="">1. Elige el equipo...</option></select>
+            <select id="pv-mvp-sel" onchange="syncHidden('pv-mvp-sel','pv-mvp')"><option value="">2. Elige el jugador...</option></select>
+            <input type="hidden" id="pv-mvp">
+            <div id="mvp-preview" class="selected-player" style="display:none"></div>
+          </div>
         </div>
-        <button class="primary" onclick="saveSpecial()" id="btn-save-special" style="width:100%">Guardar especiales</button>
+        <button class="primary" onclick="saveSpecial()" id="btn-save-special" style="width:100%;margin-top:.5rem">Guardar especiales</button>
         <p id="special-closed-msg" style="display:none;margin-top:.75rem;font-size:12px;color:var(--d-t);background:var(--d-bg);padding:8px 10px;border-radius:var(--r)">🔒 El plazo para especiales cerró el 11 de junio a las 09:00h España.</p>
       </div>
       <div class="card" id="pv-sr" style="display:none"><div style="font-size:13px;font-weight:600;margin-bottom:.75rem">Resultados especiales</div><div id="pv-srb"></div></div>
@@ -443,6 +471,297 @@ const FLAGS={
   'Inglaterra':'🏴󠁧󠁢󠁥󠁮󠁧󠁿','Croacia':'🇭🇷','Ghana':'🇬🇭','Panamá':'🇵🇦'
 };
 function flag(t){return FLAGS[t]||'🏳️';}
+
+const SQUADS = {
+  'México': {
+    P: ['Raúl Rangel', 'Guillermo Ochoa', 'Carlos Acevedo'],
+    D: ['Jorge Sánchez', 'Israel Reyes', 'César Montes', 'Johan Vásquez', 'Jesús Gallardo', 'Mateo Chávez'],
+    C: ['Erik Lira', 'Orbelín Pineda', 'Álvaro Fidalgo', 'Roberto Alvarado', 'Brian Gutiérrez', 'Luis Romo', 'Edson Álvarez', 'Obed Vargas', 'Gilberto Mora', 'Luis Chávez'],
+    F: ['César Huerta', 'Alexis Vega', 'Julián Quiñones', 'Guillermo Martínez', 'Armando González', 'Santiago Giménez', 'Raúl Jiménez'],
+  },
+  'Sudáfrica': {
+    P: ['Ronwen Williams', 'Ricardo Goss', 'Sipho Chaine'],
+    D: ['Khuliso Mudau', 'Aubrey Modiba', 'Khulumani Ndamane', 'Olwethu Makhanya', 'Bradley Cross', 'Thabang Matuludi', 'Nkosinathi Sibisi', 'Kamogelo Sebelebele', 'Ime Okon', 'Samukele Kabini', 'Mbekezeli Mbokazi'],
+    C: ['Teboho Mokoena', 'Jayden Adams', 'Thalente Mbatha', 'Sphephelo Sithole'],
+    F: ['Oswin Appollis', 'Tshepang Moremi', 'Evidence Makgopa', 'Relebohile Mofokeng', 'Lyle Foster', 'Iqraam Rayners', 'Themba Zwane', 'Thapelo Maseko'],
+  },
+  'Corea del Sur': {
+    P: ['Jo Hyeon-woo', 'Kim Seung-gyu', 'Song Bum-keun'],
+    D: ['Kim Moon-hwan', 'Kim Min-jae', 'Kim Tae-hyon', 'Park Jin-seob', 'Seol Young-woo', 'Jens Castrop', 'Lee Ki-hyuk', 'Cho Yu-min'],
+    C: ['Kim Jin-gyu', 'Bae Jun-ho', 'Paik Seung-ho', 'Yang Hyun-jun', 'Eom Ji-sung', 'Lee Kang-in', 'Lee Dong-gyeong', 'Hwang Hee-chan'],
+    F: ['Son Heung-min', 'Oh Hyeon-gyu', 'Cho Gue-sung'],
+  },
+  'Rep. Checa': {
+    P: ['Lukas Hornicek', 'Matej Kovar', 'Jindrich Stanek'],
+    D: ['Vladimir Coufal', 'David Doudera', 'Tomas Holes', 'Robin Hranac', 'Stepan Chaloupek', 'David Jurasek', 'Ladislav Krejci', 'Jaroslav Zeleny', 'David Zima'],
+    C: ['Lukas Cerv', 'Vladimir Darida', 'Lukas Provod', 'Michal Sadilek', 'Hugo Sochurek', 'Alexandr Sojka', 'Tomas Soucek', 'Pavel Sulc', 'Denis Visinsky'],
+    F: ['Adam Hlozek', 'Tomas Chory', 'Mojmir Chytil', 'Jan Kuchta', 'Patrik Schick'],
+  },
+  'Canadá': {
+    P: ['Dayne St Clair', 'Maxime Crepeau', 'Owen Goodman'],
+    D: ['Alistair Johnston', 'Derek Cornelius', 'Richie Laryea', 'Niko Sigur', 'Joel Waterman', 'Luc de Fougerolles', 'Moise Bombito', 'Alphonso Davies', 'Alfie Jones'],
+    C: ['Stephen Eustaquio', 'Ismael Kone', 'Tajon Buchanan', 'Mathieu Choiniere', 'Ali Ahmed', 'Nathan Saliba', 'Liam Millar', 'Jacob Shaffelburg', 'Jonathan Osorio'],
+    F: ['Jonathan David', 'Cyle Larin', 'Tani Oluwaseyi', 'Promise David'],
+  },
+  'Bosnia-Herz.': {
+    P: ['Nikola Vasilj', 'Martin Zlomislic', 'Osman Hadzikic'],
+    D: ['Sead Kolasinac', 'Amar Dedic', 'Nihad Mujakic', 'Nikola Katic', 'Tarik Muharemovic', 'Stjepan Radeljic', 'Dennis Hadzikadunic', 'Nidal Celik'],
+    C: ['Amir Hadziahmetovic', 'Ivan Sunjic', 'Ivan Basic', 'Dzenis Burnic', 'Ermin Mahmic', 'Benjamin Tahirovic', 'Amar Memic', 'Armin Gigovic', 'Kerim Alajbegovic', 'Esmir Bajraktarevic'],
+    F: ['Ermedin Demirovic', 'Jovo Lukic', 'Samed Bazdar', 'Haris Tabakovic', 'Edin Dzeko'],
+  },
+  'Qatar': {
+    P: ['Meshaal Barsham', 'Salah Zakaria', 'Shehab Elleithy'],
+    D: ['Boualem Khoukhi', 'Pedro Miguel', 'Sultan Al Brake', 'Bassam Al-Rawi', 'Rayyan Al-Ali', 'Issa Laye', 'Lucas Mendes', 'Homam Al-Amin'],
+    C: ['Abdulaziz Hatem', 'Assim Madibo', 'Karim Boudiaf', 'Mohammed Mannai', 'Ahmed Fathi'],
+    F: ['Almoez Ali', 'Akram Afif', 'Tahsin Mohammed', 'Edmilson Junior', 'Ahmed Al-Ganehi', 'Hassan Al-Haydos', 'Mohammed Muntari'],
+  },
+  'Suiza': {
+    P: ['Yann Sommer', 'Yvon Mvogo', 'Jonas Omlin'],
+    D: ['Manuel Akanji', 'Ricardo Rodriguez', 'Silvan Widmer', 'Fabian Schar', 'Nico Elvedi', 'Loris Benito', 'Becir Omeragic'],
+    C: ['Granit Xhaka', 'Remo Freuler', 'Xherdan Shaqiri', 'Denis Zakaria', 'Fabian Frei', 'Michel Aebischer', 'Filip Ugrinic', 'Ardon Jashari'],
+    F: ['Breel Embolo', 'Haris Seferovic', 'Noah Okafor', 'Dan Ndoye', 'Zeki Amdouni', 'Kwadwo Duah'],
+  },
+  'Brasil': {
+    P: ['Alisson Becker', 'Ederson', 'Bento Krepski'],
+    D: ['Marquinhos', 'Bremer', 'Gabriel Magalhães', 'Danilo', 'Éder Militão', 'Alex Sandro', 'Léo Ortiz', 'Guilherme Arana'],
+    C: ['Bruno Guimarães', 'Casemiro', 'Lucas Paquetá', 'Gerson', 'João Gomes', 'Andrey Santos', 'Matheus Pereira'],
+    F: ['Vinícius Júnior', 'Raphinha', 'Rodrygo', 'Endrick', 'Gabriel Martinelli', 'Gabriel Jesus', 'João Pedro', 'Richarlison', 'Neymar'],
+  },
+  'Marruecos': {
+    P: ['Yassine Bounou', 'Ahmed Reda Tagnaouti', 'Munir Mohand Mohamedi'],
+    D: ['Achraf Hakimi', 'Romain Saiss', 'Nayef Aguerd', 'Jawad El Yamiq', 'Yahya Attiyat Allah', 'Noussair Mazraoui', 'Badr Benoun'],
+    C: ['Azzedine Ounahi', 'Sofyan Amrabat', 'Bilal El Khannouss', 'Selim Amallah', 'Ilias Chair', 'Amine Harit'],
+    F: ['Hakim Ziyech', 'Youssef En-Nesyri', 'Sofiane Boufal', 'Abde Ezzalzouli', 'Ayoub El Kaabi', 'Ibrahim Diaz'],
+  },
+  'Haití': {
+    P: ['Johny Placide', 'Alexandre Pierre', 'Josué Duverger'],
+    D: ['Carlens Arcus', 'Wilguens Paugain', 'Duke Lacroix', 'Martin Expérience', 'Jean-Kévin Duverne', 'Ricardo Adé', 'Hannes Delcroix', 'Keeto Thermoncy'],
+    C: ['Leverton Pierre', 'Carl-Fred Sainte', 'Jean-Ricner Bellegarde', 'Woodensky Pierre', 'Dominique Simon'],
+    F: ['Ruben Providence', 'Josué Casimir', 'Derrick Etienne Jr.', 'Wilson Isidor', 'Duckens Nazon', 'Frantzdy Pierrot', 'Yassin Fortune', 'Lenny Joseph'],
+  },
+  'Escocia': {
+    P: ['Craig Gordon', 'Angus Gunn', 'Liam Kelly'],
+    D: ['Andrew Robertson', 'Grant Hanley', 'Jack Hendry', 'Kieran Tierney', 'Anthony Ralston', 'Scott McKenna', 'Aaron Hickey'],
+    C: ['Callum McGregor', 'John McGinn', 'Stuart Armstrong', 'Ryan Jack', 'Billy Gilmour', 'Ryan Christie', 'Kenny McLean'],
+    F: ['Lyndon Dykes', 'Che Adams', 'Scott McTominay', 'Lawrence Shankland', 'Ryan Gauld', 'Tommy Conway'],
+  },
+  'EE.UU.': {
+    P: ['Matt Turner', 'Ethan Horvath', 'Patrick Schulte'],
+    D: ['Sergino Dest', 'Miles Robinson', 'Cameron Carter-Vickers', 'Tim Ream', 'Antonee Robinson', 'Joe Scally', 'Chris Richards'],
+    C: ['Yunus Musah', 'Weston McKennie', 'Tyler Adams', 'Luca de la Torre', 'Gio Reyna', 'Christian Pulisic', 'Johnny Cardoso'],
+    F: ['Ricardo Pepi', 'Folarin Balogun', 'Josh Sargent', 'Tim Weah', 'Brandon Vazquez', 'Jesus Ferreira'],
+  },
+  'Paraguay': {
+    P: ['Roberto Fernández', 'Gastón Olveira', 'Orlando Gill'],
+    D: ['Omar Alderete', 'Gustavo Gómez', 'Júnior Alonso', 'Fabián Balbuena', 'Santiago Arzamendia', 'Robert Rojas', 'Matías Espinoza', 'Damián Bobadilla'],
+    C: ['Andrés Cubas', 'Miguel Almirón', 'Mathías Villasanti', 'Richard Sánchez', 'Diego Gómez', 'Kaku Romero'],
+    F: ['Antonio Sanabria', 'Julio Enciso', 'Óscar Ruiz', 'Adam Bareiro'],
+  },
+  'Australia': {
+    P: ['Mathew Ryan', 'Joe Gauci', 'Lawrence Thomas'],
+    D: ['Harry Souttar', 'Milos Degenek', 'Nathaniel Atkinson', 'Aziz Behich', 'Fran Karacic', 'Joel King', 'Thomas Deng'],
+    C: ['Aaron Mooy', 'Jackson Irvine', 'Riley McGree', 'Martin Boyle', 'Rayan Zebari', 'Cameron Devlin'],
+    F: ['Mathew Leckie', 'Mitchell Duke', 'Jamie Maclaren', 'Craig Goodwin', 'Marco Tilio', 'Jordan Bos'],
+  },
+  'Turquía': {
+    P: ['Mert Gunok', 'Altay Bayindir', 'Ugurcan Cakir'],
+    D: ['Zeki Celik', 'Merih Demiral', 'Caglar Soyuncu', 'Abdulkerim Bardakci', 'Ferdi Kadioglu', 'Mert Muldur', 'Ozan Kabak'],
+    C: ['Hakan Calhanoglu', 'Salih Ozcan', 'Orkun Kokcu', 'Kaan Ayhan', 'Ismail Yuksek'],
+    F: ['Kerem Akturkoglu', 'Arda Güler', 'Kenan Yildiz', 'Irfan Can Kahveci', 'Baris Alper Yilmaz', 'Yunus Akgun', 'Can Uzun'],
+  },
+  'Alemania': {
+    P: ['Manuel Neuer', 'Marc-André ter Stegen', 'Oliver Baumann'],
+    D: ['Joshua Kimmich', 'Antonio Rüdiger', 'Nico Schlotterbeck', 'Jonathan Tah', 'Maximilian Mittelstädt', 'Vitesse Raum', 'Waldemar Anton'],
+    C: ['Toni Kroos', 'Florian Wirtz', 'Jamal Musiala', 'Ilkay Gündogan', 'Leon Goretzka', 'Kai Havertz', 'Aleksandar Pavlovic'],
+    F: ['Leroy Sané', 'Thomas Müller', 'Niclas Füllkrug', 'Deniz Undav', 'Serge Gnabry', 'Tim Kleindienst'],
+  },
+  'Curazao': {
+    P: ['Eloy Room', 'Cody Lodeweges', 'Nigel Thomas'],
+    D: ['Etienne Vaessen', 'Ricardo van Rhijn', 'Karol Mykietyn', 'Leandro Bacuna', 'Cuco Martina', 'Gianluca Busio'],
+    C: ['Jürgen Locadia', 'Brandley Kuwas', 'Gervane Kastaneer', 'Tahith Chong', 'Sontje Hansen'],
+    F: ['Jeremy Antonisse', 'Kenji Gorré', 'Jearl Margaritha', 'Myron Boadu', 'Calvin Stengs', 'Deyovaisio Zeefuik'],
+  },
+  'Costa de Marfil': {
+    P: ['Yahia Fofana', 'Mohamed Koné', 'Alban Lafont'],
+    D: ['Emmanuel Agbadou', 'Ousmane Diomandé', 'Guéla Doué', 'Ghislain Konan', 'Odilon Kossounou', 'Evan Ndicka', 'Wilfried Singo', 'Clément Akpa'],
+    C: ['Seko Fofana', 'Franck Kessié', 'Ibrahim Sangaré', 'Jean Michaël Seri', 'Parfait Guiagon'],
+    F: ['Simon Adingra', 'Amad Diallo', 'Nicolas Pépé', 'Elye Wahi', 'Evann Guessand', 'Ange-Yoan Bonny', 'Yann Diomandé'],
+  },
+  'Ecuador': {
+    P: ['Hernán Galíndez', 'Alexander Domínguez', 'Wellington Ramírez'],
+    D: ['Piero Hincapié', 'Felix Torres', 'Angelo Preciado', 'Pervis Estupiñán', 'Robert Arboleda', 'Diego Palacios', 'Byron Castillo'],
+    C: ['Moisés Caicedo', 'Jhegson Méndez', 'Jeremy Sarmiento', 'Ángel Mena', 'Carlos Gruezo', 'Alan Franco'],
+    F: ['Enner Valencia', 'Gonzalo Plata', 'Kevin Rodríguez', 'Michael Estrada', 'Jordy Caicedo', 'Djorkaeff Reasco'],
+  },
+  'Países Bajos': {
+    P: ['Bart Verbruggen', 'Mark Flekken', 'Remko Pasveer'],
+    D: ['Virgil van Dijk', 'Matthijs de Ligt', 'Stefan de Vrij', 'Denzel Dumfries', 'Jurrien Timber', 'Nathan Aké', 'Lutsharel Geertruida'],
+    C: ['Frenkie de Jong', 'Tijjani Reijnders', 'Xavi Simons', 'Teun Koopmeiners', 'Ryan Gravenberch', 'Quinten Timber'],
+    F: ['Memphis Depay', 'Donyell Malen', 'Cody Gakpo', 'Wout Weghorst', 'Brian Brobbey', 'Steven Bergwijn'],
+  },
+  'Japón': {
+    P: ['Zion Suzuki', 'Keisuke Osako', 'Tomoki Hayakawa'],
+    D: ['Ko Itakura', 'Hiroki Ito', 'Takehiro Tomiyasu', 'Yukinari Sugawara', 'Shogo Taniguchi', 'Tsuyoshi Watanabe', 'Ayumu Seko'],
+    C: ['Wataru Endo', 'Daichi Kamada', 'Ritsu Doan', 'Takefusa Kubo', 'Junya Ito', 'Ao Tanaka', 'Keito Nakamura'],
+    F: ['Ayase Ueda', 'Daizen Maeda', 'Koki Ogawa', 'Kento Shiogai'],
+  },
+  'Túnez': {
+    P: ['Aymen Dahmen', 'Sabri Ben Hassine', 'Bechir Ben Said'],
+    D: ['Montassar Talbi', 'Dylan Bronn', 'Omar Rekik', 'Yan Valery', 'Ali Abdi', 'Moataz Nafati', 'Adem Arous'],
+    C: ['Ellyes Skhiri', 'Hannibal Mejbri', 'Anis Ben Slimane', 'Amine Ben Hamida', 'Rani Khedira', 'Mohamed Haj Mahmoud'],
+    F: ['Ismael Gharbi', 'Elyas Achouri', 'Firas Chaouat', 'Khalil Ayari', 'Sebastian Tounekti', 'Rayan Loumi'],
+  },
+  'Suecia': {
+    P: ['Viktor Johansson', 'Kristoffer Nordfeldt', 'Jacob Widell Zetterström'],
+    D: ['Victor Lindelöf', 'Carl Starfelt', 'Isak Hien', 'Hjalmar Ekdal', 'Emil Holm', 'Gustaf Lagerbielke', 'Gabriel Gudmundsson'],
+    C: ['Mattias Svanberg', 'Lucas Bergvall', 'Yasin Ayari', 'Ken Sema', 'Jesper Karlström', 'Besfort Zeneli'],
+    F: ['Alexander Isak', 'Viktor Gyökeres', 'Anthony Elanga', 'Alexander Bernhardsson', 'Gustaf Nilsson', 'Benjamin Nygren'],
+  },
+  'Bélgica': {
+    P: ['Thibaut Courtois', 'Senne Lammens', 'Mike Penders'],
+    D: ['Timothy Castagne', 'Zeno Debast', 'Maxim De Cuyper', 'Koni De Winter', 'Brandon Mechele', 'Thomas Meunier', 'Arthur Theate', 'Nathan Ngoy'],
+    C: ['Kevin De Bruyne', 'Amadou Onana', 'Nicolas Raskin', 'Youri Tielemans', 'Hans Vanaken', 'Axel Witsel'],
+    F: ['Charles De Ketelaere', 'Jeremy Doku', 'Romelu Lukaku', 'Dodi Lukebakio', 'Diego Moreira', 'Alexis Saelemaekers', 'Leandro Trossard', 'Matias Fernandez-Pardo'],
+  },
+  'Egipto': {
+    P: ['Mohamed El-Shenawy', 'Ahmed El-Shenawy', 'Mostafa Shobeir'],
+    D: ['Ahmed Hegazi', 'Omar Kamal', 'Akram Tawfik', 'Mohamed Hamdi', 'Mahmoud Hamdi', 'Ayman Ashraf', 'Ahmed Sayed'],
+    C: ['Mohamed Elneny', 'Tarek Hamed', 'Amr El-Sulaya', 'Ahmed Sayed Zizo', 'Mahmoud Trezeguet', 'Omar Marmoush'],
+    F: ['Mohamed Salah', 'Mostafa Mohamed', 'Mohamed Sherif', 'Ramadan Sobhi', 'Omar Marmoush', 'Ziad Ioubi'],
+  },
+  'Irán': {
+    P: ['Alireza Beiranvand', 'Hossein Hosseini', 'Payam Niazmand'],
+    D: ['Shoja Khalilzadeh', 'Majid Hosseini', 'Morteza Pouraliganji', 'Milad Mohammadi', 'Ramin Rezaeian', 'Sadegh Moharrami', 'Ehsan Pahlevan'],
+    C: ['Saeid Ezatolahi', 'Ali Gholizadeh', 'Mehdi Torabi', 'Ahmad Nourollahi', 'Vahid Amiri', 'Alireza Jahanbakhsh'],
+    F: ['Sardar Azmoun', 'Mehdi Taremi', 'Karim Ansarifard', 'Saman Ghoddos', 'Allahyar Sayyadmanesh'],
+  },
+  'Nueva Zelanda': {
+    P: ['Max Crocombe', 'Alex Paulsen', 'Michael Woud'],
+    D: ['Tyler Bindon', 'Michael Boxall', 'Liberato Cacace', 'Francis de Vries', 'Callan Elliot', 'Tim Payne', 'Nando Pijnaker', 'Tommy Smith'],
+    C: ['Joe Bell', 'Matt Garbett', 'Eli Just', 'Callum McCowatt', 'Ben Old', 'Alex Rufer', 'Marko Stamenic', 'Sarpreet Singh', 'Ryan Thomas'],
+    F: ['Kosta Barbarouses', 'Chris Wood', 'Ben Waine', 'Jesse Randall'],
+  },
+  'España': {
+    P: ['Unai Simón', 'David Raya', 'Joan García'],
+    D: ['Pau Cubarsí', 'Eric García', 'Aymeric Laporte', 'Marc Cucurella', 'Alejandro Balde', 'Marc Pubill', 'Dani Carvajal', 'Martín Zubimendi'],
+    C: ['Pedri', 'Gavi', 'Mikel Merino', 'Fabián Ruiz', 'Dani Olmo', 'Álex Baena', 'Fermín López'],
+    F: ['Lamine Yamal', 'Nico Williams', 'Mikel Oyarzabal', 'Joselu', 'Álvaro Morata', 'Ferran Torres'],
+  },
+  'Cabo Verde': {
+    P: ['Vozinha', 'Marcelo Boiça', 'Patrick Tamás'],
+    D: ['Roberto Lopes', 'Dylan Tavares', 'Zé Lopes', 'Bryan Tchissola', 'Diney', 'Steven Fortes'],
+    C: ['Ryan Mendes', 'Jamiro Monteiro', 'Stopira', 'Sergio Rodrigues', 'Kenny Rocha'],
+    F: ['Garry Rodrigues', 'Jovane Cabral', 'Héldon', 'Vagner', 'Willy Semedo'],
+  },
+  'Arabia Saudita': {
+    P: ['Mohammed Al-Owais', 'Fawaz Al-Qarni', 'Nawaf Al-Aqidi'],
+    D: ['Sultan Al-Ghannam', 'Ali Al-Bulayhi', 'Abdulelah Al-Amri', 'Hassan Tambakti', 'Saud Abdulhamid', 'Ziyad Al-Sahafi'],
+    C: ['Sami Al-Najei', 'Riyadh Sharahili', 'Mohamed Kanno', 'Nasser Al-Dawsari', 'Saleh Al-Shehri', 'Abdulrahman Al-Aboud'],
+    F: ['Firas Al-Buraikan', 'Abdullah Radif', 'Ahmed Sharahili', 'Salem Al-Dawsari', 'Hattan Bahebri'],
+  },
+  'Uruguay': {
+    P: ['Sergio Rochet', 'Sebastian Sosa', 'Augustin Rossi'],
+    D: ['José María Giménez', 'Ronald Araújo', 'Mathías Olivera', 'Facundo González', 'Sebastián Cáceres', 'Guillermo Varela', 'Matías Vina'],
+    C: ['Federico Valverde', 'Rodrigo Bentancur', 'Lucas Torreira', 'Manuel Ugarte', 'Nicolás De La Cruz', 'Matías Vecino', 'Giorgian De Arrascaeta'],
+    F: ['Darwin Núñez', 'Luis Suárez', 'Edinson Cavani', 'Facundo Torres', 'Luciano Rodríguez', 'Brian Rodríguez'],
+  },
+  'Francia': {
+    P: ['Mike Maignan', 'Alphonse Areola', 'Brice Samba'],
+    D: ['William Saliba', 'Dayot Upamecano', 'Jules Koundé', 'Theo Hernández', 'Benjamin Pavard', 'Lucas Hernández', 'Jonathan Clauss'],
+    C: ['Aurélien Tchouaméni', 'Adrien Rabiot', 'Antoine Griezmann', 'Youssouf Fofana', 'Warren Zaïre-Emery'],
+    F: ['Kylian Mbappé', 'Ousmane Dembélé', 'Marcus Thuram', 'Kingsley Coman', 'Randal Kolo Muani', 'Bradley Barcola'],
+  },
+  'Senegal': {
+    P: ['Édouard Mendy', 'Seny Dieng', 'Alfred Gomis'],
+    D: ['Kalidou Koulibaly', 'Abdou Diallo', 'Formose Mendy', 'Ismail Jakobs', 'Pape Abou Cissé', 'Youssouf Sabaly'],
+    C: ['Idrissa Gueye', 'Cheikhou Kouyaté', 'Nampalys Mendy', 'Pape Guèye', 'Lamine Camara', 'Pathé Ciss'],
+    F: ['Sadio Mané', 'Ismaïla Sarr', 'Habib Diallo', 'Nicolas Jackson', 'Boulaye Dia', 'Iliman Ndiaye', 'Krepin Diatta'],
+  },
+  'Noruega': {
+    P: ['Rune Almenning Jarstein', 'Ørjan Nyland', 'Jørgen Strand Larsen'],
+    D: ['Leo Skiri Østigård', 'Andreas Hanche-Olsen', 'Birger Meling', 'Kristian Thorstvedt', 'Stefan Strandberg', 'Marcus Holmgren Pedersen'],
+    C: ['Sander Berge', 'Martin Ødegaard', 'Mathias Normann', 'Fredrik Aursnes', 'Morten Thorsby'],
+    F: ['Erling Haaland', 'Alexander Sørloth', 'Joshua King', 'Antonio Nusa', 'Ola Solbakken', 'Oscar Bobb'],
+  },
+  'Irak': {
+    P: ['Fahad Talib', 'Jalal Hassan', 'Martyn Reuser'],
+    D: ['Ali Adnan', 'Rebin Sulaka', 'Saman Shway', 'Ahmed Ibrahim', 'Mustafa Nadhim', 'Amjed Attwan'],
+    C: ['Safaa Hadi', 'Bashar Rasan', 'Aymen Hussein', 'Mohanad Abdulraheem', 'Ibrahim Bayesh'],
+    F: ['Ayman Hussein', 'Alaa Abbas', 'Moatasem Amin', 'Hassan Abdulkareem', 'Ahmed Yasin'],
+  },
+  'Argentina': {
+    P: ['Emiliano Martínez', 'Geronimo Rulli', 'Walter Benítez'],
+    D: ['Cristian Romero', 'Nicolás Otamendi', 'Lisandro Martínez', 'Leonardo Balerdi', 'Nahuel Molina', 'Gonzalo Montiel', 'Nicolás Tagliafico', 'Valentín Barco', 'Facundo Medina'],
+    C: ['Rodrigo De Paul', 'Alexis Mac Allister', 'Enzo Fernández', 'Leandro Paredes', 'Exequiel Palacios', 'Thiago Almada', 'Nico Paz', 'Giovani Lo Celso'],
+    F: ['Lionel Messi', 'Julián Álvarez', 'Lautaro Martínez', 'Alejandro Garnacho', 'Nicolás González', 'Valentín Carboni'],
+  },
+  'Argelia': {
+    P: ['Rais M\'Bolhi', 'Alexandre Oukidja', 'Youcef Gassouah'],
+    D: ['Riyad Mahrez', 'Djamel Benlamri', 'Aïssa Mandi', 'Mehdi Zeffane', 'Yacine Brahimi', 'Abdelkader Bedrane'],
+    C: ['Sofiane Feghouli', 'Adlène Guedioura', 'Haris Belkebla', 'Mehdi Tahrat', 'Billal Brahimi'],
+    F: ['Islam Slimani', 'Youcef Atal', 'Baghdad Bounedjah', 'Adem Zorgane', 'Hossam Aouar'],
+  },
+  'Austria': {
+    P: ['Patrick Pentz', 'Heinz Lindner', 'Alexander Schlager'],
+    D: ['David Alaba', 'Phillipp Lienhart', 'Stefan Posch', 'Maximilian Wöber', 'Andreas Ulmer', 'Flavius Daniliuc'],
+    C: ['Marcel Sabitzer', 'Florian Grillitsch', 'Xaver Schlager', 'Nicolas Seiwald', 'Konrad Laimer', 'Christoph Baumgartner'],
+    F: ['Marko Arnautovic', 'Michael Gregoritsch', 'Patrick Wimmer', 'Louis Schaub', 'Sasa Kalajdzic'],
+  },
+  'Jordania': {
+    P: ['Yazeed Abo Layla', 'Mahmoud Shuqair', 'Anas Ghorab'],
+    D: ['Badr Al-Rawabdeh', 'Khaled Al-Qudah', 'Ahmad Saleh', 'Moath Abu Adailah', 'Osama Al-Rashdan'],
+    C: ['Musa Al-Tamari', 'Yaser Al-Naimat', 'Baha Faisal', 'Mahmoud Al-Mardi', 'Omar Nawaf', 'Yazan Al-Naimat'],
+    F: ['Ahmed Hayel', 'Mousa Al-Taamari', 'Zaid Al-Hamoud', 'Hesham Abu Ali'],
+  },
+  'Portugal': {
+    P: ['Diogo Costa', 'José Sá', 'Rui Patrício'],
+    D: ['Rúben Dias', 'Pepe', 'Nuno Mendes', 'João Cancelo', 'Diogo Dalot', 'Gonçalo Inácio', 'Toti Gomes'],
+    C: ['Bruno Fernandes', 'João Palhinha', 'Vitinha', 'Bernardo Silva', 'Rúben Neves', 'João Neves', 'Otávio'],
+    F: ['Cristiano Ronaldo', 'Rafael Leão', 'Pedro Neto', 'Francisco Conceição', 'João Félix', 'Gonçalo Ramos', 'Trincão'],
+  },
+  'Colombia': {
+    P: ['Camilo Vargas', 'David Ospina', 'Kevin Mier'],
+    D: ['Santiago Arias', 'Dávinson Sánchez', 'Yerry Mina', 'Johan Mojica', 'Daniel Muñoz', 'Carlos Cuesta', 'Jhon Lucumí'],
+    C: ['Wilmar Barrios', 'Gustavo Cuéllar', 'Mateus Uribe', 'Richard Ríos', 'Juan Cuadrado', 'James Rodríguez', 'Jhon Arias'],
+    F: ['Luis Díaz', 'Radamel Falcao', 'Rafael Santos Borré', 'Jhon Córdoba', 'Duván Zapata', 'Cucho Hernández'],
+  },
+  'Uzbekistán': {
+    P: ['Ulugbek Nishonov', 'Eldor Shomurodov', 'Abbosbek Fayzullayev'],
+    D: ['Sanjar Tursunov', 'Dostonbek Khamdamov', 'Sherzod Nasrullayev', 'Husayn Norchaev', 'Jasur Yakhshiboyev'],
+    C: ['Otabek Shukurov', 'Bekhruz Tursunov', 'Jakhongir Sidikov', 'Umidjon Malikov', 'Khojiakbar Alijonov'],
+    F: ['Eldor Shomurodov', 'Javlon Guseynov', 'Islom Tukhtakhujaev', 'Bobur Abdixoliqov'],
+  },
+  'R.D. Congo': {
+    P: ['Joël Kiassumbua', 'Ley Matampi', 'Dimitri Bertaud'],
+    D: ['Axel Tuanzebe', 'Aaron Wan-Bissaka', 'Chancel Mbemba', 'Marcel Tisserand', 'Arthur Masuaku', 'Jordan Ikoko', 'Gael Kakuta'],
+    C: ['Silas Katompa', 'Noah Sadiki', 'Edo Kayembe', 'Yoane Wissa', 'Paul-José Mpoku'],
+    F: ['Cédric Bakambu', 'Dieumerci Mbokani', 'Jonathan David (ineligible)', 'Yannick Bolasie', 'Emmanuel Lathomme'],
+  },
+  'Inglaterra': {
+    P: ['Jordan Pickford', 'Dean Henderson', 'James Trafford'],
+    D: ['Kyle Walker', 'John Stones', 'Marc Guehi', 'Ben White', 'Trent Alexander-Arnold', 'Luke Shaw', 'Ezri Konsa'],
+    C: ['Jude Bellingham', 'Declan Rice', 'Conor Gallagher', 'Kobbie Mainoo', 'Lewis Hall', 'Adam Wharton'],
+    F: ['Harry Kane', 'Bukayo Saka', 'Jack Grealish', 'Ollie Watkins', 'Jarrod Bowen', 'Anthony Gordon', 'Eberechi Eze'],
+  },
+  'Croacia': {
+    P: ['Dominik Livaković', 'Ivica Ivušić', 'Nediljko Labrović'],
+    D: ['Joško Gvardiol', 'Josip Šutalo', 'Duje Ćaleta-Car', 'Josip Juranović', 'Borna Sosa', 'Martin Erlić', 'Domagoj Vida'],
+    C: ['Luka Modrić', 'Mateo Kovačić', 'Marcelo Brozović', 'Mario Pašalić', 'Lovro Majer', 'Luka Sucic'],
+    F: ['Ivan Perišić', 'Bruno Petković', 'Andrej Kramarić', 'Marko Livaja', 'Ante Budimir', 'Petar Musa'],
+  },
+  'Ghana': {
+    P: ['Lawrence Ati-Zigi', 'Benjamin Asare', 'Joseph Anang'],
+    D: ['Baba Abdul Rahman', 'Gideon Mensah', 'Alidu Seidu', 'Abdul Mumin', 'Jonas Adjetey', 'Jerome Opoku', 'Kojo Oppong Peprah'],
+    C: ['Thomas Partey', 'Elisha Owusu', 'Augustine Boakye', 'Abdul Fatawu Issahaku', 'Caleb Yirenkyi'],
+    F: ['Iñaki Williams', 'Jordan Ayew', 'Kamal Deen Sulemana', 'Antoine Semenyo', 'Ernest Nuamah', 'Christopher Bonsu Baah'],
+  },
+  'Panamá': {
+    P: ['Luis Mejía', 'Orlando Mosquera', 'Rodrigo Montoya'],
+    D: ['Fidel Escobar', 'Andrés Andrade', 'Édgar Yoel Bárcenas', 'Harold Cummings', 'Martín Olave', 'Ronaldo Walker'],
+    C: ['Aníbal Godoy', 'Adalberto Carrasquilla', 'Éric Davis', 'Armando Cooper', 'Rodolfo Pitti'],
+    F: ['Ismael Díaz', 'Cecilio Waterman', 'Alfredo Stephens', 'Alberto Quintero', 'José Fajardo', 'Rolando Blackburn'],
+  },
+};
 
 const GROUPS={A:['México','Sudáfrica','Corea del Sur','Rep. Checa'],B:['Canadá','Bosnia-Herz.','Qatar','Suiza'],C:['Brasil','Marruecos','Haití','Escocia'],D:['EE.UU.','Paraguay','Australia','Turquía'],E:['Alemania','Curazao','Costa de Marfil','Ecuador'],F:['Países Bajos','Japón','Túnez','Suecia'],G:['Bélgica','Egipto','Irán','Nueva Zelanda'],H:['España','Cabo Verde','Arabia Saudita','Uruguay'],I:['Francia','Senegal','Noruega','Irak'],J:['Argentina','Argelia','Austria','Jordania'],K:['Portugal','Colombia','Uzbekistán','R.D. Congo'],L:['Inglaterra','Croacia','Ghana','Panamá']};
 const ALL_TEAMS=Object.values(GROUPS).flat();
@@ -842,14 +1161,20 @@ function renderGroupStandings(){
 
 function renderSpecialPlayer(){
   const sp=STATE.players[currentUser]?.special||{};
-  const sel=document.getElementById('pv-champ');
-  if(sel.options.length<=1)ALL_TEAMS.forEach(t=>sel.add(new Option(`${flag(t)} ${t}`,t)));
-  sel.value=sp.champion||'';
-  document.getElementById('pv-scorer').value=sp.scorer||'';
-  document.getElementById('pv-keeper').value=sp.keeper||'';
-  document.getElementById('pv-mvp').value=sp.mvp||'';
+  populateTeamSelectors();
+  // Champion
+  const champSel=document.getElementById('pv-champ');
+  if(champSel) champSel.value=sp.champion||'';
+  // Scorer
+  if(sp.scorer) restorePlayerSelector('scorer-team','pv-scorer-sel','pv-scorer','all',sp.scorer);
+  // Keeper
+  if(sp.keeper) restorePlayerSelector('keeper-team','pv-keeper-sel','pv-keeper','P',sp.keeper);
+  // MVP
+  if(sp.mvp) restorePlayerSelector('mvp-team','pv-mvp-sel','pv-mvp','all',sp.mvp);
   const closed=!specialsOpen();
-  ['pv-champ','pv-scorer','pv-keeper','pv-mvp'].forEach(id=>{const el=document.getElementById(id);if(el)el.disabled=closed;});
+  ['pv-champ','scorer-team','pv-scorer-sel','keeper-team','pv-keeper-sel','mvp-team','pv-mvp-sel'].forEach(id=>{
+    const el=document.getElementById(id);if(el)el.disabled=closed;
+  });
   const btn=document.getElementById('btn-save-special');if(btn)btn.style.display=closed?'none':'block';
   const msg=document.getElementById('special-closed-msg');if(msg)msg.style.display=closed?'block':'none';
   const rs=STATE.realSpecial;
@@ -859,14 +1184,94 @@ function renderSpecialPlayer(){
     document.getElementById('pv-srb').innerHTML=row('🏆 Campeón',rs.champion,sp.champion,20)+row('⚽ Goleador',rs.scorer,sp.scorer,10)+row('🧤 Portero',rs.keeper,sp.keeper,10)+row('⭐ MVP',rs.mvp,sp.mvp,10);
   }
 }
+// ── Two-step player selectors ──
+function populateTeamSelectors(){
+  const teams = Object.keys(SQUADS).sort();
+  const ids = ['scorer-team','keeper-team','mvp-team'];
+  ids.forEach(id=>{
+    const sel = document.getElementById(id);
+    if(!sel || sel.options.length > 1) return;
+    teams.forEach(t => sel.add(new Option(flag(t)+' '+t, t)));
+  });
+  // Champion selector: just teams (no players needed)
+  const champSel = document.getElementById('pv-champ');
+  if(champSel && champSel.options.length <= 1){
+    teams.forEach(t => champSel.add(new Option(flag(t)+' '+t, t)));
+  }
+}
+
+window.loadPlayers=function(teamSelId, playerSelId, role){
+  const team = document.getElementById(teamSelId)?.value;
+  const playerSel = document.getElementById(playerSelId);
+  if(!playerSel) return;
+  playerSel.innerHTML = '<option value="">2. Elige el jugador...</option>';
+  if(!team || !SQUADS[team]) return;
+  const squad = SQUADS[team];
+  const posLabels = {P:'Porteros',D:'Defensas',C:'Centrocampistas',F:'Delanteros'};
+  if(role === 'all'){
+    ['P','D','C','F'].forEach(r => {
+      if(!squad[r]?.length) return;
+      const og = document.createElement('optgroup');
+      og.label = posLabels[r];
+      squad[r].forEach(p => og.appendChild(new Option(p, p)));
+      playerSel.appendChild(og);
+    });
+  } else {
+    // only porteros
+    (squad[role]||[]).forEach(p => playerSel.add(new Option(p, p)));
+  }
+};
+
+window.syncHidden=function(selId, hiddenId){
+  const val = document.getElementById(selId)?.value || '';
+  const hidden = document.getElementById(hiddenId);
+  if(hidden) hidden.value = val;
+  // show preview
+  const previewMap = {'pv-scorer-sel':'scorer-preview','pv-keeper-sel':'keeper-preview','pv-mvp-sel':'mvp-preview'};
+  const previewId = previewMap[selId];
+  if(previewId){
+    const prev = document.getElementById(previewId);
+    if(prev){
+      if(val){
+        const team = document.getElementById(selId.replace('-sel','').replace('pv-','').replace('scorer','scorer').replace('keeper','keeper').replace('mvp','mvp')+'-team')?.value || '';
+        prev.style.display='flex';
+        prev.innerHTML = `<strong>${val}</strong> <span style="color:var(--text2);font-size:11px">${flag(team)} ${team}</span>`;
+      } else {
+        prev.style.display='none';
+      }
+    }
+  }
+};
+
+function restorePlayerSelector(teamSelId, playerSelId, hiddenId, role, savedValue){
+  if(!savedValue) return;
+  // Figure out which team this player belongs to
+  let foundTeam = null;
+  for(const [team, squad] of Object.entries(SQUADS)){
+    const allPlayers = role === 'all'
+      ? [...(squad.P||[]),...(squad.D||[]),...(squad.C||[]),...(squad.F||[])]
+      : (squad[role]||[]);
+    if(allPlayers.includes(savedValue)){ foundTeam=team; break; }
+  }
+  if(!foundTeam) return;
+  // Set team
+  const teamSel = document.getElementById(teamSelId);
+  if(teamSel){ teamSel.value = foundTeam; window.loadPlayers(teamSelId, playerSelId, role); }
+  // Set player
+  setTimeout(()=>{
+    const pSel = document.getElementById(playerSelId);
+    if(pSel){ pSel.value = savedValue; window.syncHidden(playerSelId, hiddenId); }
+  }, 50);
+}
+
 window.saveSpecial=async function(){
   if(!specialsOpen()){alert('El plazo para especiales ya ha cerrado.');return;}
   if(!STATE.players[currentUser])return;
   if(!STATE.players[currentUser].special)STATE.players[currentUser].special={};
   STATE.players[currentUser].special.champion=document.getElementById('pv-champ').value;
-  STATE.players[currentUser].special.scorer=document.getElementById('pv-scorer').value;
-  STATE.players[currentUser].special.keeper=document.getElementById('pv-keeper').value;
-  STATE.players[currentUser].special.mvp=document.getElementById('pv-mvp').value;
+  STATE.players[currentUser].special.scorer=document.getElementById('pv-scorer')?.value||document.getElementById('pv-scorer-sel')?.value||'';
+  STATE.players[currentUser].special.keeper=document.getElementById('pv-keeper')?.value||document.getElementById('pv-keeper-sel')?.value||'';
+  STATE.players[currentUser].special.mvp=document.getElementById('pv-mvp')?.value||document.getElementById('pv-mvp-sel')?.value||'';
   await savePlayer(currentUser);toast('✅ Especiales guardados');renderPlayer();
 };
 
