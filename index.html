@@ -331,7 +331,7 @@ hr{border:none;border-top:0.5px solid var(--border);margin:1.25rem 0}
         <div class="special-field-group">
           <label>🏆 Campeón del mundial <span class="badge bs">+20 pts</span></label>
           <div class="player-selector">
-            <select id="pv-champ" style="width:100%" class="team-sel">
+            <select id="pv-champ" style="width:100%" class="team-sel" onchange="champChanged()">
               <option value="">Selecciona un equipo...</option>
             </select>
           </div>
@@ -1242,6 +1242,15 @@ function renderSpecialPlayer(){
   }
 }
 // ── Two-step player selectors ──
+window.champChanged=function(){
+  const sel=document.getElementById('pv-champ');
+  if(sel && sel.value && currentUser && STATE.players[currentUser]){
+    if(!STATE.players[currentUser].special) STATE.players[currentUser].special={};
+    // Store immediately in local state (still need to press Guardar to persist)
+    STATE.players[currentUser].special._champPending = sel.value;
+  }
+};
+
 function populateTeamSelectors(){
   const teams = Object.keys(SQUADS).sort();
   const ids = ['scorer-team','keeper-team','mvp-team'];
@@ -1250,10 +1259,13 @@ function populateTeamSelectors(){
     if(!sel || sel.options.length > 1) return;
     teams.forEach(t => sel.add(new Option(flag(t)+' '+t, t)));
   });
-  // Champion selector: just teams (no players needed)
+  // Champion selector: always rebuild to ensure correct options
   const champSel = document.getElementById('pv-champ');
-  if(champSel && champSel.options.length <= 1){
+  if(champSel){
+    const currentVal = champSel.value;
+    champSel.innerHTML = '<option value="">Selecciona un equipo...</option>';
     teams.forEach(t => champSel.add(new Option(flag(t)+' '+t, t)));
+    if(currentVal) champSel.value = currentVal;
   }
 }
 
@@ -1325,9 +1337,15 @@ window.saveSpecial=async function(){
   if(!specialsOpen()){alert('El plazo para especiales ya ha cerrado.');return;}
   if(!STATE.players[currentUser])return;
   if(!STATE.players[currentUser].special)STATE.players[currentUser].special={};
-  const rawChamp = document.getElementById('pv-champ').value;
-  // Store just the team name, no flag prefix
-  STATE.players[currentUser].special.champion = rawChamp;
+  // Read champion from selector
+  const champSel = document.getElementById('pv-champ');
+  const rawChamp = champSel ? champSel.value : '';
+  // Fallback: if selector is empty but we have a pending value, use that
+  const finalChamp = rawChamp || STATE.players[currentUser].special?._champPending || '';
+  STATE.players[currentUser].special.champion = finalChamp;
+  // Clear pending
+  if(STATE.players[currentUser].special._champPending) 
+    delete STATE.players[currentUser].special._champPending;
   STATE.players[currentUser].special.scorer=document.getElementById('pv-scorer')?.value||document.getElementById('pv-scorer-sel')?.value||'';
   STATE.players[currentUser].special.keeper=document.getElementById('pv-keeper')?.value||document.getElementById('pv-keeper-sel')?.value||'';
   STATE.players[currentUser].special.mvp=document.getElementById('pv-mvp')?.value||document.getElementById('pv-mvp-sel')?.value||'';
