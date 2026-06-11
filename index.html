@@ -1007,7 +1007,7 @@ function calcPts(player){
     else if(rW===pW){total+=3;winners++;}
   });
   const sp=STATE.players[player]?.special||{},rs=STATE.realSpecial;
-  if(rs.champion&&sp.champion===rs.champion)total+=20;
+  if(rs.champion&&sp.champion&&sp.champion.trim().toLowerCase()===rs.champion.trim().toLowerCase())total+=20;
   if(rs.scorer&&sp.scorer&&sp.scorer.trim().toLowerCase()===rs.scorer.trim().toLowerCase())total+=10;
   if(rs.keeper&&sp.keeper&&sp.keeper.trim().toLowerCase()===rs.keeper.trim().toLowerCase())total+=10;
   if(rs.mvp&&sp.mvp&&sp.mvp.trim().toLowerCase()===rs.mvp.trim().toLowerCase())total+=10;
@@ -1208,9 +1208,20 @@ function renderGroupStandings(){
 function renderSpecialPlayer(){
   const sp=STATE.players[currentUser]?.special||{};
   populateTeamSelectors();
-  // Champion
+  // Champion — set value after options are populated
   const champSel=document.getElementById('pv-champ');
-  if(champSel) champSel.value=sp.champion||'';
+  if(champSel){
+    // If saved value has a flag prefix (old format), extract just the team name
+    let champVal = sp.champion||'';
+    // Check if value exists as an option, if not try stripping flag
+    const optVals = Array.from(champSel.options).map(o=>o.value);
+    if(champVal && !optVals.includes(champVal)){
+      // Try to find matching team name (in case stored with flag)
+      const found = ALL_TEAMS.find(t => champVal.includes(t));
+      if(found) champVal = found;
+    }
+    champSel.value = champVal;
+  }
   // Scorer
   if(sp.scorer) restorePlayerSelector('scorer-team','pv-scorer-sel','pv-scorer','all',sp.scorer);
   // Keeper
@@ -1314,7 +1325,9 @@ window.saveSpecial=async function(){
   if(!specialsOpen()){alert('El plazo para especiales ya ha cerrado.');return;}
   if(!STATE.players[currentUser])return;
   if(!STATE.players[currentUser].special)STATE.players[currentUser].special={};
-  STATE.players[currentUser].special.champion=document.getElementById('pv-champ').value;
+  const rawChamp = document.getElementById('pv-champ').value;
+  // Store just the team name, no flag prefix
+  STATE.players[currentUser].special.champion = rawChamp;
   STATE.players[currentUser].special.scorer=document.getElementById('pv-scorer')?.value||document.getElementById('pv-scorer-sel')?.value||'';
   STATE.players[currentUser].special.keeper=document.getElementById('pv-keeper')?.value||document.getElementById('pv-keeper-sel')?.value||'';
   STATE.players[currentUser].special.mvp=document.getElementById('pv-mvp')?.value||document.getElementById('pv-mvp-sel')?.value||'';
