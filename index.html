@@ -197,6 +197,20 @@ hr{border:none;border-top:0.5px solid var(--border);margin:1.25rem 0}
 
 /* ── Special fields ── */
 .special-field-group{background:var(--bg2);border-radius:var(--rl);padding:1rem;margin-bottom:.75rem;border:0.5px solid var(--border)}
+.player-modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:110;align-items:flex-start;justify-content:center;padding:1rem;overflow-y:auto}
+.player-modal-overlay.open{display:flex}
+.player-modal-box{background:var(--bg);border-radius:var(--rl);padding:1.5rem;width:100%;max-width:560px;border:0.5px solid var(--border);margin:auto;box-shadow:0 8px 32px rgba(0,0,0,.2)}
+.picks-grid{display:flex;flex-direction:column;gap:6px}
+.pick-row-view{display:flex;align-items:center;gap:8px;background:var(--bg2);border-radius:var(--r);padding:8px 10px;font-size:12px}
+.pick-row-view .teams{flex:1;font-weight:500}
+.pick-row-view .pick-val{font-weight:700;color:var(--navy);min-width:40px;text-align:center}
+.pick-row-view .pick-empty{color:var(--text3);font-style:italic;min-width:40px;text-align:center}
+.pick-row-view .pts-chip{font-size:11px;padding:2px 6px;border-radius:10px;flex-shrink:0}
+.quiniellas-tab .qrow{background:var(--bg);border:0.5px solid var(--border);border-radius:var(--rl);padding:12px 14px;margin-bottom:8px;cursor:pointer;transition:box-shadow .15s}
+.quiniellas-tab .qrow:hover{box-shadow:0 2px 12px rgba(0,0,0,.1)}
+.quiniellas-tab .qrow-header{display:flex;align-items:center;gap:10px}
+.quiniellas-tab .qrow-body{display:none;margin-top:10px;border-top:0.5px solid var(--border);padding-top:10px}
+.quiniellas-tab .qrow-body.open{display:block}
 .player-selector{display:flex;flex-direction:column;gap:8px}
 .player-selector select{width:100%}
 .player-selector .team-sel{border-color:var(--navy)}
@@ -276,6 +290,7 @@ hr{border:none;border-top:0.5px solid var(--border);margin:1.25rem 0}
       <button class="tab active" onclick="pvTab(this,'pv-picks')"><i class="ti ti-ball-football"></i> Resultados</button>
       <button class="tab" onclick="pvTab(this,'pv-groups')"><i class="ti ti-layout-grid"></i> Grupos</button>
       <button class="tab" onclick="pvTab(this,'pv-ranking')"><i class="ti ti-trophy"></i> Ranking</button>
+      <button class="tab" onclick="pvTab(this,'pv-quiniellas')"><i class="ti ti-eye"></i> Quinielas</button>
       <button class="tab" onclick="pvTab(this,'pv-special')"><i class="ti ti-star"></i> Especiales</button>
     </div>
     <div id="pv-picks" class="pvp">
@@ -292,6 +307,13 @@ hr{border:none;border-top:0.5px solid var(--border);margin:1.25rem 0}
       </div>
       <div id="pv-gl"></div>
     </div>
+    <div id="pv-quiniellas" class="pvp quiniellas-tab" style="display:none">
+      <div class="tab-banner" style="background:linear-gradient(135deg,#1a5276,#2471a3)">
+        <svg width="52" height="52" viewBox="0 0 52 52" fill="none"><circle cx="26" cy="20" r="10" fill="#aed6f1" stroke="#2980b9" stroke-width="1.5"/><ellipse cx="26" cy="20" rx="5" ry="10" fill="none" stroke="#2980b9" stroke-width="1"/><line x1="16" y1="20" x2="36" y2="20" stroke="#2980b9" stroke-width="1"/><path d="M12 38 Q20 30 26 28 Q32 30 40 38" fill="#2471a3" stroke="#1a5276" stroke-width="1"/></svg>
+        <div class="tab-banner-text" style="color:#fff"><h4>Quinielas</h4><p>Picks de todos los participantes (partidos cerrados)</p></div>
+      </div>
+      <div id="pv-quiniellas-list"></div>
+    </div>
     <div id="pv-ranking" class="pvp" style="display:none">
       <div class="tab-banner" style="background:linear-gradient(135deg,#7d6608,#d4ac0d)">
         <svg width="52" height="52" viewBox="0 0 52 52" fill="none"><line x1="26" y1="4" x2="26" y2="44" stroke="#e8e8e8" stroke-width="3" stroke-linecap="round"/><rect x="22" y="19" width="8" height="2.5" rx="1" fill="#c9962b"/><line x1="16" y1="8" x2="22" y2="44" stroke="#e8e8e8" stroke-width="2.5" stroke-linecap="round" transform="rotate(-12,26,26)"/><line x1="36" y1="8" x2="30" y2="44" stroke="#e8e8e8" stroke-width="2.5" stroke-linecap="round" transform="rotate(12,26,26)"/><circle cx="12" cy="44" r="5" fill="#FFD700" stroke="#c9962b" stroke-width="1"/><text x="12" y="47" text-anchor="middle" font-size="6" fill="#7d6608" font-weight="bold">1</text><circle cx="26" cy="46" r="4" fill="#C0C0C0" stroke="#888" stroke-width="1"/><text x="26" y="49" text-anchor="middle" font-size="6" fill="#555" font-weight="bold">2</text><circle cx="40" cy="44" r="3.5" fill="#cd7f32" stroke="#8B4513" stroke-width="1"/><text x="40" y="47" text-anchor="middle" font-size="6" fill="#4a2500" font-weight="bold">3</text></svg>
@@ -302,7 +324,7 @@ hr{border:none;border-top:0.5px solid var(--border);margin:1.25rem 0}
     <div id="pv-special" class="pvp" style="display:none">
       <div class="tab-banner" style="background:linear-gradient(135deg,#4a235a,#8e44ad)">
         <svg width="52" height="52" viewBox="0 0 52 52" fill="none"><circle cx="26" cy="26" r="10" fill="#6c3483" stroke="#a569bd" stroke-width="1"/><ellipse cx="26" cy="12" rx="3.5" ry="6" fill="#f1c6f5" opacity="0.9"/><ellipse cx="26" cy="40" rx="3.5" ry="6" fill="#f1c6f5" opacity="0.9"/><ellipse cx="12" cy="26" rx="6" ry="3.5" fill="#f1c6f5" opacity="0.9"/><ellipse cx="40" cy="26" rx="6" ry="3.5" fill="#f1c6f5" opacity="0.9"/><ellipse cx="15" cy="15" rx="3" ry="5.5" fill="#d7bde2" opacity="0.8" transform="rotate(-45,15,15)"/><ellipse cx="37" cy="15" rx="3" ry="5.5" fill="#d7bde2" opacity="0.8" transform="rotate(45,37,15)"/><ellipse cx="15" cy="37" rx="3" ry="5.5" fill="#d7bde2" opacity="0.8" transform="rotate(45,15,37)"/><ellipse cx="37" cy="37" rx="3" ry="5.5" fill="#d7bde2" opacity="0.8" transform="rotate(-45,37,37)"/><circle cx="26" cy="26" r="5" fill="#f5e94a"/><text x="26" y="29" text-anchor="middle" font-size="7" fill="#7d6608">★</text></svg>
-        <div class="tab-banner-text" style="color:#fff"><h4>Especiales</h4><p>Campeón, goleador, portero y MVP · Cierre 11 jun 09:00h</p></div>
+        <div class="tab-banner-text" style="color:#fff"><h4>Especiales</h4><p>Campeón, goleador, portero y MVP · Cierre 11 jun 20:00h</p></div>
       </div>
       <div class="card">
         <!-- CAMPEÓN -->
@@ -345,7 +367,7 @@ hr{border:none;border-top:0.5px solid var(--border);margin:1.25rem 0}
           </div>
         </div>
         <button class="primary" onclick="saveSpecial()" id="btn-save-special" style="width:100%;margin-top:.5rem">Guardar especiales</button>
-        <p id="special-closed-msg" style="display:none;margin-top:.75rem;font-size:12px;color:var(--d-t);background:var(--d-bg);padding:8px 10px;border-radius:var(--r)">🔒 El plazo para especiales cerró el 11 de junio a las 09:00h España.</p>
+        <p id="special-closed-msg" style="display:none;margin-top:.75rem;font-size:12px;color:var(--d-t);background:var(--d-bg);padding:8px 10px;border-radius:var(--r)">🔒 El plazo para especiales cerró el 11 de junio a las 20:00h España.</p>
       </div>
       <div class="card" id="pv-sr" style="display:none"><div style="font-size:13px;font-weight:600;margin-bottom:.75rem">Resultados especiales</div><div id="pv-srb"></div></div>
     </div>
@@ -442,12 +464,23 @@ hr{border:none;border-top:0.5px solid var(--border);margin:1.25rem 0}
     <div class="rules-row"><div class="desc"><strong>🧤 Mejor portero</strong></div><div class="pts bw">10 pts</div></div>
     <div class="rules-row"><div class="desc"><strong>⭐ MVP del torneo</strong></div><div class="pts bw">10 pts</div></div>
     <hr>
-    <p style="font-size:12px;color:var(--text2);line-height:1.7">⏱ Los resultados de cada partido se cierran <strong>1 hora antes</strong> del inicio.<br>🏆 Los especiales se cierran el <strong>11 de junio a las 09:00h España</strong> (12h antes del inicio).<br>🔓 Las fases eliminatorias se desbloquean cuando el admin confirma los equipos clasificados.</p>
+    <p style="font-size:12px;color:var(--text2);line-height:1.7">⏱ Los resultados de cada partido se cierran <strong>1 hora antes</strong> del inicio.<br>🏆 Los especiales se cierran el <strong>11 de junio a las 20:00h España</strong> (12h antes del inicio).<br>🔓 Las fases eliminatorias se desbloquean cuando el admin confirma los equipos clasificados.</p>
     <button class="primary" style="width:100%;margin-top:1rem" onclick="closeRules()">Entendido</button>
   </div>
 </div>
 
 <div id="toast"></div>
+
+<!-- PLAYER PICKS MODAL (admin) -->
+<div class="player-modal-overlay" id="player-modal" onclick="if(event.target===this)closePlayerModal()">
+  <div class="player-modal-box">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem">
+      <div style="font-size:16px;font-weight:700" id="pm-title">Picks del jugador</div>
+      <button class="btn-sm" onclick="closePlayerModal()"><i class="ti ti-x"></i></button>
+    </div>
+    <div id="pm-content"></div>
+  </div>
+</div>
 
 <script type="module">
 import{initializeApp}from'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
@@ -893,7 +926,7 @@ function makeMatches(){
 
 function canPick(id){const t=MATCH_TIMES[id];if(!t)return true;return Date.now()<new Date(t).getTime()-60*60*1000;}
 function isKOPH(m){return m.phase!=='Grupos'&&(m.home.includes('º')||m.home.includes('Gan.')||m.away.includes('º')||m.away.includes('Gan.'));}
-const SPECIALS_DEADLINE=new Date('2026-06-11T07:00:00Z');
+const SPECIALS_DEADLINE=new Date('2026-06-11T18:00:00Z');
 function specialsOpen(){return Date.now()<SPECIALS_DEADLINE.getTime();}
 
 function timeLabel(id){
@@ -956,6 +989,7 @@ window.pvTab=function(btn,id){
   btn.closest('#player-view').querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));btn.classList.add('active');
   document.querySelectorAll('.pvp').forEach(p=>p.style.display='none');document.getElementById(id).style.display='block';
   if(id==='pv-groups')renderGroupStandings();
+  if(id==='pv-quiniellas')renderQuiniellas();
 };
 window.adminTab=function(btn,id){
   btn.closest('#admin-view').querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));btn.classList.add('active');
@@ -1383,6 +1417,148 @@ function populateSel(){
   Object.keys(STATE.players).sort().forEach(p=>sel.add(new Option(p,p)));
   if(cur)sel.value=cur;
 }
+
+// ── Player picks modal (admin) ──
+window.openPlayerModal=function(playerName){
+  const player=STATE.players[playerName];
+  if(!player){return;}
+  document.getElementById('pm-title').textContent=`Quiniela de ${playerName}`;
+  
+  const picks=player.picks||{};
+  const sp=player.special||{};
+  const phases=['Grupos','Dieciseisavos','Octavos','Cuartos','Semis','Final'];
+  let html='';
+
+  phases.forEach(phase=>{
+    const ms=STATE.matches.filter(m=>m.phase===phase);
+    if(!ms.length)return;
+    let phaseHtml='';
+    if(phase==='Grupos'){
+      const grps={};
+      ms.forEach(m=>{if(!grps[m.group])grps[m.group]=[];grps[m.group].push(m);});
+      Object.entries(grps).forEach(([g,gms])=>{
+        let grpHtml='';
+        gms.forEach(m=>{
+          const pick=picks[m.id];
+          const hasPick=pick&&pick.home!==''&&pick.away!=='';
+          let ptsHtml='';
+          if(m.played&&hasPick){
+            const rH=parseInt(m.homeGoals),rA=parseInt(m.awayGoals);
+            const pH=parseInt(pick.home),pA=parseInt(pick.away);
+            const rW=rH>rA?'h':rH<rA?'a':'d',pW=pH>pA?'h':pH<pA?'a':'d';
+            let pts=0,cls='bd';
+            if(pick.home==m.homeGoals&&pick.away==m.awayGoals){pts=5;cls='bs';}
+            else if(rW===pW){pts=3;cls='bw';}
+            ptsHtml=`<span class="badge ${cls} pts-chip">${pts}p</span>`;
+          }
+          grpHtml+=`<div class="pick-row-view">
+            <span class="teams">${flag(m.home)} ${m.home} vs ${flag(m.away)} ${m.away}</span>
+            ${hasPick
+              ?`<span class="pick-val">${pick.home}-${pick.away}</span>`
+              :`<span class="pick-empty">Sin rellenar</span>`}
+            ${ptsHtml}
+          </div>`;
+        });
+        if(grpHtml) phaseHtml+=`<div class="section-title" style="font-size:10px">Grupo ${g}</div>${grpHtml}`;
+      });
+    } else {
+      ms.forEach(m=>{
+        const pick=picks[m.id];
+        const hasPick=pick&&pick.home!==''&&pick.away!=='';
+        phaseHtml+=`<div class="pick-row-view">
+          <span class="teams">${m.home} vs ${m.away}</span>
+          ${hasPick?`<span class="pick-val">${pick.home}-${pick.away}</span>`:`<span class="pick-empty">Sin rellenar</span>`}
+        </div>`;
+      });
+    }
+    if(phaseHtml) html+=`<div class="section-title">${phase}</div>${phaseHtml}`;
+  });
+
+  // Specials
+  html+=`<div class="section-title" style="margin-top:1rem">Especiales</div>
+  <div class="pick-row-view"><span class="teams">🏆 Campeón</span><span class="${sp.champion?'pick-val':'pick-empty'}">${sp.champion||'Sin rellenar'}</span></div>
+  <div class="pick-row-view"><span class="teams">⚽ Goleador</span><span class="${sp.scorer?'pick-val':'pick-empty'}">${sp.scorer||'Sin rellenar'}</span></div>
+  <div class="pick-row-view"><span class="teams">🧤 Portero</span><span class="${sp.keeper?'pick-val':'pick-empty'}">${sp.keeper||'Sin rellenar'}</span></div>
+  <div class="pick-row-view"><span class="teams">⭐ MVP</span><span class="${sp.mvp?'pick-val':'pick-empty'}">${sp.mvp||'Sin rellenar'}</span></div>`;
+
+  document.getElementById('pm-content').innerHTML=html;
+  document.getElementById('player-modal').classList.add('open');
+};
+window.closePlayerModal=function(){
+  document.getElementById('player-modal').classList.remove('open');
+};
+
+// ── Public quinielas tab ──
+function renderQuiniellas(){
+  const container=document.getElementById('pv-quiniellas-list');
+  if(!container)return;
+  const players=Object.keys(STATE.players).filter(p=>p!==currentUser).sort();
+  if(!players.length){container.innerHTML='<p class="muted">No hay otros participantes todavía.</p>';return;}
+
+  // Only show picks for matches that are locked or played
+  const visibleMatches=STATE.matches.filter(m=>m.played||!canPick(m.id));
+
+  let html='<p class="muted" style="margin-bottom:.75rem;font-size:12px">Solo se muestran los partidos cerrados o ya jugados para no dar ventaja.</p>';
+  players.forEach(p=>{
+    const picks=STATE.players[p]?.picks||{};
+    const sp=STATE.players[p]?.special||{};
+    const pts=calcPts(p);
+    const filled=visibleMatches.filter(m=>picks[m.id]&&picks[m.id].home!=='').length;
+    
+    html+=`<div class="qrow" onclick="toggleQrow('qrow-${p.replace(/[^a-z0-9]/gi,'_')}')">
+      <div class="qrow-header">
+        <div class="av" style="font-size:11px">${p.slice(0,2).toUpperCase()}</div>
+        <div style="flex:1"><div style="font-weight:600;font-size:13px">${p}</div>
+          <div style="font-size:11px;color:var(--text2)">${filled} partidos cerrados rellenados</div>
+        </div>
+        <span class="badge bs">${pts.total} pts</span>
+        <i class="ti ti-chevron-down" style="color:var(--text3);font-size:14px"></i>
+      </div>
+      <div class="qrow-body" id="qrow-${p.replace(/[^a-z0-9]/gi,'_')}">`;
+
+    // Show visible picks
+    if(filled===0){
+      html+=`<p class="muted" style="font-size:12px">Sin partidos rellenados aún.</p>`;
+    } else {
+      visibleMatches.forEach(m=>{
+        const pick=picks[m.id];
+        if(!pick||pick.home==='') return;
+        let ptsHtml='';
+        if(m.played){
+          const rH=parseInt(m.homeGoals),rA=parseInt(m.awayGoals);
+          const pH=parseInt(pick.home),pA=parseInt(pick.away);
+          const rW=rH>rA?'h':rH<rA?'a':'d',pW=pH>pA?'h':pH<pA?'a':'d';
+          let pts=0,cls='bd';
+          if(pick.home==m.homeGoals&&pick.away==m.awayGoals){pts=5;cls='bs';}
+          else if(rW===pW){pts=3;cls='bw';}
+          ptsHtml=`<span class="badge ${cls} pts-chip">${pts}p</span>`;
+        }
+        html+=`<div class="pick-row-view">
+          <span class="teams" style="font-size:11px">${flag(m.home)} ${m.home} vs ${flag(m.away)} ${m.away}</span>
+          <span class="pick-val">${pick.home}-${pick.away}</span>
+          ${ptsHtml}
+        </div>`;
+      });
+    }
+
+    // Show specials if tournament has started
+    if(!specialsOpen()){
+      html+=`<div class="section-title" style="font-size:10px;margin-top:.75rem">Especiales</div>
+      <div class="pick-row-view"><span class="teams" style="font-size:11px">🏆 Campeón</span><span class="${sp.champion?'pick-val':'pick-empty'}">${sp.champion||'—'}</span></div>
+      <div class="pick-row-view"><span class="teams" style="font-size:11px">⚽ Goleador</span><span class="${sp.scorer?'pick-val':'pick-empty'}">${sp.scorer||'—'}</span></div>
+      <div class="pick-row-view"><span class="teams" style="font-size:11px">🧤 Portero</span><span class="${sp.keeper?'pick-val':'pick-empty'}">${sp.keeper||'—'}</span></div>
+      <div class="pick-row-view"><span class="teams" style="font-size:11px">⭐ MVP</span><span class="${sp.mvp?'pick-val':'pick-empty'}">${sp.mvp||'—'}</span></div>`;
+    }
+
+    html+=`</div></div>`;
+  });
+  container.innerHTML=html;
+}
+
+window.toggleQrow=function(id){
+  const el=document.getElementById(id);
+  if(el) el.classList.toggle('open');
+};
 
 loadFromFirebase();
 </script>
