@@ -1402,7 +1402,7 @@ function renderPlayersList(){
   const el=document.getElementById('pl-list'),players=Object.keys(STATE.players);
   if(!players.length){el.innerHTML='<p class="muted">Sin participantes.</p>';return;}
   let html='<table><thead><tr><th>Nombre</th><th>Picks</th><th>Pts</th><th></th></tr></thead><tbody>';
-  players.forEach(p=>{const picks=Object.keys(STATE.players[p]?.picks||{}).length,pts=calcPts(p).total;html+=`<tr><td>${p}</td><td>${picks}</td><td><strong>${pts}</strong></td><td><button class="btn-sm" onclick="removePlayer('${p}')"><i class="ti ti-trash"></i></button></td></tr>`;});
+  players.forEach(p=>{const picks=Object.keys(STATE.players[p]?.picks||{}).length,pts=calcPts(p).total;html+=`<tr><td>${p}</td><td>${picks}</td><td><strong>${pts}</strong></td><td style="display:flex;gap:4px"><button class="btn-sm" onclick="openPlayerModal('${p}')" title="Ver quiniela"><i class="ti ti-eye"></i></button><button class="btn-sm" onclick="removePlayer('${p}')"><i class="ti ti-trash"></i></button></td></tr>`;});
   el.innerHTML=html+'</tbody></table>';
 }
 window.saveRealSpecial=async function(){
