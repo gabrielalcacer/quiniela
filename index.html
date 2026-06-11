@@ -211,6 +211,17 @@ hr{border:none;border-top:0.5px solid var(--border);margin:1.25rem 0}
 .quiniellas-tab .qrow-header{display:flex;align-items:center;gap:10px}
 .quiniellas-tab .qrow-body{display:none;margin-top:10px;border-top:0.5px solid var(--border);padding-top:10px}
 .quiniellas-tab .qrow-body.open{display:block}
+.accord{border:0.5px solid var(--border);border-radius:var(--rl);margin-bottom:8px;overflow:hidden}
+.accord-header{display:flex;align-items:center;gap:10px;padding:12px 14px;cursor:pointer;background:var(--bg);user-select:none;transition:background .15s}
+.accord-header:hover{background:var(--bg2)}
+.accord-header.open{background:var(--bg2);border-bottom:0.5px solid var(--border)}
+.accord-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+.accord-title{font-size:13px;font-weight:600;flex:1}
+.accord-meta{font-size:11px;color:var(--text2);display:flex;align-items:center;gap:8px}
+.accord-body{display:none;padding:10px 14px}
+.accord-body.open{display:block}
+.accord-chevron{color:var(--text3);font-size:14px;transition:transform .2s;flex-shrink:0}
+.accord-header.open .accord-chevron{transform:rotate(180deg)}
 .player-selector{display:flex;flex-direction:column;gap:8px}
 .player-selector select{width:100%}
 .player-selector .team-sel{border-color:var(--navy)}
@@ -1066,44 +1077,92 @@ function renderPlayerMatches(){
   const picks=STATE.players[currentUser]?.picks||{};
   let html='';
 
-  // ── Fase de Grupos: orden cronológico con separador de fecha ──
+  // ── Fase de Grupos: acordeón por día ──
   const groupMs=STATE.matches.filter(m=>m.phase==='Grupos');
-  // Sort by kickoff time, then by match id as tiebreaker
   groupMs.sort((a,b)=>{
     const ta=MATCH_TIMES[a.id]?new Date(MATCH_TIMES[a.id]).getTime():0;
     const tb=MATCH_TIMES[b.id]?new Date(MATCH_TIMES[b.id]).getTime():0;
     return ta-tb||a.id.localeCompare(b.id);
   });
-  // Group by calendar date (user's local date)
   const byDay={};
+  const byDayRaw={};
   groupMs.forEach(m=>{
     const t=MATCH_TIMES[m.id];
     const dayKey=t
-      ? new Date(t).toLocaleDateString('es',{weekday:'long',day:'numeric',month:'long',year:'numeric'})
+      ? new Date(t).toLocaleDateString('es',{weekday:'long',day:'numeric',month:'long'})
       : 'Sin fecha';
-    if(!byDay[dayKey])byDay[dayKey]=[];
+    const rawTs=t?new Date(t).getTime():0;
+    if(!byDay[dayKey]){byDay[dayKey]=[];byDayRaw[dayKey]=rawTs;}
     byDay[dayKey].push(m);
   });
+
   html+=`<div class="section-title" style="margin-top:0">Fase de Grupos</div>`;
-  Object.entries(byDay).forEach(([day,ms])=>{
-    html+=`<div style="display:flex;align-items:center;gap:8px;margin:1rem 0 .5rem">
-      <div style="width:8px;height:8px;border-radius:50%;background:var(--red);flex-shrink:0"></div>
-      <span style="font-size:12px;font-weight:600;color:var(--text2);text-transform:capitalize">${day}</span>
-      <div style="flex:1;height:0.5px;background:var(--border)"></div>
+  const now=Date.now();
+  Object.entries(byDay).forEach(([day,ms],idx)=>{
+    const dayTs=byDayRaw[day];
+    // Determine status of this day
+    const allPlayed=ms.every(m=>m.played);
+    const hasOpen=ms.some(m=>!m.played&&canPick(m.id));
+    const filled=ms.filter(m=>picks[m.id]&&picks[m.id].home!=='').length;
+    const dotColor=allPlayed?'var(--s-t)':hasOpen?'var(--red)':'var(--text3)';
+    const statusText=allPlayed?'Finalizado':hasOpen?`${filled}/${ms.length} rellenados`:'Cerrado';
+    // Auto-open today's day or next upcoming day
+    const isToday=dayTs>0&&dayTs<now+24*60*60*1000&&dayTs>now-24*60*60*1000;
+    const isNext=dayTs>now&&Object.values(byDayRaw).filter(t=>t>now).sort()[0]===dayTs;
+    const openClass=(isToday||isNext||idx===0)?'open':'';
+
+    const dayId='day_'+dayTs;
+    html+=`<div class="accord">
+      <div class="accord-header ${openClass}" onclick="toggleAccord('${dayId}',this)">
+        <div class="accord-dot" style="background:${dotColor}"></div>
+        <div class="accord-title" style="text-transform:capitalize">${day}</div>
+        <div class="accord-meta">
+          <span>${ms.length} partidos</span>
+          <span class="badge ${allPlayed?'bs':hasOpen?'bw':'bi'}" style="font-size:10px">${statusText}</span>
+        </div>
+        <i class="ti ti-chevron-down accord-chevron"></i>
+      </div>
+      <div class="accord-body ${openClass}" id="${dayId}">
+        ${ms.map(m=>matchRow(m,picks)).join('')}
+      </div>
     </div>`;
-    ms.forEach(m=>html+=matchRow(m,picks));
   });
 
-  // ── Fases eliminatorias: por ronda ──
+  // ── Fases eliminatorias: acordeón por ronda ──
   const koPhases=['Dieciseisavos','Octavos','Cuartos','Semis','Final'];
+  html+=`<div class="section-title" style="margin-top:1rem">Fases Eliminatorias</div>`;
   koPhases.forEach(phase=>{
     const ms=STATE.matches.filter(m=>m.phase===phase);if(!ms.length)return;
-    html+=`<div class="section-title">${phase}</div>`;
-    ms.forEach(m=>html+=matchRow(m,picks));
+    const phaseId='phase_'+phase;
+    const allDefined=ms.every(m=>!isKOPH(m));
+    const allPlayed=ms.every(m=>m.played);
+    const dotColor=!allDefined?'var(--text3)':allPlayed?'var(--s-t)':'var(--w-t)';
+    const statusText=!allDefined?'Por definir':allPlayed?'Finalizado':'En juego';
+    html+=`<div class="accord">
+      <div class="accord-header" onclick="toggleAccord('${phaseId}',this)">
+        <div class="accord-dot" style="background:${dotColor}"></div>
+        <div class="accord-title">${phase}</div>
+        <div class="accord-meta">
+          <span>${ms.length} partidos</span>
+          <span class="badge ${!allDefined?'bi':allPlayed?'bs':'bw'}" style="font-size:10px">${statusText}</span>
+        </div>
+        <i class="ti ti-chevron-down accord-chevron"></i>
+      </div>
+      <div class="accord-body" id="${phaseId}">
+        ${ms.map(m=>matchRow(m,picks)).join('')}
+      </div>
+    </div>`;
   });
 
   document.getElementById('pv-ml').innerHTML=html||'<p class="muted">Sin partidos.</p>';
 }
+
+window.toggleAccord=function(id,header){
+  const body=document.getElementById(id);
+  if(!body)return;
+  body.classList.toggle('open');
+  if(header)header.classList.toggle('open');
+};
 
 function matchRow(m,picks){
   const pick=picks[m.id]||{home:'',away:''};
@@ -1384,13 +1443,71 @@ function renderAdmin(){
 }
 
 function renderAdminMatches(){
-  const phases=['Grupos','Dieciseisavos','Octavos','Cuartos','Semis','Final'];let html='';
-  phases.forEach(phase=>{
+  let html='';
+  // ── Grupos: acordeón por día ──
+  const groupMs=STATE.matches.filter(m=>m.phase==='Grupos');
+  groupMs.sort((a,b)=>{
+    const ta=MATCH_TIMES[a.id]?new Date(MATCH_TIMES[a.id]).getTime():0;
+    const tb=MATCH_TIMES[b.id]?new Date(MATCH_TIMES[b.id]).getTime():0;
+    return ta-tb||a.id.localeCompare(b.id);
+  });
+  const byDay={};const byDayRaw={};
+  groupMs.forEach(m=>{
+    const t=MATCH_TIMES[m.id];
+    const dayKey=t?new Date(t).toLocaleDateString('es',{weekday:'long',day:'numeric',month:'long'}):'Sin fecha';
+    const rawTs=t?new Date(t).getTime():0;
+    if(!byDay[dayKey]){byDay[dayKey]=[];byDayRaw[dayKey]=rawTs;}
+    byDay[dayKey].push(m);
+  });
+  const now=Date.now();
+  html+=`<div class="section-title" style="margin-top:0">Fase de Grupos</div>`;
+  Object.entries(byDay).forEach(([day,ms])=>{
+    const dayTs=byDayRaw[day];
+    const allPlayed=ms.every(m=>m.played);
+    const hasUnplayed=ms.some(m=>!m.played);
+    const dotColor=allPlayed?'var(--s-t)':dayTs<now?'var(--red)':'var(--text3)';
+    const played=ms.filter(m=>m.played).length;
+    const statusText=allPlayed?'✓ Todo confirmado':`${played}/${ms.length} confirmados`;
+    // Auto-open days with unplayed matches that have already started
+    const hasStarted=ms.some(m=>MATCH_TIMES[m.id]&&new Date(MATCH_TIMES[m.id]).getTime()<now);
+    const openClass=(hasStarted&&hasUnplayed)?'open':'';
+    const dayId='adday_'+dayTs;
+    html+=`<div class="accord">
+      <div class="accord-header ${openClass}" onclick="toggleAccord('${dayId}',this)">
+        <div class="accord-dot" style="background:${dotColor}"></div>
+        <div class="accord-title" style="text-transform:capitalize">${day}</div>
+        <div class="accord-meta">
+          <span>${ms.length} partidos</span>
+          <span class="badge ${allPlayed?'bs':'bw'}" style="font-size:10px">${statusText}</span>
+        </div>
+        <i class="ti ti-chevron-down accord-chevron"></i>
+      </div>
+      <div class="accord-body ${openClass}" id="${dayId}">
+        ${ms.map(m=>adminRow(m)).join('')}
+      </div>
+    </div>`;
+  });
+  // ── KO phases: acordeón por ronda ──
+  html+=`<div class="section-title" style="margin-top:1rem">Fases Eliminatorias</div>`;
+  ['Dieciseisavos','Octavos','Cuartos','Semis','Final'].forEach(phase=>{
     const ms=STATE.matches.filter(m=>m.phase===phase);if(!ms.length)return;
-    if(phase==='Grupos'){
-      const grps={};ms.forEach(m=>{if(!grps[m.group])grps[m.group]=[];grps[m.group].push(m);});
-      Object.entries(grps).forEach(([g,gms])=>{html+=`<div class="section-title">Grupo ${g}</div>`;gms.forEach(m=>html+=adminRow(m));});
-    }else{html+=`<div class="section-title">${phase}</div>`;ms.forEach(m=>html+=adminRow(m));}
+    const phaseId='adphase_'+phase;
+    const played=ms.filter(m=>m.played).length;
+    const allPlayed=played===ms.length;
+    html+=`<div class="accord">
+      <div class="accord-header" onclick="toggleAccord('${phaseId}',this)">
+        <div class="accord-dot" style="background:${allPlayed?'var(--s-t)':'var(--w-t)'}"></div>
+        <div class="accord-title">${phase}</div>
+        <div class="accord-meta">
+          <span>${ms.length} partidos</span>
+          <span class="badge ${allPlayed?'bs':'bw'}" style="font-size:10px">${played}/${ms.length} confirmados</span>
+        </div>
+        <i class="ti ti-chevron-down accord-chevron"></i>
+      </div>
+      <div class="accord-body" id="${phaseId}">
+        ${ms.map(m=>adminRow(m)).join('')}
+      </div>
+    </div>`;
   });
   document.getElementById('ad-ml').innerHTML=html;
 }
