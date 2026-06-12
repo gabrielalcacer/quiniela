@@ -938,7 +938,12 @@ function makeMatches(){
 function canPick(id){const t=MATCH_TIMES[id];if(!t)return true;return Date.now()<new Date(t).getTime()-60*60*1000;}
 function isKOPH(m){return m.phase!=='Grupos'&&(m.home.includes('º')||m.home.includes('Gan.')||m.away.includes('º')||m.away.includes('Gan.'));}
 const SPECIALS_DEADLINE=new Date('2026-06-11T18:00:00Z');
-function specialsOpen(){return Date.now()<SPECIALS_DEADLINE.getTime();}
+// Excepciones: estas personas pueden rellenar/editar especiales sin límite de tiempo
+const SPECIALS_EXCEPTIONS=['Jose luis','Marco','Ale','Raul'];
+function specialsOpen(){
+  if(currentUser && SPECIALS_EXCEPTIONS.includes(currentUser)) return true;
+  return Date.now()<SPECIALS_DEADLINE.getTime();
+}
 
 function timeLabel(id){
   const t=MATCH_TIMES[id];if(!t)return null;
