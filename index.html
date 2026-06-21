@@ -262,7 +262,12 @@ hr{border:none;border-top:0.5px solid var(--border);margin:1.25rem 0}
     <div class="card">
       <div style="margin-bottom:1rem">
         <label style="font-size:12px;color:var(--text2);display:block;margin-bottom:6px;font-weight:600">Tu nombre</label>
-        <select id="login-select"><option value="">Selecciona...</option></select>
+        <select id="login-select" onchange="onNameSelected()"><option value="">Selecciona...</option></select>
+      </div>
+      <div id="pin-field-wrap" style="margin-bottom:1.25rem;display:none">
+        <label style="font-size:12px;color:var(--text2);display:block;margin-bottom:6px;font-weight:600" id="pin-label">PIN (4 dígitos)</label>
+        <input type="password" id="user-pin" placeholder="••••" inputmode="numeric" maxlength="4" pattern="[0-9]*" onkeydown="if(event.key==='Enter')doLogin()">
+        <p id="pin-hint" style="font-size:11px;color:var(--text2);margin-top:6px;line-height:1.4"></p>
       </div>
       <div style="margin-bottom:1.25rem">
         <label style="font-size:12px;color:var(--text2);display:block;margin-bottom:6px;font-weight:600">¿Eres el admin?</label>
@@ -978,13 +983,40 @@ async function saveMatches(){await setDoc(doc(db,'quiniela','matches'),{list:STA
 async function savePlayer(n){await setDoc(doc(db,'players',n),STATE.players[n]);}
 async function saveSpecialReal(){await setDoc(doc(db,'quiniela','special'),STATE.realSpecial);}
 
+window.onNameSelected=function(){
+  const sel=document.getElementById('login-select').value;
+  const wrap=document.getElementById('pin-field-wrap');
+  const hint=document.getElementById('pin-hint');
+  const label=document.getElementById('pin-label');
+  if(!sel){wrap.style.display='none';return;}
+  wrap.style.display='block';
+  const hasPlayer=STATE.players[sel];
+  const hasPin=hasPlayer&&hasPlayer.pin;
+  if(hasPin){
+    label.textContent='Tu PIN (4 dígitos)';
+    hint.textContent='Introduce el PIN que creaste la primera vez.';
+  }else{
+    label.textContent='Crea tu PIN (4 dígitos)';
+    hint.textContent='Es la primera vez que entras. Elige un PIN de 4 dígitos para proteger tu quiniela — lo necesitarás cada vez que entres.';
+  }
+  document.getElementById('user-pin').value='';
+  document.getElementById('user-pin').focus();
+};
+
 window.doLogin=function(){
   const sel=document.getElementById('login-select').value;
   const pw=document.getElementById('admin-pw').value;
   if(pw==='2026'){isAdmin=true;currentUser='admin';showView('admin-view');document.getElementById('app-header').style.display='block';renderAdmin();subscribeRT();return;}
   if(!sel){alert('Selecciona tu nombre');return;}
+  const pin=document.getElementById('user-pin').value.trim();
+  if(!/^[0-9]{4}$/.test(pin)){alert('El PIN debe tener exactamente 4 dígitos');return;}
+  const existing=STATE.players[sel];
+  if(existing&&existing.pin){
+    if(existing.pin!==pin){alert('PIN incorrecto. Si lo has olvidado, pide al admin que lo restablezca.');return;}
+  }
   currentUser=sel;isAdmin=false;
-  if(!STATE.players[currentUser])STATE.players[currentUser]={picks:{},special:{champion:'',scorer:'',keeper:'',mvp:''}};
+  if(!STATE.players[currentUser])STATE.players[currentUser]={picks:{},special:{champion:'',scorer:'',keeper:'',mvp:''},pin:pin};
+  else if(!STATE.players[currentUser].pin){STATE.players[currentUser].pin=pin;savePlayer(currentUser);}
   showView('player-view');
   document.getElementById('app-header').style.display='block';
   document.getElementById('app-footer').style.display='block';
@@ -1554,10 +1586,24 @@ window.removePlayer=async function(name){
 function renderPlayersList(){
   const el=document.getElementById('pl-list'),players=Object.keys(STATE.players);
   if(!players.length){el.innerHTML='<p class="muted">Sin participantes.</p>';return;}
-  let html='<table><thead><tr><th>Nombre</th><th>Picks</th><th>Pts</th><th></th></tr></thead><tbody>';
-  players.forEach(p=>{const picks=Object.keys(STATE.players[p]?.picks||{}).length,pts=calcPts(p).total;html+=`<tr><td>${p}</td><td>${picks}</td><td><strong>${pts}</strong></td><td style="display:flex;gap:4px"><button class="btn-sm" onclick="openPlayerModal('${p}')" title="Ver quiniela"><i class="ti ti-eye"></i></button><button class="btn-sm" onclick="removePlayer('${p}')"><i class="ti ti-trash"></i></button></td></tr>`;});
+  let html='<table><thead><tr><th>Nombre</th><th>Picks</th><th>Pts</th><th>PIN</th><th></th></tr></thead><tbody>';
+  players.forEach(p=>{
+    const picks=Object.keys(STATE.players[p]?.picks||{}).length,pts=calcPts(p).total;
+    const hasPin=!!STATE.players[p]?.pin;
+    html+=`<tr><td>${p}</td><td>${picks}</td><td><strong>${pts}</strong></td><td>${hasPin?'<span class="badge bs">✓</span>':'<span class="badge bi">Sin crear</span>'}</td><td style="display:flex;gap:4px"><button class="btn-sm" onclick="openPlayerModal('${p}')" title="Ver quiniela"><i class="ti ti-eye"></i></button>${hasPin?`<button class="btn-sm" onclick="resetPin('${p}')" title="Restablecer PIN"><i class="ti ti-key"></i></button>`:''}<button class="btn-sm" onclick="removePlayer('${p}')"><i class="ti ti-trash"></i></button></td></tr>`;
+  });
   el.innerHTML=html+'</tbody></table>';
 }
+
+window.resetPin=async function(name){
+  if(!confirm(`¿Restablecer el PIN de ${name}? Podrá crear uno nuevo la próxima vez que entre.`))return;
+  if(STATE.players[name]){
+    delete STATE.players[name].pin;
+    await savePlayer(name);
+    toast(`✅ PIN de ${name} restablecido`);
+    renderPlayersList();
+  }
+};
 window.saveRealSpecial=async function(){
   STATE.realSpecial.champion=document.getElementById('ad-rc').value;STATE.realSpecial.scorer=document.getElementById('ad-rs').value;
   STATE.realSpecial.keeper=document.getElementById('ad-rk2').value;STATE.realSpecial.mvp=document.getElementById('ad-rm').value;
