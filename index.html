@@ -232,7 +232,6 @@ hr{border:none;border-top:0.5px solid var(--border);margin:1.25rem 0}
 </head>
 <body>
 
-<!-- STICKY HEADER (hidden on login) -->
 <div id="app-header" style="display:none">
   <div class="header-inner">
     <div class="header-logo">
@@ -249,7 +248,6 @@ hr{border:none;border-top:0.5px solid var(--border);margin:1.25rem 0}
 
 <div class="app" id="app">
 
-<!-- LOGIN -->
 <div id="login-screen" class="view active">
   <div class="hero-wrap">
     <img src="hero.png" class="hero-img" alt="Quiniela Mundial 2026">
@@ -279,10 +277,8 @@ hr{border:none;border-top:0.5px solid var(--border);margin:1.25rem 0}
   </div>
 </div>
 
-<!-- PLAYER VIEW -->
 <div id="player-view" class="view">
   <div class="inner">
-    <!-- Welcome card -->
     <div class="welcome-card" id="welcome-card">
       <h3 id="wc-name">¡Hola!</h3>
       <p id="wc-msg">Rellena tus resultados antes de que empiecen los partidos</p>
@@ -292,7 +288,6 @@ hr{border:none;border-top:0.5px solid var(--border);margin:1.25rem 0}
         <div class="welcome-stat"><div class="n" id="wc-pending">0</div><div class="l">Pendientes</div></div>
       </div>
     </div>
-    <!-- Countdown -->
     <div class="countdown-bar" id="countdown-bar">
       <div class="cd-icon">⏱</div>
       <div class="cd-text">
@@ -343,7 +338,6 @@ hr{border:none;border-top:0.5px solid var(--border);margin:1.25rem 0}
         <div class="tab-banner-text" style="color:#fff"><h4>Especiales</h4><p>Campeón, goleador, portero y MVP · Cierre 11 jun 20:00h</p></div>
       </div>
       <div class="card">
-        <!-- CAMPEÓN -->
         <div class="special-field-group">
           <label>🏆 Campeón del mundial <span class="badge bs">+20 pts</span></label>
           <div class="player-selector">
@@ -352,7 +346,6 @@ hr{border:none;border-top:0.5px solid var(--border);margin:1.25rem 0}
             </select>
           </div>
         </div>
-        <!-- GOLEADOR -->
         <div class="special-field-group">
           <label>⚽ Goleador del torneo <span class="badge bw">+10 pts</span></label>
           <div class="player-selector">
@@ -362,7 +355,6 @@ hr{border:none;border-top:0.5px solid var(--border);margin:1.25rem 0}
             <div id="scorer-preview" class="selected-player" style="display:none"></div>
           </div>
         </div>
-        <!-- PORTERO -->
         <div class="special-field-group">
           <label>🧤 Mejor portero <span class="badge bw">+10 pts</span></label>
           <div class="player-selector">
@@ -372,7 +364,6 @@ hr{border:none;border-top:0.5px solid var(--border);margin:1.25rem 0}
             <div id="keeper-preview" class="selected-player" style="display:none"></div>
           </div>
         </div>
-        <!-- MVP -->
         <div class="special-field-group">
           <label>⭐ MVP del torneo <span class="badge bw">+10 pts</span></label>
           <div class="player-selector">
@@ -390,7 +381,6 @@ hr{border:none;border-top:0.5px solid var(--border);margin:1.25rem 0}
   </div>
 </div>
 
-<!-- ADMIN VIEW -->
 <div id="admin-view" class="view">
   <div class="inner">
     <div style="display:flex;align-items:center;gap:10px;margin-bottom:1.25rem">
@@ -431,7 +421,6 @@ hr{border:none;border-top:0.5px solid var(--border);margin:1.25rem 0}
 </div>
 </div>
 
-<!-- STICKY FOOTER -->
 <div id="app-footer">
   <div class="footer-inner">
     <div>
@@ -445,7 +434,6 @@ hr{border:none;border-top:0.5px solid var(--border);margin:1.25rem 0}
   </div>
 </div>
 
-<!-- PICK MODAL -->
 <div id="mo" onclick="if(event.target===this)closePick()">
   <div id="mb">
     <div style="font-size:15px;font-weight:700;margin-bottom:4px" id="mo-t">Tu resultado</div>
@@ -464,7 +452,6 @@ hr{border:none;border-top:0.5px solid var(--border);margin:1.25rem 0}
   </div>
 </div>
 
-<!-- RULES MODAL -->
 <div id="rules-modal" onclick="if(event.target===this)closeRules()">
   <div id="rules-box">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.25rem">
@@ -487,7 +474,6 @@ hr{border:none;border-top:0.5px solid var(--border);margin:1.25rem 0}
 
 <div id="toast"></div>
 
-<!-- PLAYER PICKS MODAL (admin) -->
 <div class="player-modal-overlay" id="player-modal" onclick="if(event.target===this)closePlayerModal()">
   <div class="player-modal-box">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem">
@@ -505,55 +491,19 @@ import{getFirestore,doc,getDoc,setDoc,onSnapshot,collection,getDocs,deleteDoc}fr
 const fbApp=initializeApp({apiKey:"AIzaSyB9APbkXsCqAkkXgA9DiVXNlvhy_8TcWTs",authDomain:"quiniela-c4186.firebaseapp.com",projectId:"quiniela-c4186",storageBucket:"quiniela-c4186.firebasestorage.app",messagingSenderId:"1069209810424",appId:"1:1069209810424:web:6a6461c344e138d93c120d"});
 const db=getFirestore(fbApp);
 
-const FLAGS = {
-  'México': '<img src="https://flagcdn.com/w20/mx.png" width="20" height="15" style="vertical-align:middle;border-radius:2px;margin-right:2px" alt="México">',
-  'Sudáfrica': '<img src="https://flagcdn.com/w20/za.png" width="20" height="15" style="vertical-align:middle;border-radius:2px;margin-right:2px" alt="Sudáfrica">',
-  'Corea del Sur': '<img src="https://flagcdn.com/w20/kr.png" width="20" height="15" style="vertical-align:middle;border-radius:2px;margin-right:2px" alt="Corea del Sur">',
-  'Rep. Checa': '<img src="https://flagcdn.com/w20/cz.png" width="20" height="15" style="vertical-align:middle;border-radius:2px;margin-right:2px" alt="Rep. Checa">',
-  'Canadá': '<img src="https://flagcdn.com/w20/ca.png" width="20" height="15" style="vertical-align:middle;border-radius:2px;margin-right:2px" alt="Canadá">',
-  'Bosnia-Herz.': '<img src="https://flagcdn.com/w20/ba.png" width="20" height="15" style="vertical-align:middle;border-radius:2px;margin-right:2px" alt="Bosnia-Herz.">',
-  'Qatar': '<img src="https://flagcdn.com/w20/qa.png" width="20" height="15" style="vertical-align:middle;border-radius:2px;margin-right:2px" alt="Qatar">',
-  'Suiza': '<img src="https://flagcdn.com/w20/ch.png" width="20" height="15" style="vertical-align:middle;border-radius:2px;margin-right:2px" alt="Suiza">',
-  'Brasil': '<img src="https://flagcdn.com/w20/br.png" width="20" height="15" style="vertical-align:middle;border-radius:2px;margin-right:2px" alt="Brasil">',
-  'Marruecos': '<img src="https://flagcdn.com/w20/ma.png" width="20" height="15" style="vertical-align:middle;border-radius:2px;margin-right:2px" alt="Marruecos">',
-  'Haití': '<img src="https://flagcdn.com/w20/ht.png" width="20" height="15" style="vertical-align:middle;border-radius:2px;margin-right:2px" alt="Haití">',
-  'Escocia': '<img src="https://flagcdn.com/w20/gb-sct.png" width="20" height="15" style="vertical-align:middle;border-radius:2px;margin-right:2px" alt="Escocia">',
-  'EE.UU.': '<img src="https://flagcdn.com/w20/us.png" width="20" height="15" style="vertical-align:middle;border-radius:2px;margin-right:2px" alt="EE.UU.">',
-  'Paraguay': '<img src="https://flagcdn.com/w20/py.png" width="20" height="15" style="vertical-align:middle;border-radius:2px;margin-right:2px" alt="Paraguay">',
-  'Australia': '<img src="https://flagcdn.com/w20/au.png" width="20" height="15" style="vertical-align:middle;border-radius:2px;margin-right:2px" alt="Australia">',
-  'Turquía': '<img src="https://flagcdn.com/w20/tr.png" width="20" height="15" style="vertical-align:middle;border-radius:2px;margin-right:2px" alt="Turquía">',
-  'Alemania': '<img src="https://flagcdn.com/w20/de.png" width="20" height="15" style="vertical-align:middle;border-radius:2px;margin-right:2px" alt="Alemania">',
-  'Curazao': '<img src="https://flagcdn.com/w20/cw.png" width="20" height="15" style="vertical-align:middle;border-radius:2px;margin-right:2px" alt="Curazao">',
-  'Costa de Marfil': '<img src="https://flagcdn.com/w20/ci.png" width="20" height="15" style="vertical-align:middle;border-radius:2px;margin-right:2px" alt="Costa de Marfil">',
-  'Ecuador': '<img src="https://flagcdn.com/w20/ec.png" width="20" height="15" style="vertical-align:middle;border-radius:2px;margin-right:2px" alt="Ecuador">',
-  'Países Bajos': '<img src="https://flagcdn.com/w20/nl.png" width="20" height="15" style="vertical-align:middle;border-radius:2px;margin-right:2px" alt="Países Bajos">',
-  'Japón': '<img src="https://flagcdn.com/w20/jp.png" width="20" height="15" style="vertical-align:middle;border-radius:2px;margin-right:2px" alt="Japón">',
-  'Túnez': '<img src="https://flagcdn.com/w20/tn.png" width="20" height="15" style="vertical-align:middle;border-radius:2px;margin-right:2px" alt="Túnez">',
-  'Suecia': '<img src="https://flagcdn.com/w20/se.png" width="20" height="15" style="vertical-align:middle;border-radius:2px;margin-right:2px" alt="Suecia">',
-  'Bélgica': '<img src="https://flagcdn.com/w20/be.png" width="20" height="15" style="vertical-align:middle;border-radius:2px;margin-right:2px" alt="Bélgica">',
-  'Egipto': '<img src="https://flagcdn.com/w20/eg.png" width="20" height="15" style="vertical-align:middle;border-radius:2px;margin-right:2px" alt="Egipto">',
-  'Irán': '<img src="https://flagcdn.com/w20/ir.png" width="20" height="15" style="vertical-align:middle;border-radius:2px;margin-right:2px" alt="Irán">',
-  'Nueva Zelanda': '<img src="https://flagcdn.com/w20/nz.png" width="20" height="15" style="vertical-align:middle;border-radius:2px;margin-right:2px" alt="Nueva Zelanda">',
-  'España': '<img src="https://flagcdn.com/w20/es.png" width="20" height="15" style="vertical-align:middle;border-radius:2px;margin-right:2px" alt="España">',
-  'Cabo Verde': '<img src="https://flagcdn.com/w20/cv.png" width="20" height="15" style="vertical-align:middle;border-radius:2px;margin-right:2px" alt="Cabo Verde">',
-  'Arabia Saudita': '<img src="https://flagcdn.com/w20/sa.png" width="20" height="15" style="vertical-align:middle;border-radius:2px;margin-right:2px" alt="Arabia Saudita">',
-  'Uruguay': '<img src="https://flagcdn.com/w20/uy.png" width="20" height="15" style="vertical-align:middle;border-radius:2px;margin-right:2px" alt="Uruguay">',
-  'Francia': '<img src="https://flagcdn.com/w20/fr.png" width="20" height="15" style="vertical-align:middle;border-radius:2px;margin-right:2px" alt="Francia">',
-  'Senegal': '<img src="https://flagcdn.com/w20/sn.png" width="20" height="15" style="vertical-align:middle;border-radius:2px;margin-right:2px" alt="Senegal">',
-  'Noruega': '<img src="https://flagcdn.com/w20/no.png" width="20" height="15" style="vertical-align:middle;border-radius:2px;margin-right:2px" alt="Noruega">',
-  'Irak': '<img src="https://flagcdn.com/w20/iq.png" width="20" height="15" style="vertical-align:middle;border-radius:2px;margin-right:2px" alt="Irak">',
-  'Argentina': '<img src="https://flagcdn.com/w20/ar.png" width="20" height="15" style="vertical-align:middle;border-radius:2px;margin-right:2px" alt="Argentina">',
-  'Argelia': '<img src="https://flagcdn.com/w20/dz.png" width="20" height="15" style="vertical-align:middle;border-radius:2px;margin-right:2px" alt="Argelia">',
-  'Austria': '<img src="https://flagcdn.com/w20/at.png" width="20" height="15" style="vertical-align:middle;border-radius:2px;margin-right:2px" alt="Austria">',
-  'Jordania': '<img src="https://flagcdn.com/w20/jo.png" width="20" height="15" style="vertical-align:middle;border-radius:2px;margin-right:2px" alt="Jordania">',
-  'Portugal': '<img src="https://flagcdn.com/w20/pt.png" width="20" height="15" style="vertical-align:middle;border-radius:2px;margin-right:2px" alt="Portugal">',
-  'Colombia': '<img src="https://flagcdn.com/w20/co.png" width="20" height="15" style="vertical-align:middle;border-radius:2px;margin-right:2px" alt="Colombia">',
-  'Uzbekistán': '<img src="https://flagcdn.com/w20/uz.png" width="20" height="15" style="vertical-align:middle;border-radius:2px;margin-right:2px" alt="Uzbekistán">',
-  'R.D. Congo': '<img src="https://flagcdn.com/w20/cd.png" width="20" height="15" style="vertical-align:middle;border-radius:2px;margin-right:2px" alt="R.D. Congo">',
-  'Inglaterra': '<img src="https://flagcdn.com/w20/gb-eng.png" width="20" height="15" style="vertical-align:middle;border-radius:2px;margin-right:2px" alt="Inglaterra">',
-  'Croacia': '<img src="https://flagcdn.com/w20/hr.png" width="20" height="15" style="vertical-align:middle;border-radius:2px;margin-right:2px" alt="Croacia">',
-  'Ghana': '<img src="https://flagcdn.com/w20/gh.png" width="20" height="15" style="vertical-align:middle;border-radius:2px;margin-right:2px" alt="Ghana">',
-  'Panamá': '<img src="https://flagcdn.com/w20/pa.png" width="20" height="15" style="vertical-align:middle;border-radius:2px;margin-right:2px" alt="Panamá">',
+const FLAGS={
+  'México':'🇲🇽','Sudáfrica':'🇿🇦','Corea del Sur':'🇰🇷','Rep. Checa':'🇨🇿',
+  'Canadá':'🇨🇦','Bosnia-Herz.':'🇧🇦','Qatar':'🇶🇦','Suiza':'🇨🇭',
+  'Brasil':'🇧🇷','Marruecos':'🇲🇦','Haití':'🇭🇹','Escocia':'🏴󠁧󠁢󠁳󠁣󠁴󠁿',
+  'EE.UU.':'🇺🇸','Paraguay':'🇵🇾','Australia':'🇦🇺','Turquía':'🇹🇷',
+  'Alemania':'🇩🇪','Curazao':'🇨🇼','Costa de Marfil':'🇨🇮','Ecuador':'🇪🇨',
+  'Países Bajos':'🇳🇱','Japón':'🇯🇵','Túnez':'🇹🇳','Suecia':'🇸🇪',
+  'Bélgica':'🇧🇪','Egipto':'🇪🇬','Irán':'🇮🇷','Nueva Zelanda':'🇳🇿',
+  'España':'🇪🇸','Cabo Verde':'🇨🇻','Arabia Saudita':'🇸🇦','Uruguay':'🇺🇾',
+  'Francia':'🇫🇷','Senegal':'🇸🇳','Noruega':'🇳🇴','Irak':'🇮🇶',
+  'Argentina':'🇦🇷','Argelia':'🇩🇿','Austria':'🇦🇹','Jordania':'🇯🇴',
+  'Portugal':'🇵🇹','Colombia':'🇨🇴','Uzbekistán':'🇺🇿','R.D. Congo':'🇨🇩',
+  'Inglaterra':'🏴󠁧󠁢󠁥󠁮󠁧󠁿','Croacia':'🇭🇷','Ghana':'🇬🇭','Panamá':'🇵🇦'
 };
 function flag(t){return FLAGS[t]||'🏳️';}
 
@@ -865,89 +815,100 @@ const ALL_TEAMS=Object.values(GROUPS).flat();
 
 const MATCH_TIMES={
   // GRUPO A — México(G1,G2,G3) Sudáfrica(G1,G4,G5) Corea(G2,G4,G6) RepCheca(G3,G5,G6)
-  'G1': '2026-06-11T19:00:00Z', // J1: México vs Sudáfrica          ES 21:00 11jun
-  'G6': '2026-06-12T02:00:00Z', // J1: Corea del Sur vs Rep. Checa  ES 04:00 12jun
-  'G4': '2026-06-25T19:00:00Z', // J2: Sudáfrica vs Corea del Sur   ES 18:00 18jun
-  'G2': '2026-06-19T01:00:00Z', // J2: México vs Corea del Sur      ES 03:00 19jun
-  'G3': '2026-06-25T19:00:00Z', // J3: México vs Rep. Checa         ES 03:00 25jun
-  'G5': '2026-06-18T16:00:00Z', // J3: Sudáfrica vs Rep. Checa      ES 03:00 25jun
+  'G1': '2026-06-11T19:00:00Z', // J1: México vs Sudáfrica
+  'G6': '2026-06-12T02:00:00Z', // J1: Corea del Sur vs Rep. Checa
+  'G4': '2026-06-25T01:00:00Z', // J2: Sudáfrica vs Corea del Sur
+  'G2': '2026-06-19T01:00:00Z', // J2: México vs Corea del Sur
+  'G3': '2026-06-25T01:00:00Z', // J3: México vs Rep. Checa
+  'G5': '2026-06-18T16:00:00Z', // J3: Sudáfrica vs Rep. Checa
+
   // GRUPO B — Canadá(G7,G8,G9) Bosnia(G7,G10,G11) Qatar(G8,G10,G12) Suiza(G9,G11,G12)
-  'G7': '2026-06-12T19:00:00Z', // J1: Canadá vs Bosnia-Herz.       ES 21:00 12jun
-  'G12':'2026-06-13T19:00:00Z', // J1: Qatar vs Suiza               ES 21:00 13jun
-  'G11':'2026-06-18T19:00:00Z', // J2: Suiza vs Bosnia-Herz.        ES 21:00 18jun
-  'G8': '2026-06-18T22:00:00Z', // J2: Canadá vs Qatar              ES 00:00 19jun
-  'G9': '2026-06-26T19:00:00Z', // J3: Suiza vs Canadá              ES 21:00 24jun
-  'G10':'2026-06-26T19:00:00Z', // J3: Bosnia-Herz. vs Qatar        ES 21:00 24jun
+  'G7': '2026-06-12T19:00:00Z', // J1: Canadá vs Bosnia-Herz.
+  'G12':'2026-06-13T19:00:00Z', // J1: Qatar vs Suiza
+  'G11':'2026-06-18T19:00:00Z', // J2: Suiza vs Bosnia-Herz.
+  'G8': '2026-06-18T22:00:00Z', // J2: Canadá vs Qatar
+  'G9': '2026-06-24T19:00:00Z', // J3: Suiza vs Canadá
+  'G10':'2026-06-24T19:00:00Z', // J3: Bosnia-Herz. vs Qatar
+
   // GRUPO C — Brasil(G13,G14,G15) Marruecos(G13,G16,G17) Haití(G14,G16,G18) Escocia(G15,G17,G18)
-  'G13':'2026-06-13T22:00:00Z', // J1: Brasil vs Marruecos          ES 00:00 14jun
-  'G18':'2026-06-14T01:00:00Z', // J1: Haití vs Escocia             ES 03:00 14jun
-  'G17':'2026-06-19T22:00:00Z', // J2: Escocia vs Marruecos         ES 00:00 20jun
-  'G14':'2026-06-20T00:30:00Z', // J2: Brasil vs Haití              ES 02:30 20jun
-  'G15':'2026-06-25T22:00:00Z', // J3: Escocia vs Brasil            ES 00:00 25jun
-  'G16':'2026-06-25T22:00:00Z', // J3: Marruecos vs Haití           ES 00:00 25jun
+  'G13':'2026-06-13T22:00:00Z', // J1: Brasil vs Marruecos
+  'G18':'2026-06-14T01:00:00Z', // J1: Haití vs Escocia
+  'G17':'2026-06-19T22:00:00Z', // J2: Escocia vs Marruecos
+  'G14':'2026-06-20T00:30:00Z', // J2: Brasil vs Haití
+  'G15':'2026-06-24T22:00:00Z', // J3: Escocia vs Brasil
+  'G16':'2026-06-24T22:00:00Z', // J3: Marruecos vs Haití
+
   // GRUPO D — EE.UU.(G19,G20,G21) Paraguay(G19,G22,G23) Australia(G20,G22,G24) Turquía(G21,G23,G24)
-  'G19':'2026-06-13T01:00:00Z', // J1: EE.UU. vs Paraguay           ES 03:00 13jun
-  'G24':'2026-06-14T04:00:00Z', // J1: Australia vs Turquía         ES 18:00 14jun
-  'G20':'2026-06-19T19:00:00Z', // J2: EE.UU. vs Australia          ES 21:00 19jun
-  'G23':'2026-06-20T03:00:00Z', // J2: Turquía vs Paraguay          ES 05:00 20jun
-  'G21':'2026-06-27T02:00:00Z', // J3: Turquía vs EE.UU.            ES 04:00 26jun
-  'G22':'2026-06-27T02:00:00Z', // J3: Paraguay vs Australia        ES 04:00 26jun
+  'G19':'2026-06-13T01:00:00Z', // J1: EE.UU. vs Paraguay
+  'G24':'2026-06-14T04:00:00Z', // J1: Australia vs Turquía
+  'G20':'2026-06-19T19:00:00Z', // J2: EE.UU. vs Australia
+  'G23':'2026-06-20T03:00:00Z', // J2: Turquía vs Paraguay
+  'G21':'2026-06-26T02:00:00Z', // J3: Turquía vs EE.UU.
+  'G22':'2026-06-26T02:00:00Z', // J3: Paraguay vs Australia
+
   // GRUPO E — Alemania(G25,G26,G27) Curazao(G25,G28,G29) CostaMarf.(G26,G28,G30) Ecuador(G27,G29,G30)
-  'G25':'2026-06-14T17:00:00Z', // J1: Alemania vs Curazao          ES 19:00 14jun
-  'G30':'2026-06-14T23:00:00Z', // J1: Costa de Marfil vs Ecuador   ES 01:00 15jun
-  'G26':'2026-06-20T20:00:00Z', // J2: Alemania vs Costa de Marfil  ES 22:00 20jun
-  'G29':'2026-06-21T02:00:00Z', // J2: Ecuador vs Curazao           ES 02:00 21jun
-  'G27':'2026-06-25T20:00:00Z', // J3: Ecuador vs Alemania          ES 22:00 25jun
-  'G28':'2026-06-25T20:00:00Z', // J3: Curazao vs Costa de Marfil   ES 22:00 25jun
+  'G25':'2026-06-14T17:00:00Z', // J1: Alemania vs Curazao
+  'G30':'2026-06-14T23:00:00Z', // J1: Costa de Marfil vs Ecuador
+  'G26':'2026-06-20T20:00:00Z', // J2: Alemania vs Costa de Marfil
+  'G29':'2026-06-21T00:00:00Z', // J2: Ecuador vs Curazao
+  'G27':'2026-06-25T20:00:00Z', // J3: Ecuador vs Alemania
+  'G28':'2026-06-25T20:00:00Z', // J3: Curazao vs Costa de Marfil
+
   // GRUPO F — PaísesBajos(G31,G32,G33) Japón(G31,G34,G35) Túnez(G32,G34,G36) Suecia(G33,G35,G36)
-  'G31':'2026-06-14T20:00:00Z', // J1: Países Bajos vs Japón        ES 00:00 15jun
-  'G36':'2026-06-15T02:00:00Z', // J1: Suecia vs Túnez              ES 04:00 15jun
-  'G33':'2026-06-20T17:00:00Z', // J2: Países Bajos vs Suecia       ES 19:00 20jun
-  'G34':'2026-06-21T04:00:00Z', // J2: Túnez vs Japón               ES 06:00 21jun
-  'G35':'2026-06-26T23:00:00Z', // J3: Japón vs Suecia              ES 01:00 26jun
-  'G32':'2026-06-26T23:00:00Z', // J3: Túnez vs Países Bajos        ES 01:00 26jun
+  'G31':'2026-06-14T20:00:00Z', // J1: Países Bajos vs Japón
+  'G36':'2026-06-15T02:00:00Z', // J1: Suecia vs Túnez
+  'G33':'2026-06-20T17:00:00Z', // J2: Países Bajos vs Suecia
+  'G34':'2026-06-21T04:00:00Z', // J2: Túnez vs Japón
+  'G35':'2026-06-25T23:00:00Z', // J3: Japón vs Suecia
+  'G32':'2026-06-25T23:00:00Z', // J3: Túnez vs Países Bajos
+
   // GRUPO G — Bélgica(G37,G38,G39) Egipto(G37,G40,G41) Irán(G38,G40,G42) NuevaZelanda(G39,G41,G42)
-  'G37':'2026-06-15T19:00:00Z', // J1: Bélgica vs Egipto            ES 21:00 15jun
-  'G42':'2026-06-16T01:00:00Z', // J1: Irán vs Nueva Zelanda        ES 03:00 16jun
-  'G38':'2026-06-21T19:00:00Z', // J2: Bélgica vs Irán              ES 21:00 21jun
-  'G41':'2026-06-22T01:00:00Z', // J2: Nueva Zelanda vs Egipto      ES 03:00 22jun
-  'G40':'2026-06-28T03:00:00Z', // J3: Egipto vs Irán               ES 05:00 27jun
-  'G39':'2026-06-28T03:00:00Z', // J3: Nueva Zelanda vs Bélgica     ES 05:00 27jun
+  'G37':'2026-06-15T19:00:00Z', // J1: Bélgica vs Egipto
+  'G42':'2026-06-16T01:00:00Z', // J1: Irán vs Nueva Zelanda
+  'G38':'2026-06-21T19:00:00Z', // J2: Bélgica vs Irán
+  'G41':'2026-06-22T01:00:00Z', // J2: Nueva Zelanda vs Egipto
+  'G40':'2026-06-27T03:00:00Z', // J3: Egipto vs Irán
+  'G39':'2026-06-27T03:00:00Z', // J3: Nueva Zelanda vs Bélgica
+
   // GRUPO H — España(G43,G44,G45) CaboVerde(G43,G46,G47) ArabiaSaudita(G44,G46,G48) Uruguay(G45,G47,G48)
-  'G43':'2026-06-15T16:00:00Z', // J1: España vs Cabo Verde         ES 18:00 15jun
-  'G48':'2026-06-15T22:00:00Z', // J1: Arabia Saudita vs Uruguay    ES 00:00 16jun
-  'G44':'2026-06-21T16:00:00Z', // J2: España vs Arabia Saudita     ES 18:00 21jun
-  'G47':'2026-06-21T22:00:00Z', // J2: Uruguay vs Cabo Verde        ES 00:00 22jun
-  'G45':'2026-06-28T00:00:00Z', // J3: Uruguay vs España            ES 02:00 27jun
-  'G46':'2026-06-28T00:00:00Z', // J3: Cabo Verde vs Arabia Saudita ES 02:00 27jun
+  'G43':'2026-06-15T16:00:00Z', // J1: España vs Cabo Verde
+  'G48':'2026-06-15T22:00:00Z', // J1: Arabia Saudita vs Uruguay
+  'G44':'2026-06-21T16:00:00Z', // J2: España vs Arabia Saudita
+  'G47':'2026-06-21T22:00:00Z', // J2: Uruguay vs Cabo Verde
+  'G45':'2026-06-27T00:00:00Z', // J3: Uruguay vs España
+  'G46':'2026-06-27T00:00:00Z', // J3: Cabo Verde vs Arabia Saudita
+
   // GRUPO I — Francia(G49,G50,G51) Senegal(G49,G52,G53) Noruega(G50,G52,G54) Irak(G51,G53,G54)
-  'G49':'2026-06-16T19:00:00Z', // J1: Francia vs Senegal           ES 21:00 16jun
-  'G54':'2026-06-16T22:00:00Z', // J1: Irak vs Noruega              ES 00:00 17jun
-  'G51':'2026-06-22T21:00:00Z', // J2: Francia vs Irak              ES 23:00 22jun
-  'G52':'2026-06-23T00:00:00Z', // J2: Noruega vs Senegal           ES 02:00 23jun
-  'G50':'2026-06-26T19:00:00Z', // J3: Noruega vs Francia           ES 21:00 26jun
-  'G53':'2026-06-26T19:00:00Z', // J3: Senegal vs Irak              ES 21:00 26jun
+  'G49':'2026-06-16T19:00:00Z', // J1: Francia vs Senegal
+  'G54':'2026-06-16T22:00:00Z', // J1: Irak vs Noruega
+  'G51':'2026-06-22T21:00:00Z', // J2: Francia vs Irak
+  'G52':'2026-06-23T00:00:00Z', // J2: Noruega vs Senegal
+  'G50':'2026-06-26T19:00:00Z', // J3: Noruega vs Francia
+  'G53':'2026-06-26T19:00:00Z', // J3: Senegal vs Irak
+
   // GRUPO J — Argentina(G55,G56,G57) Argelia(G55,G58,G59) Austria(G56,G58,G60) Jordania(G57,G59,G60)
-  'G55':'2026-06-17T01:00:00Z', // J1: Argentina vs Argelia         ES 03:00 17jun
-  'G60':'2026-06-17T04:00:00Z', // J1: Austria vs Jordania          ES 06:00 17jun
-  'G56':'2026-06-22T17:00:00Z', // J2: Argentina vs Austria         ES 19:00 22jun
-  'G59':'2026-06-23T03:00:00Z', // J2: Jordania vs Argelia          ES 05:00 23jun
-  'G57':'2026-06-29T02:00:00Z', // J3: Jordania vs Argentina        ES 04:00 28jun
-  'G58':'2026-06-29T02:00:00Z', // J3: Argelia vs Austria           ES 04:00 28jun
+  'G55':'2026-06-17T01:00:00Z', // J1: Argentina vs Argelia
+  'G60':'2026-06-17T04:00:00Z', // J1: Austria vs Jordania
+  'G56':'2026-06-22T17:00:00Z', // J2: Argentina vs Austria
+  'G59':'2026-06-23T03:00:00Z', // J2: Jordania vs Argelia
+  'G57':'2026-06-28T02:00:00Z', // J3: Jordania vs Argentina
+  'G58':'2026-06-28T02:00:00Z', // J3: Argelia vs Austria
+
   // GRUPO K — Portugal(G61,G62,G63) Colombia(G61,G64,G65) Uzbekistán(G62,G64,G66) RDCongo(G63,G65,G66)
-  'G63':'2026-06-17T17:00:00Z', // J1: Portugal vs R.D. Congo       ES 19:00 17jun
-  'G64':'2026-06-18T02:00:00Z', // J1: Uzbekistán vs Colombia       ES 04:00 18jun (Azteca)
-  'G62':'2026-06-23T17:00:00Z', // J2: Portugal vs Uzbekistán       ES 19:00 23jun
-  'G65':'2026-06-24T02:00:00Z', // J2: Colombia vs R.D. Congo       ES 04:00 24jun
-  'G61':'2026-06-28T23:30:00Z', // J3: Colombia vs Portugal         ES 01:30 28jun
-  'G66':'2026-06-28T23:30:00Z', // J3: R.D. Congo vs Uzbekistán     ES 01:30 28jun
+  'G63':'2026-06-17T17:00:00Z', // J1: Portugal vs R.D. Congo
+  'G64':'2026-06-18T02:00:00Z', // J1: Uzbekistán vs Colombia
+  'G62':'2026-06-23T17:00:00Z', // J2: Portugal vs Uzbekistán
+  'G65':'2026-06-24T02:00:00Z', // J2: Colombia vs R.D. Congo
+  'G61':'2026-06-27T23:30:00Z', // J3: Colombia vs Portugal
+  'G66':'2026-06-27T23:30:00Z', // J3: R.D. Congo vs Uzbekistán
+
   // GRUPO L — Inglaterra(G67,G68,G69) Croacia(G67,G70,G71) Ghana(G68,G70,G72) Panamá(G69,G71,G72)
-  'G67':'2026-06-17T20:00:00Z', // J1: Inglaterra vs Croacia        ES 22:00 17jun
-  'G72':'2026-06-17T23:00:00Z', // J1: Ghana vs Panamá              ES 01:00 18jun
-  'G68':'2026-06-23T20:00:00Z', // J2: Inglaterra vs Ghana          ES 22:00 23jun
-  'G71':'2026-06-23T23:00:00Z', // J2: Panamá vs Croacia            ES 01:00 24jun
-  'G69':'2026-06-27T21:00:00Z', // J3: Panamá vs Inglaterra         ES 23:00 27jun
-  'G70':'2026-06-27T21:00:00Z', // J3: Croacia vs Ghana             ES 23:00 27jun
+  'G67':'2026-06-17T20:00:00Z', // J1: Inglaterra vs Croacia
+  'G72':'2026-06-17T23:00:00Z', // J1: Ghana vs Panamá
+  'G68':'2026-06-23T20:00:00Z', // J2: Inglaterra vs Ghana
+  'G71':'2026-06-23T23:00:00Z', // J2: Panamá vs Croacia
+  'G69':'2026-06-27T21:00:00Z', // J3: Panamá vs Inglaterra
+  'G70':'2026-06-27T21:00:00Z', // J3: Croacia vs Ghana
 };
 
 function makeMatches(){
