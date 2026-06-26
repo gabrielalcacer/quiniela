@@ -180,7 +180,7 @@ body {
 .rank-row.rank-3 { border-color: #cd7f32; }
 .rank-num { font-size: 26px; width: 30px; text-align: center; color: var(--red-pirate); flex-shrink: 0; }
 .rank-bar-wrap { flex: 1; min-width: 0; }
-.rank-name { font-size: 20px; color: var(--text); margin-bottom: 2px; }
+.rank-name { font-size: 20px; color: var(--text); margin-bottom: 2px; font-weight: 700; font-family: 'Nunito', sans-serif; }
 .rank-pts { font-size: 22px; color: var(--text); flex-shrink: 0; }
 .rank-detail { font-size: 11px; font-weight: bold; color: var(--text2); }
 .rank-bar-bg { height: 6px; background: var(--border); border-radius: 3px; overflow: hidden; margin-top: 5px; }
@@ -217,7 +217,7 @@ button.primary:hover { background: #b22222; }
 /* ── Login Screen ── */
 #login-screen {
   background: url('http://googleusercontent.com/image_generation_content/2') center/cover no-repeat;
-  min-height: 100vh; display: flex; align-items: center; justify-content: center; position: relative; z-index: 10;
+  min-height: 100vh; display: none; align-items: center; justify-content: center; position: relative; z-index: 10;
 }
 #login-screen::before { content: ''; position: absolute; inset: 0; background: rgba(0,0,0,0.6); z-index: -1;}
 .login-box {
@@ -294,6 +294,8 @@ td { padding: 9px 10px; border-bottom: 1px solid var(--border); font-weight: 600
 .player-selector{display:flex;flex-direction:column;gap:8px}
 .player-selector select{width:100%}
 
+
+#login-screen.active { display: flex; }
 </style>
 </head>
 <body>
@@ -1321,7 +1323,7 @@ function startCountdown(){
     const diff=new Date(MATCH_TIMES[nm.id]).getTime()-Date.now();
     if(diff<0){document.getElementById('countdown-bar').style.display='none';return;}
     const h=Math.floor(diff/3600000),m=Math.floor((diff%3600000)/60000),s=Math.floor((diff%60000)/1000);
-    document.getElementById('cd-match').textContent=`${flag(nm.home)} ${nm.home} vs ${nm.away} ${flag(nm.away)}`;
+    document.getElementById('cd-match').innerHTML=`${flag(nm.home)} ${nm.home} vs ${nm.away} ${flag(nm.away)}`;
     document.getElementById('cd-teams').textContent='Próximo partido';
     document.getElementById('cd-timer').textContent=`${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
   }
@@ -1345,7 +1347,7 @@ function renderPlayer(){
   document.getElementById('footer-name').textContent=currentUser;
   document.getElementById('footer-rank').textContent='#'+rank;
   const nm=nextMatch();
-  document.getElementById('footer-next').textContent=nm?`Próximo: ${flag(nm.home)} vs ${flag(nm.away)}`:'';
+  document.getElementById('footer-next').innerHTML=nm?`Próximo: ${flag(nm.home)} vs ${flag(nm.away)}`:'';
   renderPlayerMatches();renderRanking('pv-rl');renderRanking('pv-rl-desktop');renderSpecialPlayer();
 }
 
@@ -1509,7 +1511,7 @@ window.openPickModal=function(id){
   editingMatchId=id;
   const pick=STATE.players[currentUser]?.picks?.[id]||{home:'',away:'',advances:''};
   const tl=timeLabel(id);
-  document.getElementById('mo-t').textContent=`${flag(m.home)} ${m.home} vs ${m.away} ${flag(m.away)}`;
+  document.getElementById('mo-t').innerHTML=`${flag(m.home)} ${m.home} vs ${m.away} ${flag(m.away)}`;
   document.getElementById('mo-h').innerHTML=`${flag(m.home)} ${m.home}`;
   document.getElementById('mo-a').innerHTML=`${flag(m.away)} ${m.away}`;
   document.getElementById('mo-time').innerHTML=tl?`🇪🇸 ${tl.es}<br>🇺🇸 ${tl.us}<br>🇻🇪 ${tl.ve}`:'';
