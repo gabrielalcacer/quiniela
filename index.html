@@ -196,9 +196,9 @@ td { padding: 9px 10px; border-bottom: 1px solid var(--border); font-weight: 600
 <div id="app-header" style="display:none">
   <div class="header-inner">
     <div class="header-logo">
-      <span class="header-logo-ball">🏴‍☠️</span>
+      <span class="header-logo-ball">⚽</span>
       <div class="header-logo-text">
-        <strong class="pirata-font">Grand Line 2026</strong>
+        <strong class="pirata-font">Mundial 2026</strong>
         <small>EE.UU · México · Canadá</small>
       </div>
     </div>
@@ -214,20 +214,20 @@ td { padding: 9px 10px; border-bottom: 1px solid var(--border); font-weight: 600
     <h1 class="pirata-font">QUINIELA MUNDIAL</h1>
     <p class="subtitle">Grand Line Edition 2026</p>
     <div style="margin-bottom:1rem">
-      <label style="font-size:12px;color:var(--text2);display:block;margin-bottom:6px;font-weight:700">Selecciona tu Tripulante</label>
+      <label style="font-size:12px;color:var(--text2);display:block;margin-bottom:6px;font-weight:700">Selecciona tu Nombre</label>
       <select id="login-select" onchange="onNameSelected()"><option value="">Selecciona...</option></select>
     </div>
     <div id="pin-field-wrap" style="margin-bottom:1.25rem;display:none">
-      <label style="font-size:12px;color:var(--text2);display:block;margin-bottom:6px;font-weight:700" id="pin-label">Código Secreto (PIN)</label>
+      <label style="font-size:12px;color:var(--text2);display:block;margin-bottom:6px;font-weight:700" id="pin-label">Tu PIN (4 dígitos)</label>
       <input type="password" id="user-pin" placeholder="••••" inputmode="numeric" maxlength="4" pattern="[0-9]*" onkeydown="if(event.key==='Enter')doLogin()">
       <p id="pin-hint" style="font-size:11px;color:var(--text2);margin-top:6px;line-height:1.4"></p>
     </div>
     <div style="margin-bottom:1.5rem">
-      <label style="font-size:12px;color:var(--text2);display:block;margin-bottom:6px;font-weight:700">Llave del Almirante (Admin)</label>
+      <label style="font-size:12px;color:var(--text2);display:block;margin-bottom:6px;font-weight:700">¿Eres el administrador?</label>
       <input type="password" id="admin-pw" placeholder="Contraseña admin">
     </div>
-    <button class="primary" style="width:100%;height:46px;font-size:18px;letter-spacing:1px;font-family:'Pirata One',serif" onclick="doLogin()">ZARPAR ➔</button>
-    <p id="lmsg" style="text-align:center;color:var(--text2);font-size:13px;margin-top:15px"><span class="sp"></span>Cargando tripulación...</p>
+    <button class="primary" style="width:100%;height:46px;font-size:18px;letter-spacing:1px;font-family:'Pirata One',serif" onclick="doLogin()">ENTRAR ➔</button>
+    <p id="lmsg" style="text-align:center;color:var(--text2);font-size:13px;margin-top:15px"><span class="sp"></span>Cargando participantes...</p>
   </div>
 </div>
 
@@ -236,35 +236,35 @@ td { padding: 9px 10px; border-bottom: 1px solid var(--border); font-weight: 600
     <aside class="sidebar-left">
       <div class="welcome-card" id="welcome-card">
         <h3 id="wc-name">¡Hola!</h3>
-        <p id="wc-msg" style="font-weight:bold; font-size:12px;">Rellena tus resultados antes de zarpar</p>
+        <p id="wc-msg" style="font-weight:bold; font-size:12px;">Rellena tus resultados antes de los partidos</p>
         <div class="welcome-stats">
-          <div class="welcome-stat"><div class="n pirata-font" id="wc-pts">0</div><div class="l">Berries</div></div>
-          <div class="welcome-stat"><div class="n pirata-font" id="wc-rank">#-</div><div class="l">Rango</div></div>
+          <div class="welcome-stat"><div class="n pirata-font" id="wc-pts">0</div><div class="l">Puntos (฿)</div></div>
+          <div class="welcome-stat"><div class="n pirata-font" id="wc-rank">#-</div><div class="l">Posición</div></div>
           <div class="welcome-stat"><div class="n pirata-font" id="wc-pending" style="color:#ff7b7b">0</div><div class="l">Pendientes</div></div>
         </div>
       </div>
       <div class="countdown-bar" id="countdown-bar">
-        <div class="cd-icon">🧭</div>
+        <div class="cd-icon">⏱</div>
         <div class="cd-text">
-          <strong id="cd-match">Log Pose...</strong>
-          <span id="cd-teams">Buscando rumbo</span>
+          <strong id="cd-match">Próximo partido</strong>
+          <span id="cd-teams">Buscando...</span>
         </div>
         <div class="cd-time pirata-font" id="cd-timer">--:--:--</div>
       </div>
       <div class="tabs">
-        <button class="tab active" onclick="pvTab(this,'pv-picks')"><i class="ti ti-map"></i> Mapa de Picks</button>
-        <button class="tab" onclick="pvTab(this,'pv-groups')"><i class="ti ti-layout-grid"></i> Mar de Grupos</button>
-        <button class="tab" id="tab-btn-ranking" onclick="pvTab(this,'pv-ranking')"><i class="ti ti-skull"></i> Recompensas (Ranking)</button>
-        <button class="tab" onclick="pvTab(this,'pv-quiniellas')"><i class="ti ti-telescope"></i> Espiar Rivales</button>
-        <button class="tab" onclick="pvTab(this,'pv-special')"><i class="ti ti-star"></i> Tesoros Especiales</button>
-        <button class="tab" onclick="logout()" style="background:var(--parchment); color:var(--red-pirate); border-color:var(--red-pirate); margin-top:10px;"><i class="ti ti-door-exit"></i> Abandonar Barco</button>
+        <button class="tab active" onclick="pvTab(this,'pv-picks')"><i class="ti ti-map"></i> Tus Resultados</button>
+        <button class="tab" onclick="pvTab(this,'pv-groups')"><i class="ti ti-layout-grid"></i> Grupos</button>
+        <button class="tab" id="tab-btn-ranking" onclick="pvTab(this,'pv-ranking')"><i class="ti ti-trophy"></i> Ranking</button>
+        <button class="tab" onclick="pvTab(this,'pv-quiniellas')"><i class="ti ti-eye"></i> Quinielas</button>
+        <button class="tab" onclick="pvTab(this,'pv-special')"><i class="ti ti-star"></i> Especiales</button>
+        <button class="tab" onclick="logout()" style="background:var(--parchment); color:var(--red-pirate); border-color:var(--red-pirate); margin-top:10px;"><i class="ti ti-door-exit"></i> Salir</button>
       </div>
     </aside>
 
     <main class="content-center">
       <div id="pv-picks" class="pvp">
         <div class="section-title pirata-font" style="font-size:26px; margin-top:0;">Tus Predicciones</div>
-        <p class="muted" style="margin-bottom:15px;">Asegura tus pronósticos antes de que comience la batalla.</p>
+        <p class="muted" style="margin-bottom:15px;">Asegura tus pronósticos antes de que empiece cada partido.</p>
         <div id="pv-ml"></div>
       </div>
       <div id="pv-groups" class="pvp" style="display:none">
@@ -272,12 +272,12 @@ td { padding: 9px 10px; border-bottom: 1px solid var(--border); font-weight: 600
         <div id="pv-gl" class="card"></div>
       </div>
       <div id="pv-quiniellas" class="pvp quiniellas-tab" style="display:none">
-        <div class="section-title pirata-font" style="font-size:26px; margin-top:0;">Cartas de Navegación Rivales</div>
+        <div class="section-title pirata-font" style="font-size:26px; margin-top:0;">Quinielas Restantes</div>
         <div id="pv-quiniellas-list"></div>
       </div>
       <div id="pv-ranking" class="pvp" style="display:none">
         <div class="wanted-board">
-          <h3 class="pirata-font">WANTED - TOP PIRATAS</h3>
+          <h3 class="pirata-font">WANTED - TOP JUGADORES</h3>
           <div id="pv-rl"></div>
         </div>
       </div>
@@ -285,38 +285,38 @@ td { padding: 9px 10px; border-bottom: 1px solid var(--border); font-weight: 600
         <div class="section-title pirata-font" style="font-size:26px; margin-top:0;">Tesoros Especiales</div>
         <div class="card">
           <div class="special-field-group">
-            <label>👑 Rey de los Piratas (Campeón) <span class="badge bs">+ ฿20</span></label>
-            <select id="pv-champ" onchange="champChanged()" style="border-color:var(--wood)"><option value="">Selecciona tripulación...</option></select>
+            <label>🏆 Campeón del Mundial <span class="badge bs">+ ฿20</span></label>
+            <select id="pv-champ" onchange="champChanged()" style="border-color:var(--wood)"><option value="">Selecciona equipo...</option></select>
           </div>
           <div class="special-field-group">
-            <label>⚔️ Mejor Espadachín (Goleador) <span class="badge bw">+ ฿10</span></label>
+            <label>⚽ Goleador del torneo <span class="badge bw">+ ฿10</span></label>
             <div style="display:flex; flex-direction:column; gap:8px;">
-              <select id="scorer-team" onchange="loadPlayers('scorer-team','pv-scorer-sel','all')" style="border-color:var(--wood)"><option value="">1. Elige tripulación...</option></select>
-              <select id="pv-scorer-sel" onchange="syncHidden('pv-scorer-sel','pv-scorer')"><option value="">2. Elige guerrero...</option></select>
+              <select id="scorer-team" onchange="loadPlayers('scorer-team','pv-scorer-sel','all')" style="border-color:var(--wood)"><option value="">1. Elige equipo...</option></select>
+              <select id="pv-scorer-sel" onchange="syncHidden('pv-scorer-sel','pv-scorer')"><option value="">2. Elige jugador...</option></select>
               <input type="hidden" id="pv-scorer">
               <div id="scorer-preview" class="selected-player" style="display:none"></div>
             </div>
           </div>
           <div class="special-field-group">
-            <label>🛡️ Escudo de Hierro (Portero) <span class="badge bw">+ ฿10</span></label>
+            <label>🧤 Mejor portero <span class="badge bw">+ ฿10</span></label>
             <div style="display:flex; flex-direction:column; gap:8px;">
-              <select id="keeper-team" onchange="loadPlayers('keeper-team','pv-keeper-sel','P')" style="border-color:var(--wood)"><option value="">1. Elige tripulación...</option></select>
-              <select id="pv-keeper-sel" onchange="syncHidden('pv-keeper-sel','pv-keeper')"><option value="">2. Elige guardián...</option></select>
+              <select id="keeper-team" onchange="loadPlayers('keeper-team','pv-keeper-sel','P')" style="border-color:var(--wood)"><option value="">1. Elige equipo...</option></select>
+              <select id="pv-keeper-sel" onchange="syncHidden('pv-keeper-sel','pv-keeper')"><option value="">2. Elige portero...</option></select>
               <input type="hidden" id="pv-keeper">
               <div id="keeper-preview" class="selected-player" style="display:none"></div>
             </div>
           </div>
           <div class="special-field-group">
-            <label>⭐ MVP de Grand Line <span class="badge bw">+ ฿10</span></label>
+            <label>⭐ MVP del torneo <span class="badge bw">+ ฿10</span></label>
             <div style="display:flex; flex-direction:column; gap:8px;">
-              <select id="mvp-team" onchange="loadPlayers('mvp-team','pv-mvp-sel','all')" style="border-color:var(--wood)"><option value="">1. Elige tripulación...</option></select>
-              <select id="pv-mvp-sel" onchange="syncHidden('pv-mvp-sel','pv-mvp')"><option value="">2. Elige leyenda...</option></select>
+              <select id="mvp-team" onchange="loadPlayers('mvp-team','pv-mvp-sel','all')" style="border-color:var(--wood)"><option value="">1. Elige equipo...</option></select>
+              <select id="pv-mvp-sel" onchange="syncHidden('pv-mvp-sel','pv-mvp')"><option value="">2. Elige jugador...</option></select>
               <input type="hidden" id="pv-mvp">
               <div id="mvp-preview" class="selected-player" style="display:none"></div>
             </div>
           </div>
-          <button class="primary" onclick="saveSpecial()" id="btn-save-special" style="width:100%; font-size:16px; margin-top:10px;">Enterrar Tesoro (Guardar)</button>
-          <p id="special-closed-msg" style="display:none;margin-top:.75rem;font-size:12px;color:var(--d-t);background:var(--d-bg);padding:8px 10px;border-radius:4px; border:1px solid var(--d-t)">🔒 Cofre cerrado. Plazo vencido.</p>
+          <button class="primary" onclick="saveSpecial()" id="btn-save-special" style="width:100%; font-size:16px; margin-top:10px;">Guardar Especiales</button>
+          <p id="special-closed-msg" style="display:none;margin-top:.75rem;font-size:12px;color:var(--d-t);background:var(--d-bg);padding:8px 10px;border-radius:4px; border:1px solid var(--d-t)">🔒 Plazo cerrado para opciones especiales.</p>
         </div>
         <div class="card" id="pv-sr" style="display:none"><div class="section-title">Resultados Especiales</div><div id="pv-srb"></div></div>
       </div>
@@ -324,7 +324,7 @@ td { padding: 9px 10px; border-bottom: 1px solid var(--border); font-weight: 600
 
     <aside class="sidebar-right">
       <div class="wanted-board">
-        <h3 class="pirata-font">WANTED - TOP PIRATAS</h3>
+        <h3 class="pirata-font">WANTED - TOP JUGADORES</h3>
         <div id="pv-rl-desktop"></div>
       </div>
     </aside>
@@ -334,15 +334,15 @@ td { padding: 9px 10px; border-bottom: 1px solid var(--border); font-weight: 600
 <div id="admin-view" class="view">
   <div class="inner" style="max-width: 800px;">
     <div style="display:flex;align-items:center;gap:10px;margin-bottom:1.25rem; background:var(--parchment); padding:15px; border:2px solid var(--wood); border-radius:8px;">
-      <div style="font-size:30px">🏴‍☠️</div>
-      <div><div style="font-weight:700;font-size:18px; color:var(--red-pirate)" class="pirata-font">Camarote del Capitán (Admin)</div><div class="muted">Control absoluto del torneo</div></div>
-      <div style="margin-left:auto"><button class="btn-sm" onclick="logout()">Abandonar</button></div>
+      <div style="font-size:30px">🛡️</div>
+      <div><div style="font-weight:700;font-size:18px; color:var(--red-pirate)" class="pirata-font">Panel de Administrador</div><div class="muted">Gestiona resultados y participantes</div></div>
+      <div style="margin-left:auto"><button class="btn-sm" onclick="logout()">Salir</button></div>
     </div>
     <div class="tabs">
       <button class="tab active" onclick="adminTab(this,'ad-res')"><i class="ti ti-ball-football"></i> Resultados</button>
-      <button class="tab" onclick="adminTab(this,'ad-pl')"><i class="ti ti-users"></i> Tripulantes</button>
-      <button class="tab" onclick="adminTab(this,'ad-sp')"><i class="ti ti-star"></i> Tesoros</button>
-      <button class="tab" onclick="adminTab(this,'ad-rk')"><i class="ti ti-skull"></i> Recompensas</button>
+      <button class="tab" onclick="adminTab(this,'ad-pl')"><i class="ti ti-users"></i> Participantes</button>
+      <button class="tab" onclick="adminTab(this,'ad-sp')"><i class="ti ti-star"></i> Especiales</button>
+      <button class="tab" onclick="adminTab(this,'ad-rk')"><i class="ti ti-trophy"></i> Ranking</button>
     </div>
     
     <div id="ad-res" class="adp">
@@ -351,7 +351,7 @@ td { padding: 9px 10px; border-bottom: 1px solid var(--border); font-weight: 600
     </div>
     
     <div id="ad-pl" class="adp" style="display:none">
-      <div class="card"><div style="font-weight:700;margin-bottom:.75rem">Añadir Tripulante</div>
+      <div class="card"><div style="font-weight:700;margin-bottom:.75rem">Añadir Participante</div>
         <div style="display:flex;gap:8px">
           <input type="text" id="np" placeholder="Nombre" class="flex1" onkeydown="if(event.key==='Enter')addPlayer()">
           <button class="primary" onclick="addPlayer()">Añadir</button>
@@ -361,17 +361,17 @@ td { padding: 9px 10px; border-bottom: 1px solid var(--border); font-weight: 600
     </div>
     
     <div id="ad-sp" class="adp" style="display:none">
-      <div class="card"><div style="font-weight:700;margin-bottom:.75rem">Realidad del Torneo</div>
-        <div style="margin-bottom:1rem"><label class="muted">Rey Pirata</label><select id="ad-rc" style="width:100%"><option value="">Sin definir</option></select></div>
-        <div style="margin-bottom:1rem"><label class="muted">Mejor Espadachín</label><input type="text" id="ad-rs" style="width:100%"></div>
-        <div style="margin-bottom:1rem"><label class="muted">Escudo</label><input type="text" id="ad-rk2" style="width:100%"></div>
-        <div style="margin-bottom:1rem"><label class="muted">MVP</label><input type="text" id="ad-rm" style="width:100%"></div>
-        <button class="primary" onclick="saveRealSpecial()">Guardar Verdad</button>
+      <div class="card"><div style="font-weight:700;margin-bottom:.75rem">Resultados Reales Finales</div>
+        <div style="margin-bottom:1rem"><label class="muted">🏆 Campeón real</label><select id="ad-rc" style="width:100%"><option value="">Sin definir</option></select></div>
+        <div style="margin-bottom:1rem"><label class="muted">⚽ Goleador real</label><input type="text" id="ad-rs" style="width:100%"></div>
+        <div style="margin-bottom:1rem"><label class="muted">🧤 Mejor portero real</label><input type="text" id="ad-rk2" style="width:100%"></div>
+        <div style="margin-bottom:1rem"><label class="muted">⭐ MVP real</label><input type="text" id="ad-rm" style="width:100%"></div>
+        <button class="primary" onclick="saveRealSpecial()">Guardar resultados</button>
       </div>
     </div>
     
     <div id="ad-rk" class="adp" style="display:none">
-      <div class="wanted-board"><h3 class="pirata-font">WANTED</h3><div id="ad-rkl"></div></div>
+      <div class="wanted-board"><h3 class="pirata-font">RANKING</h3><div id="ad-rkl"></div></div>
     </div>
   </div>
 </div>
@@ -379,7 +379,7 @@ td { padding: 9px 10px; border-bottom: 1px solid var(--border); font-weight: 600
 <div id="app-footer">
   <div class="footer-inner">
     <div><div class="footer-pts pirata-font" id="footer-pts">0</div></div>
-    <div class="footer-label"><strong id="footer-name" style="color:var(--wood); font-size:14px;">-</strong><br>Berries (฿)</div>
+    <div class="footer-label"><strong id="footer-name" style="color:var(--wood); font-size:14px;">-</strong><br>Puntos (฿)</div>
     <div class="footer-next" id="footer-next"></div>
     <div class="footer-rank pirata-font" id="footer-rank">#-</div>
   </div>
@@ -398,7 +398,7 @@ td { padding: 9px 10px; border-bottom: 1px solid var(--border); font-weight: 600
     </div>
     <div style="display:flex;gap:8px;justify-content:center">
       <button onclick="closePick()">Cancelar</button>
-      <button class="primary" onclick="savePick()">Sellar Destino</button>
+      <button class="primary" onclick="savePick()">Guardar resultado</button>
     </div>
   </div>
 </div>
@@ -406,23 +406,23 @@ td { padding: 9px 10px; border-bottom: 1px solid var(--border); font-weight: 600
 <div id="rules-modal" onclick="if(event.target===this)closeRules()">
   <div id="rules-box">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem; border-bottom:2px solid var(--border); padding-bottom:10px;">
-      <div style="font-size:24px; color:var(--wood)" class="pirata-font">📜 Leyes del Grand Line</div>
+      <div style="font-size:24px; color:var(--wood)" class="pirata-font">📋 Sistema de Puntuación</div>
       <button class="btn-sm" onclick="closeRules()"><i class="ti ti-x"></i></button>
     </div>
-    <div style="display:flex; justify-content:space-between; padding:8px 0; border-bottom:1px solid var(--border)"><div style="font-size:13px"><strong>Pleno (Marcador exacto)</strong></div><div class="badge bs">฿ 5</div></div>
-    <div style="display:flex; justify-content:space-between; padding:8px 0; border-bottom:1px solid var(--border)"><div style="font-size:13px"><strong>Acierto (Ganador/Empate)</strong></div><div class="badge bw">฿ 3</div></div>
-    <div class="section-title" style="font-size:14px; margin-top:15px;">Tesoros Finales</div>
-    <div style="display:flex; justify-content:space-between; padding:8px 0; border-bottom:1px solid var(--border)"><div style="font-size:13px"><strong>Rey Pirata (Campeón)</strong></div><div class="badge bs">฿ 20</div></div>
-    <div style="display:flex; justify-content:space-between; padding:8px 0; border-bottom:1px solid var(--border)"><div style="font-size:13px"><strong>Mejor Espadachín (Goleador)</strong></div><div class="badge bw">฿ 10</div></div>
-    <div style="display:flex; justify-content:space-between; padding:8px 0; border-bottom:1px solid var(--border)"><div style="font-size:13px"><strong>Escudo (Portero) / MVP</strong></div><div class="badge bw">฿ 10</div></div>
-    <button class="primary" style="width:100%;margin-top:20px" onclick="closeRules()">Entendido, Capitán</button>
+    <div style="display:flex; justify-content:space-between; padding:8px 0; border-bottom:1px solid var(--border)"><div style="font-size:13px"><strong>Resultado exacto</strong></div><div class="badge bs">฿ 5</div></div>
+    <div style="display:flex; justify-content:space-between; padding:8px 0; border-bottom:1px solid var(--border)"><div style="font-size:13px"><strong>Ganador o empate correcto</strong></div><div class="badge bw">฿ 3</div></div>
+    <div class="section-title" style="font-size:14px; margin-top:15px;">Especiales (al final)</div>
+    <div style="display:flex; justify-content:space-between; padding:8px 0; border-bottom:1px solid var(--border)"><div style="font-size:13px"><strong>🏆 Campeón del Mundial</strong></div><div class="badge bs">฿ 20</div></div>
+    <div style="display:flex; justify-content:space-between; padding:8px 0; border-bottom:1px solid var(--border)"><div style="font-size:13px"><strong>⚽ Goleador del torneo</strong></div><div class="badge bw">฿ 10</div></div>
+    <div style="display:flex; justify-content:space-between; padding:8px 0; border-bottom:1px solid var(--border)"><div style="font-size:13px"><strong>🧤 Mejor portero / MVP</strong></div><div class="badge bw">฿ 10</div></div>
+    <button class="primary" style="width:100%;margin-top:20px" onclick="closeRules()">Entendido</button>
   </div>
 </div>
 
 <div class="player-modal-overlay" id="player-modal" onclick="if(event.target===this)closePlayerModal()">
   <div class="player-modal-box">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem; border-bottom:2px solid var(--border); padding-bottom:10px;">
-      <div style="font-size:22px; color:var(--red-pirate)" class="pirata-font" id="pm-title">Mapa de </div>
+      <div style="font-size:22px; color:var(--red-pirate)" class="pirata-font" id="pm-title">Picks de </div>
       <button class="btn-sm" onclick="closePlayerModal()"><i class="ti ti-x"></i></button>
     </div>
     <div id="pm-content"></div>
@@ -441,7 +441,7 @@ const db=getFirestore(fbApp);
 const FLAGS={
   'México':'🇲🇽','Sudáfrica':'🇿🇦','Corea del Sur':'🇰🇷','Rep. Checa':'🇨🇿','Canadá':'🇨🇦','Bosnia-Herz.':'🇧🇦','Qatar':'🇶🇦','Suiza':'🇨🇭','Brasil':'🇧🇷','Marruecos':'🇲🇦','Haití':'🇭🇹','Escocia':'🏴󠁧󠁢󠁳󠁣󠁴󠁿','EE.UU.':'🇺🇸','Paraguay':'🇵🇾','Australia':'🇦🇺','Turquía':'🇹🇷','Alemania':'🇩🇪','Curazao':'🇨🇼','Costa de Marfil':'🇨🇮','Ecuador':'🇪🇨','Países Bajos':'🇳🇱','Japón':'🇯🇵','Túnez':'🇹🇳','Suecia':'🇸🇪','Bélgica':'🇧🇪','Egipto':'🇪🇬','Irán':'🇮🇷','Nueva Zelanda':'🇳🇿','España':'🇪🇸','Cabo Verde':'🇨🇻','Arabia Saudita':'🇸🇦','Uruguay':'🇺🇾','Francia':'🇫🇷','Senegal':'🇸🇳','Noruega':'🇳🇴','Irak':'🇮🇶','Argentina':'🇦🇷','Argelia':'🇩🇿','Austria':'🇦🇹','Jordania':'🇯🇴','Portugal':'🇵🇹','Colombia':'🇨🇴','Uzbekistán':'🇺🇿','R.D. Congo':'🇨🇩','Inglaterra':'🏴󠁧󠁢󠁥󠁮󠁧󠁿','Croacia':'🇭🇷','Ghana':'🇬🇭','Panamá':'🇵🇦'
 };
-function flag(t){return FLAGS[t]||'🏴‍☠️';}
+function flag(t){return FLAGS[t]||'⚽';}
 
 const SQUADS = {
   'México': { P: ['Raúl Rangel','Guillermo Ochoa','Carlos Acevedo'], D: ['Jorge Sánchez','Israel Reyes','César Montes','Johan Vásquez','Jesús Gallardo','Mateo Chávez'], C: ['Erik Lira','Orbelín Pineda','Álvaro Fidalgo','Roberto Alvarado','Brian Gutiérrez','Luis Romo','Edson Álvarez','Obed Vargas','Gilberto Mora','Luis Chávez'], F: ['César Huerta','Alexis Vega','Julián Quiñones','Guillermo Martínez','Armando González','Santiago Giménez','Raúl Jiménez'] },
@@ -567,7 +567,7 @@ async function loadFromFirebase(){
     const sp=await getDoc(doc(db,'quiniela','special'));if(sp.exists())STATE.realSpecial={...STATE.realSpecial,...sp.data()};
     const ps=await getDocs(collection(db,'players'));STATE.players={};ps.forEach(d=>STATE.players[d.id]=d.data());
     document.getElementById('lmsg').style.display='none';populateSel();
-  }catch(e){document.getElementById('lmsg').textContent='Error de Navegación (Firebase)';console.error(e);}
+  }catch(e){document.getElementById('lmsg').textContent='Error al conectar con la base de datos.';console.error(e);}
 }
 
 function subscribeRT(){
@@ -590,11 +590,11 @@ window.onNameSelected=function(){
   const hasPlayer=STATE.players[sel];
   const hasPin=hasPlayer&&hasPlayer.pin;
   if(hasPin){
-    label.textContent='Tu PIN Pirata (4 dígitos)';
-    hint.textContent='Abre tu cofre con la clave secreta.';
+    label.textContent='Tu PIN (4 dígitos)';
+    hint.textContent='Introduce tu PIN para acceder.';
   }else{
     label.textContent='Crea tu PIN (4 dígitos)';
-    hint.textContent='Elige 4 números para sellar tu cofre para siempre.';
+    hint.textContent='Elige 4 números para asegurar tu cuenta para siempre.';
   }
   document.getElementById('user-pin').value='';
   document.getElementById('user-pin').focus();
@@ -604,12 +604,12 @@ window.doLogin=function(){
   const sel=document.getElementById('login-select').value;
   const pw=document.getElementById('admin-pw').value;
   if(pw==='2026'){isAdmin=true;currentUser='admin';showView('admin-view');document.getElementById('app-header').style.display='block';renderAdmin();subscribeRT();return;}
-  if(!sel){alert('Selecciona tripulación');return;}
+  if(!sel){alert('Selecciona tu nombre');return;}
   const pin=document.getElementById('user-pin').value.trim();
   if(!/^[0-9]{4}$/.test(pin)){alert('El PIN debe tener 4 dígitos');return;}
   const existing=STATE.players[sel];
   if(existing&&existing.pin){
-    if(existing.pin!==pin){alert('PIN incorrecto, pirata.');return;}
+    if(existing.pin!==pin){alert('PIN incorrecto.');return;}
   }
   currentUser=sel;isAdmin=false;
   if(!STATE.players[currentUser])STATE.players[currentUser]={picks:{},special:{champion:'',scorer:'',keeper:'',mvp:''},pin:pin};
@@ -619,7 +619,7 @@ window.doLogin=function(){
   document.getElementById('app-header').style.display='block';
   document.getElementById('app-footer').style.display='block';
   document.getElementById('header-user').style.display='flex';
-  document.getElementById('header-user').textContent='☠️ '+currentUser;
+  document.getElementById('header-user').textContent='⚽ '+currentUser;
   renderPlayer();renderGroupStandings();subscribeRT();startCountdown();
 };
 
@@ -631,7 +631,11 @@ window.logout=function(){
   showView('login-screen');
 };
 
-function showView(v){document.querySelectorAll('#app>.view').forEach(e=>e.classList.remove('active'));document.getElementById(v).classList.add('active');}
+function showView(v){
+  document.querySelectorAll('#app>.view').forEach(e=>e.classList.remove('active'));
+  document.getElementById(v).classList.add('active');
+  window.scrollTo(0, 0); // Fija el error del scroll
+}
 
 window.pvTab=function(btn,id){
   btn.closest('.tabs').querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));btn.classList.add('active');
@@ -683,7 +687,7 @@ function startCountdown(){
     if(diff<0){document.getElementById('countdown-bar').style.display='none';return;}
     const h=Math.floor(diff/3600000),m=Math.floor((diff%3600000)/60000),s=Math.floor((diff%60000)/1000);
     document.getElementById('cd-match').textContent=`${flag(nm.home)} ${nm.home} vs ${nm.away} ${flag(nm.away)}`;
-    document.getElementById('cd-teams').textContent='Próxima batalla';
+    document.getElementById('cd-teams').textContent='Próximo partido';
     document.getElementById('cd-timer').textContent=`${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
   }
   tick();cdInterval=setInterval(tick,1000);
@@ -695,8 +699,8 @@ function renderPlayer(){
   const rank=ranking.findIndex(r=>r.name===currentUser)+1;
   const pending=pendingCount();
   
-  document.getElementById('wc-name').textContent=`Capitán ${currentUser}`;
-  document.getElementById('wc-msg').textContent=pending>0?`¡Tienes ${pending} predicciones sin mapa!`:'✅ Ruta de navegación lista';
+  document.getElementById('wc-name').textContent=`¡Hola, ${currentUser}!`;
+  document.getElementById('wc-msg').textContent=pending>0?`¡Tienes ${pending} predicciones pendientes!`:'✅ Todo al día';
   document.getElementById('wc-pts').textContent=pts.total;
   document.getElementById('wc-rank').textContent='#'+rank;
   document.getElementById('wc-pending').textContent=pending;
@@ -715,7 +719,7 @@ function renderPlayer(){
 function renderRankingAll() {
   const ranking = getRanking();
   let html = '';
-  if(!ranking.length) { html = '<p class="muted">Sin piratas en el mar.</p>'; }
+  if(!ranking.length) { html = '<p class="muted">Sin participantes.</p>'; }
   else {
     const maxPts = Math.max(ranking[0].total, 1);
     ranking.forEach((r,i)=>{
@@ -727,7 +731,7 @@ function renderRankingAll() {
         <div class="rank-num pirata-font">${medal}</div>
         <div class="rank-bar-wrap">
           <div class="rank-name pirata-font">${r.name}${isCurrent?' <span style="font-size:12px;color:var(--text2); font-family:Nunito">(Tú)</span>':''}</div>
-          <div class="rank-detail">☠️ ${r.exact} Plenos · ⚔️ ${r.winners} Aciertos</div>
+          <div class="rank-detail">🎯 ${r.exact} Exactos · ⚽ ${r.winners} Ganadores</div>
           <div class="rank-bar-bg"><div class="rank-bar-fill" style="width:${pct}%"></div></div>
         </div>
         <div class="rank-pts pirata-font" style="font-size:24px">฿ ${r.total}</div>
@@ -843,9 +847,9 @@ function matchRow(m,picks){
     else{scoreClass='lost';}
     if(pts>0)ptsHtml=`<span class="badge ${cls}">+ ฿${pts}</span>`;
   }
-  const myPick=pick.home!==''&&pick.away!==''?`${pick.home} - ${pick.away}`:'Sin mapa';
+  const myPick=pick.home!==''&&pick.away!==''?`${pick.home} - ${pick.away}`:'Sin rellenar';
   const official=m.played?`${m.homeGoals} - ${m.awayGoals}`:'Pendiente';
-  const editBtn=!koph&&!m.played&&!locked?`<button class="btn-sm primary" onclick="openPickModal('${m.id}')" style="margin-left:auto"><i class="ti ti-edit"></i> Marcar</button>`:'';
+  const editBtn=!koph&&!m.played&&!locked?`<button class="btn-sm primary" onclick="openPickModal('${m.id}')" style="margin-left:auto"><i class="ti ti-edit"></i> Editar</button>`:'';
   const timeHtml=tl?`<div class="match-times-block"><span><em>🇪🇸 ESP</em>${tl.es}</span><span><em>🇺🇸 USA (ET)</em>${tl.us}</span><span><em>🇻🇪 VEN</em>${tl.ve}</span></div>`:'';
   const hFlag=flag(m.home),aFlag=flag(m.away);
   return`<div class="match-card-big">
@@ -860,12 +864,12 @@ function matchRow(m,picks){
     ${timeHtml}
     <div class="mcb-scores">
       <div class="mcb-score-row pick-row">
-        <span class="mcb-score-label">Tu mapa</span>
+        <span class="mcb-score-label">Tu resultado</span>
         <span class="mcb-score-val ${pick.home===''?'empty':scoreClass}">${myPick}</span>
         ${editBtn}
       </div>
       <div class="mcb-score-row result-row">
-        <span class="mcb-score-label">Realidad</span>
+        <span class="mcb-score-label">Oficial</span>
         <span class="mcb-score-val ${!m.played?'empty':''}">${official}</span>
       </div>
     </div>
@@ -893,7 +897,7 @@ window.savePick=async function(){
   if(!canPick(editingMatchId)){alert('Este partido ya está cerrado.');closePick();return;}
   if(!STATE.players[currentUser].picks)STATE.players[currentUser].picks={};
   STATE.players[currentUser].picks[editingMatchId]={home:h,away:a};
-  await savePlayer(currentUser);closePick();toast('✅ Destino sellado');renderPlayer();
+  await savePlayer(currentUser);closePick();toast('✅ Resultado guardado');renderPlayer();
 };
 
 function calcGroupStandings(g){
@@ -951,7 +955,7 @@ function renderSpecialPlayer(){
   if(rs.champion||rs.scorer||rs.keeper||rs.mvp){
     document.getElementById('pv-sr').style.display='block';
     const row=(label,real,guess,pts)=>{if(!real)return'';const ok=guess&&guess.trim().toLowerCase()===real.trim().toLowerCase();return`<div style="display:flex;align-items:center;gap:8px;margin-bottom:10px; padding-bottom:5px; border-bottom:1px dashed var(--border)"><span style="flex:1">${label}: <strong>${real}</strong></span><span class="badge ${ok?'bs':'bd'}">${ok?'+ ฿'+pts:'✗'}</span></div>`;};
-    document.getElementById('pv-srb').innerHTML=row('👑 Rey',rs.champion,sp.champion,20)+row('⚔️ Espadachín',rs.scorer,sp.scorer,10)+row('🛡️ Escudo',rs.keeper,sp.keeper,10)+row('⭐ MVP',rs.mvp,sp.mvp,10);
+    document.getElementById('pv-srb').innerHTML=row('🏆 Campeón',rs.champion,sp.champion,20)+row('⚽ Goleador',rs.scorer,sp.scorer,10)+row('🧤 Portero',rs.keeper,sp.keeper,10)+row('⭐ MVP',rs.mvp,sp.mvp,10);
   }
 }
 
@@ -974,7 +978,7 @@ function populateTeamSelectors(){
   const champSel = document.getElementById('pv-champ');
   if(champSel){
     const currentVal = champSel.value;
-    champSel.innerHTML = '<option value="">Selecciona tripulación...</option>';
+    champSel.innerHTML = '<option value="">Selecciona equipo...</option>';
     teams.forEach(t => champSel.add(new Option(flag(t)+' '+t, t)));
     if(currentVal) champSel.value = currentVal;
   }
@@ -984,7 +988,7 @@ window.loadPlayers=function(teamSelId, playerSelId, role){
   const team = document.getElementById(teamSelId)?.value;
   const playerSel = document.getElementById(playerSelId);
   if(!playerSel) return;
-  playerSel.innerHTML = '<option value="">2. Elige guerrero...</option>';
+  playerSel.innerHTML = '<option value="">2. Elige jugador...</option>';
   if(!team || !SQUADS[team]) return;
   const squad = SQUADS[team];
   const posLabels = {P:'Porteros',D:'Defensas',C:'Centrocampistas',F:'Delanteros'};
@@ -1040,7 +1044,7 @@ function restorePlayerSelector(teamSelId, playerSelId, hiddenId, role, savedValu
 }
 
 window.saveSpecial=async function(){
-  if(!specialsOpen()){alert('El cofre ya ha sido cerrado.');return;}
+  if(!specialsOpen()){alert('Las opciones especiales están cerradas.');return;}
   if(!STATE.players[currentUser])return;
   if(!STATE.players[currentUser].special)STATE.players[currentUser].special={};
   const champSel = document.getElementById('pv-champ');
@@ -1051,7 +1055,7 @@ window.saveSpecial=async function(){
   STATE.players[currentUser].special.scorer=document.getElementById('pv-scorer')?.value||document.getElementById('pv-scorer-sel')?.value||'';
   STATE.players[currentUser].special.keeper=document.getElementById('pv-keeper')?.value||document.getElementById('pv-keeper-sel')?.value||'';
   STATE.players[currentUser].special.mvp=document.getElementById('pv-mvp')?.value||document.getElementById('pv-mvp-sel')?.value||'';
-  await savePlayer(currentUser);toast('✅ Tesoros enterrados');renderPlayer();
+  await savePlayer(currentUser);toast('✅ Especiales guardados');renderPlayer();
 };
 
 function renderAdmin(){
@@ -1192,7 +1196,7 @@ function populateSel(){
 window.openPlayerModal=function(playerName){
   const player=STATE.players[playerName];
   if(!player){return;}
-  document.getElementById('pm-title').textContent=`Mapa de ${playerName}`;
+  document.getElementById('pm-title').textContent=`Picks de ${playerName}`;
   const picks=player.picks||{};
   const sp=player.special||{};
   const phases=['Grupos','Dieciseisavos','Octavos','Cuartos','Semis','Final'];
@@ -1222,7 +1226,7 @@ window.openPlayerModal=function(playerName){
           }
           grpHtml+=`<div class="pick-row-view">
             <span class="teams">${flag(m.home)} ${m.home} vs ${flag(m.away)} ${m.away}</span>
-            ${hasPick ?`<span class="pick-val">${pick.home}-${pick.away}</span>`:`<span class="pick-empty">Sin mapa</span>`}
+            ${hasPick ?`<span class="pick-val">${pick.home}-${pick.away}</span>`:`<span class="pick-empty">Sin rellenar</span>`}
             ${ptsHtml}
           </div>`;
         });
@@ -1234,17 +1238,17 @@ window.openPlayerModal=function(playerName){
         const hasPick=pick&&pick.home!==''&&pick.away!=='';
         phaseHtml+=`<div class="pick-row-view">
           <span class="teams">${m.home} vs ${m.away}</span>
-          ${hasPick?`<span class="pick-val">${pick.home}-${pick.away}</span>`:`<span class="pick-empty">Sin mapa</span>`}
+          ${hasPick?`<span class="pick-val">${pick.home}-${pick.away}</span>`:`<span class="pick-empty">Sin rellenar</span>`}
         </div>`;
       });
     }
     if(phaseHtml) html+=`<div class="section-title pirata-font" style="font-size:22px">${phase}</div>${phaseHtml}`;
   });
 
-  html+=`<div class="section-title pirata-font" style="font-size:22px; margin-top:1rem">Tesoros</div>
-  <div class="pick-row-view"><span class="teams">👑 Rey Pirata</span><span class="${sp.champion?'pick-val':'pick-empty'}">${sp.champion||'—'}</span></div>
-  <div class="pick-row-view"><span class="teams">⚔️ Espadachín</span><span class="${sp.scorer?'pick-val':'pick-empty'}">${sp.scorer||'—'}</span></div>
-  <div class="pick-row-view"><span class="teams">🛡️ Escudo</span><span class="${sp.keeper?'pick-val':'pick-empty'}">${sp.keeper||'—'}</span></div>
+  html+=`<div class="section-title pirata-font" style="font-size:22px; margin-top:1rem">Especiales</div>
+  <div class="pick-row-view"><span class="teams">🏆 Campeón</span><span class="${sp.champion?'pick-val':'pick-empty'}">${sp.champion||'—'}</span></div>
+  <div class="pick-row-view"><span class="teams">⚽ Goleador</span><span class="${sp.scorer?'pick-val':'pick-empty'}">${sp.scorer||'—'}</span></div>
+  <div class="pick-row-view"><span class="teams">🧤 Portero</span><span class="${sp.keeper?'pick-val':'pick-empty'}">${sp.keeper||'—'}</span></div>
   <div class="pick-row-view"><span class="teams">⭐ MVP</span><span class="${sp.mvp?'pick-val':'pick-empty'}">${sp.mvp||'—'}</span></div>`;
 
   document.getElementById('pm-content').innerHTML=html;
@@ -1260,7 +1264,7 @@ function renderQuiniellas(){
 
   const visibleMatches=STATE.matches.filter(m=>m.played||!canPick(m.id));
 
-  let html='<p class="muted" style="margin-bottom:.75rem;font-size:12px">Solo se muestran las rutas reveladas o ya navegadas.</p>';
+  let html='<p class="muted" style="margin-bottom:.75rem;font-size:12px">Solo se muestran los resultados visibles de partidos cerrados.</p>';
   players.forEach(p=>{
     const picks=STATE.players[p]?.picks||{};
     const sp=STATE.players[p]?.special||{};
@@ -1271,7 +1275,7 @@ function renderQuiniellas(){
       <div class="qrow-header">
         <div class="av">${p.slice(0,2).toUpperCase()}</div>
         <div style="flex:1"><div style="font-weight:700;font-size:14px; color:var(--wood)">${p}</div>
-          <div style="font-size:11px;color:var(--text2)">${filled} mapas revelados</div>
+          <div style="font-size:11px;color:var(--text2)">${filled} resultados visibles</div>
         </div>
         <span class="badge bs">฿ ${pts.total}</span>
         <i class="ti ti-chevron-down" style="color:var(--wood);font-size:18px"></i>
@@ -1279,7 +1283,7 @@ function renderQuiniellas(){
       <div class="qrow-body" id="qrow-${p.replace(/[^a-z0-9]/gi,'_')}">`;
 
     if(filled===0){
-      html+=`<p class="muted" style="font-size:12px">Sin rutas reveladas aún.</p>`;
+      html+=`<p class="muted" style="font-size:12px">Sin resultados visibles aún.</p>`;
     } else {
       visibleMatches.forEach(m=>{
         const pick=picks[m.id];
@@ -1303,10 +1307,10 @@ function renderQuiniellas(){
     }
 
     if(!specialsOpen()){
-      html+=`<div class="section-title pirata-font" style="font-size:18px;margin-top:.75rem">Tesoros</div>
-      <div class="pick-row-view"><span class="teams" style="font-size:11px">👑 Rey</span><span class="${sp.champion?'pick-val':'pick-empty'}">${sp.champion||'—'}</span></div>
-      <div class="pick-row-view"><span class="teams" style="font-size:11px">⚔️ Espadachín</span><span class="${sp.scorer?'pick-val':'pick-empty'}">${sp.scorer||'—'}</span></div>
-      <div class="pick-row-view"><span class="teams" style="font-size:11px">🛡️ Escudo</span><span class="${sp.keeper?'pick-val':'pick-empty'}">${sp.keeper||'—'}</span></div>
+      html+=`<div class="section-title pirata-font" style="font-size:18px;margin-top:.75rem">Especiales</div>
+      <div class="pick-row-view"><span class="teams" style="font-size:11px">🏆 Campeón</span><span class="${sp.champion?'pick-val':'pick-empty'}">${sp.champion||'—'}</span></div>
+      <div class="pick-row-view"><span class="teams" style="font-size:11px">⚽ Goleador</span><span class="${sp.scorer?'pick-val':'pick-empty'}">${sp.scorer||'—'}</span></div>
+      <div class="pick-row-view"><span class="teams" style="font-size:11px">🧤 Portero</span><span class="${sp.keeper?'pick-val':'pick-empty'}">${sp.keeper||'—'}</span></div>
       <div class="pick-row-view"><span class="teams" style="font-size:11px">⭐ MVP</span><span class="${sp.mvp?'pick-val':'pick-empty'}">${sp.mvp||'—'}</span></div>`;
     }
     html+=`</div></div>`;
