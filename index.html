@@ -3,546 +3,569 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Quiniela Mundial 2026: Grand Line</title>
+<title>Quiniela Mundial 2026</title>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.x/dist/tabler-icons.min.css">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,400;0,600;0,700;1,400&family=Pirata+One&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&family=Pirata+One&display=swap" rel="stylesheet">
 <style>
-* { box-sizing: border-box; margin: 0; padding: 0; }
-:root {
-  --bg-ocean: #2b6777;
-  --bg-ocean-dark: #1a404a;
-  --parchment: #fdf8e9;
-  --parchment-dark: #e8dcc4;
-  --wood: #4a2e1b;
-  --wood-light: #6b4423;
-  --red-pirate: #9b111e;
-  --gold: #d4af37;
-  
-  --text: #3e2723;
-  --text2: #5c4033;
-  --text3: #8d6e63;
-  --border: #8b7355;
-  --border2: #5c4033;
-  
-  --s-bg: #e8f5e0; --s-t: #2d6a0a;
-  --w-bg: #fef3e2; --w-t: #7a4800;
-  --i-bg: #e8f1fb; --i-t: #1455a0;
-  --d-bg: #fde8e8; --d-t: #9b1c1c;
-  
-  --r: 8px; --rl: 12px;
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg-ocean:#2b6777;--bg-ocean-dark:#1a404a;
+  --parchment:#fdf8e9;--parchment-dark:#e8dcc4;
+  --wood:#4a2e1b;--wood-light:#6b4423;
+  --red-pirate:#9b111e;--gold:#d4af37;
+  --text:#3e2723;--text2:#5c4033;--text3:#8d6e63;
+  --border:#8b7355;--border2:#5c4033;
+  --bg:var(--parchment);--bg2:var(--parchment-dark);--bg3:#dfd1b5;
+  --s-bg:#e8f5e0;--s-t:#2d6a0a;
+  --w-bg:#fef3e2;--w-t:#7a4800;
+  --i-bg:#e8f1fb;--i-t:#1455a0;
+  --d-bg:#fde8e8;--d-t:#9b1c1c;
+  --r:8px;--rl:12px;
+  --red:var(--red-pirate);--navy:var(--wood);
 }
+html{scroll-behavior:smooth}
+body{font-family:'Nunito',sans-serif;font-size:14px;color:var(--text);background:radial-gradient(circle at center,var(--bg-ocean) 0%,var(--bg-ocean-dark) 100%);min-height:100vh;padding-bottom:80px}
+.pirata{font-family:'Pirata One',serif;letter-spacing:1px}
 
-html { scroll-behavior: smooth; }
-body { 
-  font-family: 'Nunito', sans-serif; 
-  font-size: 14px; 
-  color: var(--text); 
-  background: radial-gradient(circle at center, var(--bg-ocean) 0%, var(--bg-ocean-dark) 100%);
-  min-height: 100vh; 
-  padding-bottom: 80px; 
-}
-
-.pirata-font { font-family: 'Pirata One', serif; letter-spacing: 1px; }
-
-/* ── Layout Principal (Desktop vs Mobile) ── */
-.app { width: 100%; margin: 0 auto; overflow-x: hidden; position: relative; min-height: 100vh;}
-.view { display: none; width: 100%;} 
-.view.active { display: block; }
-
-.inner { padding: 1rem; max-width: 640px; margin: 0 auto; }
-
-@media(min-width: 1024px) {
-  .inner.desktop-layout {
-    max-width: 1300px;
-    display: grid;
-    grid-template-columns: 280px 1fr 320px;
-    gap: 24px;
-    align-items: start;
-  }
-  .sidebar-left { position: sticky; top: 74px; }
-  .sidebar-right { display: block !important; position: sticky; top: 74px; }
-  #tab-btn-ranking { display: none !important; } 
-}
-.sidebar-right { display: none; } 
+/* ── Layout ── */
+.app{max-width:640px;margin:0 auto}
+.view{display:none}.view.active{display:block}
+.inner{padding:1rem}
 
 /* ── Sticky header ── */
-#app-header { 
-  position: sticky; top: 0; z-index: 60; 
-  background: linear-gradient(to bottom, var(--wood), var(--wood-light)); 
-  border-bottom: 3px solid var(--border2);
-  box-shadow: 0 4px 12px rgba(0,0,0,.4);
-}
-.header-inner { max-width: 1300px; margin: 0 auto; display: flex; align-items: center; gap: 10px; padding: 0 1rem; height: 60px; }
-.header-logo { display: flex; align-items: center; gap: 8px; flex: 1; }
-.header-logo-ball { font-size: 26px; line-height: 1; filter: drop-shadow(0 2px 2px rgba(0,0,0,0.5)); }
-.header-logo-text { display: flex; flex-direction: column; }
-.header-logo-text strong { font-size: 18px; color: #fff; line-height: 1.1; font-family: 'Pirata One', serif; letter-spacing: 1px; }
-.header-logo-text small { font-size: 10px; color: var(--gold); letter-spacing: .5px; font-weight: bold;}
-.header-chip { background: rgba(0,0,0,.4); border: 1px solid var(--gold); border-radius: 20px; padding: 4px 12px; font-size: 12px; color: var(--gold); font-weight: bold; }
-.header-btn { background: var(--red-pirate); border: 1px solid #ff7b7b; border-radius: 8px; padding: 6px 12px; color: #fff; font-size: 12px; cursor: pointer; font-weight: bold; font-family: 'Nunito', sans-serif;}
+#app-header{position:sticky;top:0;z-index:60;background:linear-gradient(to bottom,var(--wood),var(--wood-light));border-bottom:3px solid var(--border2);box-shadow:0 4px 12px rgba(0,0,0,.4)}
+.header-inner{max-width:640px;margin:0 auto;display:flex;align-items:center;gap:10px;padding:0 1rem;height:60px}
+.header-logo{display:flex;align-items:center;gap:8px;flex:1}
+.header-logo-ball{font-size:26px;line-height:1}
+.header-logo-text{display:flex;flex-direction:column}
+.header-logo-text strong{font-size:16px;font-weight:700;color:#fff;line-height:1.2;font-family:'Pirata One',serif;letter-spacing:1px}
+.header-logo-text small{font-size:10px;color:var(--gold);letter-spacing:.5px;font-weight:700}
+.header-chip{background:rgba(0,0,0,.4);border:1px solid var(--gold);border-radius:20px;padding:4px 12px;font-size:12px;color:var(--gold);font-weight:700;display:flex;align-items:center;gap:5px;white-space:nowrap}
+.header-btn{background:var(--red-pirate);border:1px solid #ff7b7b;border-radius:8px;padding:6px 10px;color:#fff;font-size:12px;cursor:pointer;display:flex;align-items:center;gap:4px;font-family:'Nunito',sans-serif;font-weight:700}
+.header-btn:hover{opacity:.88}
 
-/* ── Sticky footer score ── */
-#app-footer { position: fixed; bottom: 0; left: 0; right: 0; z-index: 60; background: var(--parchment); border-top: 3px solid var(--wood); padding: 8px 1rem; display: none; box-shadow: 0 -4px 15px rgba(0,0,0,0.3); }
-.footer-inner { max-width: 1300px; margin: 0 auto; display: flex; align-items: center; gap: 12px; }
-.footer-pts { font-size: 26px; color: var(--red-pirate); line-height: 1; }
-.footer-label { font-size: 11px; color: var(--text2); line-height: 1.3; }
-.footer-rank { margin-left: auto; background: var(--wood); color: var(--gold); border-radius: 20px; padding: 6px 16px; font-size: 16px; border: 1px solid var(--gold); }
-.footer-next { flex: 1; font-size: 11px; color: var(--text2); text-align: right; line-height: 1.4; }
-
-/* ── Tarjetas Estilo Pergamino ── */
-.card, .welcome-card, .countdown-bar, #mb, #rules-box, .player-modal-box { 
-  background: var(--parchment); 
-  border: 2px solid var(--border); 
-  border-radius: 4px; 
-  padding: 1.25rem; 
-  margin-bottom: 1rem; 
-  box-shadow: 4px 4px 0px rgba(0,0,0,0.2); 
-  position: relative;
-}
+/* ── Sticky footer ── */
+#app-footer{position:fixed;bottom:0;left:0;right:0;z-index:60;background:var(--parchment);border-top:3px solid var(--wood);padding:8px 1rem;display:none;box-shadow:0 -4px 15px rgba(0,0,0,.3)}
+.footer-inner{max-width:640px;margin:0 auto;display:flex;align-items:center;gap:12px}
+.footer-pts{font-size:26px;font-weight:700;color:var(--red-pirate);font-family:'Pirata One',serif}
+.footer-label{font-size:11px;color:var(--text2);line-height:1.3}
+.footer-rank{margin-left:auto;background:var(--wood);color:var(--gold);border-radius:20px;padding:6px 16px;font-size:14px;font-weight:700;border:1px solid var(--gold);font-family:'Pirata One',serif}
+.footer-next{flex:1;font-size:11px;color:var(--text2);text-align:right;line-height:1.4}
 
 /* ── Welcome card ── */
-.welcome-card { background: linear-gradient(135deg, var(--wood), var(--wood-light)); color: var(--parchment); border-color: var(--border2); }
-.welcome-card h3 { font-size: 22px; font-family: 'Pirata One', serif; letter-spacing: 1px; color: var(--gold); }
-.welcome-stats { display: grid; grid-template-columns: repeat(3,1fr); gap: 8px; margin-top: 1rem; }
-.welcome-stat { background: rgba(0,0,0,.3); border: 1px solid var(--border); border-radius: 4px; padding: 8px; text-align: center; }
-.welcome-stat .n { font-size: 24px; color: var(--gold); }
-.welcome-stat .l { font-size: 10px; color: #ddd; text-transform: uppercase; font-weight: bold;}
+.welcome-card{background:linear-gradient(135deg,var(--wood),var(--wood-light));border-radius:4px;padding:1.25rem;margin-bottom:1rem;color:var(--parchment);border:2px solid var(--border2);box-shadow:4px 4px 0 rgba(0,0,0,.2)}
+.welcome-card::after{content:'';display:none}
+.welcome-card h3{font-size:20px;font-weight:700;margin-bottom:4px;color:var(--gold);font-family:'Pirata One',serif;letter-spacing:1px}
+.welcome-card p{font-size:12px;opacity:.8;line-height:1.5}
+.welcome-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:1rem}
+.welcome-stat{background:rgba(0,0,0,.3);border:1px solid var(--border);border-radius:4px;padding:8px;text-align:center}
+.welcome-stat .n{font-size:22px;font-weight:700;color:var(--gold);font-family:'Pirata One',serif}
+.welcome-stat .l{font-size:10px;opacity:.8;text-transform:uppercase;font-weight:700}
 
-/* ── Countdown (Log Pose) ── */
-.countdown-bar { display: flex; align-items: center; gap: 12px; padding: .85rem 1rem; background: var(--parchment-dark); border: 2px dashed var(--border); }
-.cd-icon { font-size: 30px; filter: drop-shadow(0 2px 2px rgba(0,0,0,0.3)); }
-.cd-text { flex: 1; }
-.cd-text strong { font-size: 14px; display: block; margin-bottom: 2px; color: var(--red-pirate); }
-.cd-text span { font-size: 12px; color: var(--text2); font-weight: 600; }
-.cd-time { font-size: 22px; color: var(--wood); font-variant-numeric: tabular-nums; }
+/* ── Countdown ── */
+.countdown-bar{background:var(--parchment-dark);border:2px dashed var(--border);border-radius:4px;padding:.85rem 1rem;margin-bottom:1rem;display:flex;align-items:center;gap:12px;box-shadow:2px 2px 0 rgba(0,0,0,.1)}
+.cd-icon{font-size:28px}
+.cd-text{flex:1}
+.cd-text strong{font-size:13px;display:block;margin-bottom:2px;color:var(--red-pirate);font-weight:700}
+.cd-text span{font-size:12px;color:var(--text2);font-weight:600}
+.cd-time{font-size:20px;font-weight:700;color:var(--wood);font-variant-numeric:tabular-nums;font-family:'Pirata One',serif}
 
-/* ── Tabs (Letreros de madera) ── */
-.tabs { display: flex; overflow-x: auto; gap: 8px; margin-bottom: 1.25rem; padding-bottom: 5px; }
-.tab { 
-  padding: 10px 16px; cursor: pointer; font-size: 14px; font-weight: 700; color: var(--parchment); 
-  background: var(--wood); border: 2px solid var(--border2); border-radius: 6px; 
-  white-space: nowrap; display: flex; align-items: center; gap: 6px; transition: all .2s; 
-  box-shadow: 2px 2px 0 rgba(0,0,0,0.3);
-}
-.tab:hover { background: var(--wood-light); transform: translateY(-2px); }
-.tab.active { background: var(--red-pirate); color: var(--gold); border-color: var(--gold); transform: translateY(-2px); box-shadow: 2px 4px 0 rgba(0,0,0,0.4); }
+/* ── Tabs ── */
+.tabs{display:flex;overflow-x:auto;gap:6px;margin-bottom:1.25rem;padding-bottom:4px}
+.tab{padding:10px 14px;cursor:pointer;font-size:13px;font-weight:700;color:var(--parchment);background:var(--wood);border:2px solid var(--border2);border-radius:6px;white-space:nowrap;display:flex;align-items:center;gap:5px;transition:all .2s;box-shadow:2px 2px 0 rgba(0,0,0,.3);font-family:'Nunito',sans-serif}
+.tab:hover{background:var(--wood-light);transform:translateY(-1px)}
+.tab.active{background:var(--red-pirate);color:var(--gold);border-color:var(--gold);transform:translateY(-2px);box-shadow:2px 4px 0 rgba(0,0,0,.4)}
 
-@media(min-width: 1024px) {
-  .tabs { flex-direction: column; overflow: visible; }
-  .tab { font-size: 16px; padding: 14px 16px; justify-content: flex-start; }
-}
-
-/* ── Match Cards ── */
-.section-title { font-size: 18px; color: var(--wood); margin: 1rem 0 .5rem; display: flex; align-items: center; gap: 8px; }
-.section-title::after { content: ''; flex: 1; height: 2px; background: var(--border); border-bottom: 1px solid #fff; }
-
-.match-card-big { 
-  background: var(--parchment); border: 2px solid var(--border); border-left: 6px solid var(--wood); 
-  border-radius: 4px; padding: 14px; margin-bottom: 12px; transition: transform .2s; 
-  box-shadow: 3px 3px 0 rgba(0,0,0,0.1); 
-}
-.match-card-big:hover { transform: translateX(2px); box-shadow: 4px 4px 0 rgba(0,0,0,0.15); }
-.mcb-header { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 10px; }
-.mcb-teams { display: flex; align-items: center; gap: 8px; flex: 1; min-width: 0; }
-.mcb-team { font-size: 15px; font-weight: 700; color: var(--text); display: flex; align-items: center; gap: 5px; }
-.mcb-vs { font-size: 11px; color: var(--parchment); background: var(--wood); padding: 2px 6px; border-radius: 4px; font-weight: bold; }
-
-.mcb-scores { display: flex; flex-direction: column; gap: 6px; }
-.mcb-score-row { display: flex; align-items: center; gap: 10px; border-radius: 4px; padding: 9px 12px; border: 1px solid rgba(0,0,0,0.05); }
-.pick-row { background: var(--parchment-dark); border-left: 3px solid var(--gold); }
-.result-row { background: rgba(45, 106, 10, 0.05); border-left: 3px solid var(--s-t); }
-.mcb-score-label { font-size: 11px; font-weight: 700; width: 110px; flex-shrink: 0; color: var(--text2); text-transform: uppercase;}
-.mcb-score-val { font-size: 18px; font-weight: 700; flex: 1; color: var(--text); }
-.mcb-score-val.empty { font-size: 13px; color: var(--text3); font-weight: 400; font-style: italic; }
-.mcb-score-val.won { color: var(--s-t); }
-.mcb-score-val.lost { color: var(--d-t); }
+/* ── Cards ── */
+.card{background:var(--parchment);border:2px solid var(--border);border-radius:4px;padding:1rem 1.25rem;margin-bottom:1rem;box-shadow:3px 3px 0 rgba(0,0,0,.15)}
+.section-title{font-size:12px;font-weight:700;color:var(--wood);text-transform:uppercase;letter-spacing:.6px;margin:.75rem 0 .5rem;display:flex;align-items:center;gap:6px;font-family:'Pirata One',serif;font-size:16px;letter-spacing:1px}
+.section-title::after{content:'';flex:1;height:2px;background:var(--border)}
 
 /* ── Badges ── */
-.badge { display: inline-flex; align-items: center; padding: 3px 9px; border-radius: 4px; font-size: 11px; font-weight: 700; gap: 4px; text-transform: uppercase; border: 1px solid rgba(0,0,0,0.1); }
-.bs { background: var(--s-bg); color: var(--s-t); }
-.bw { background: var(--w-bg); color: var(--w-t); }
-.bi { background: var(--i-bg); color: var(--i-t); }
-.bd { background: var(--d-bg); color: var(--d-t); }
+.badge{display:inline-flex;align-items:center;padding:3px 9px;border-radius:4px;font-size:11px;font-weight:700;gap:4px;border:1px solid rgba(0,0,0,.1);text-transform:uppercase}
+.bs{background:var(--s-bg);color:var(--s-t)}
+.bw{background:var(--w-bg);color:var(--w-t)}
+.bi{background:var(--i-bg);color:var(--i-t)}
+.bd{background:var(--d-bg);color:var(--d-t)}
 
-/* ── Ranking Wanted Posters ── */
-.wanted-board { background: var(--wood); border: 4px solid var(--border2); padding: 1rem; border-radius: 6px; }
-.wanted-board h3 { color: var(--gold); text-align: center; font-size: 28px; margin-bottom: 15px; border-bottom: 2px dashed var(--gold); padding-bottom: 10px;}
-.rank-row { 
-  display: flex; align-items: center; gap: 10px; background: var(--parchment); 
-  border: 2px solid var(--border); padding: 8px 12px; margin-bottom: 10px; 
-  box-shadow: 2px 2px 5px rgba(0,0,0,0.3); position: relative;
-}
-.rank-row.rank-1 { border-color: var(--gold); background: #fffbe6; }
-.rank-row.rank-2 { border-color: #a0a0a0; }
-.rank-row.rank-3 { border-color: #cd7f32; }
-.rank-num { font-size: 26px; width: 30px; text-align: center; color: var(--red-pirate); flex-shrink: 0; }
-.rank-bar-wrap { flex: 1; min-width: 0; }
-.rank-name { font-size: 20px; color: var(--text); margin-bottom: 2px; }
-.rank-pts { font-size: 22px; color: var(--text); flex-shrink: 0; }
-.rank-detail { font-size: 11px; font-weight: bold; color: var(--text2); }
-.rank-bar-bg { height: 6px; background: var(--border); border-radius: 3px; overflow: hidden; margin-top: 5px; }
-.rank-bar-fill { height: 100%; border-radius: 3px; background: linear-gradient(90deg, var(--red-pirate), #ff4d4d); transition: width .6s ease; }
+/* ── Tables ── */
+table{width:100%;border-collapse:collapse;font-size:13px}
+th{text-align:left;padding:8px 10px;font-weight:700;color:var(--wood);border-bottom:2px solid var(--border);font-size:11px;text-transform:uppercase;letter-spacing:.4px}
+td{padding:9px 10px;border-bottom:1px solid var(--border);font-weight:600}
+tr:last-child td{border-bottom:none}
+.gtable{width:100%;border-collapse:collapse;font-size:12px;margin-top:.5rem}
+.gtable th{padding:5px 6px;font-size:10px;color:var(--wood);border-bottom:1px solid var(--border);font-weight:700;text-transform:uppercase}
+.gtable td{padding:5px 6px;border-bottom:1px solid var(--border)}
+.gtable tr.qualify{background:rgba(45,106,10,.08)}
+.gtable tr.qualify td:first-child{border-left:3px solid var(--s-t)}
 
-/* ── Acordeones ── */
-.accord { border: 2px solid var(--border); background: var(--parchment); margin-bottom: 10px; box-shadow: 2px 2px 0 rgba(0,0,0,0.1); }
-.accord-header { display: flex; align-items: center; gap: 10px; padding: 12px 14px; cursor: pointer; user-select: none; transition: background .15s; background: var(--parchment-dark); }
-.accord-header:hover { background: #dfd1b5; }
-.accord-header.open { border-bottom: 2px dashed var(--border); }
-.accord-dot { width: 12px; height: 12px; border-radius: 50%; border: 1px solid rgba(0,0,0,0.3); flex-shrink: 0; }
-.accord-title { font-size: 15px; font-weight: 700; flex: 1; color: var(--wood); }
-.accord-meta { font-size: 12px; color: var(--text2); display: flex; align-items: center; gap: 8px; font-weight: bold; }
-.accord-body { display: none; padding: 10px; background: var(--parchment); }
-.accord-body.open { display: block; }
-.accord-chevron { color: var(--wood); font-size: 16px; transition: transform .2s; }
-.accord-header.open .accord-chevron { transform: rotate(180deg); }
+/* ── Match cards ── */
+.match-card-big{background:var(--parchment);border:2px solid var(--border);border-left:6px solid var(--wood);border-radius:4px;padding:14px;margin-bottom:12px;transition:transform .15s;box-shadow:3px 3px 0 rgba(0,0,0,.1)}
+.match-card-big:hover{transform:translateX(2px);box-shadow:4px 4px 0 rgba(0,0,0,.15)}
+.mcb-header{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:10px}
+.mcb-teams{display:flex;align-items:center;gap:8px;flex:1;min-width:0}
+.mcb-team{font-size:14px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:flex;align-items:center;gap:5px;color:var(--text)}
+.mcb-vs{font-size:11px;color:var(--parchment);background:var(--wood);padding:2px 6px;border-radius:4px;font-weight:700;flex-shrink:0}
+.match-times-block{display:flex;gap:0;margin-bottom:10px;border-radius:4px;overflow:hidden;border:1px solid var(--border)}
+.match-times-block span{flex:1;font-size:11px;color:var(--text2);padding:5px 8px;background:var(--parchment-dark);text-align:center;border-right:1px solid var(--border);font-weight:600}
+.match-times-block span:last-child{border-right:none}
+.match-times-block span em{display:block;font-style:normal;font-size:10px;color:var(--text3);margin-bottom:1px}
+.mcb-scores{display:flex;flex-direction:column;gap:6px}
+.mcb-score-row{display:flex;align-items:center;gap:10px;border-radius:4px;padding:9px 12px}
+.pick-row{background:var(--parchment-dark);border-left:3px solid var(--gold)}
+.result-row{background:rgba(45,106,10,.05);border-left:3px solid var(--s-t)}
+.mcb-score-label{font-size:11px;font-weight:700;width:110px;flex-shrink:0;color:var(--text2);text-transform:uppercase}
+.mcb-score-val{font-size:16px;font-weight:700;flex:1;color:var(--text)}
+.mcb-score-val.empty{font-size:13px;color:var(--text3);font-weight:400;font-style:italic}
+.mcb-score-val.won{color:var(--s-t)}
+.mcb-score-val.lost{color:var(--d-t)}
 
-/* ── Formularios y Botones ── */
-input, select { 
-  width: 100%; padding: 10px 12px; border: 2px solid var(--border); border-radius: 4px; 
-  font-size: 14px; background: #fff; color: var(--text); height: 42px; font-family: 'Nunito', sans-serif; font-weight: 600;
-}
-input:focus, select:focus { outline: none; border-color: var(--red-pirate); box-shadow: 0 0 0 3px rgba(155, 17, 30, 0.2); }
-button { 
-  cursor: pointer; padding: 10px 18px; border: 2px solid var(--wood); border-radius: 4px; 
-  background: var(--parchment-dark); color: var(--wood); font-size: 14px; font-weight: 700; transition: all .15s; font-family: 'Nunito', sans-serif;
-}
-button:hover { background: #dfd1b5; transform: translateY(-1px); box-shadow: 2px 2px 0 rgba(0,0,0,0.2); }
-button.primary { background: var(--red-pirate); color: #fff; border-color: #5a0000; }
-button.primary:hover { background: #b22222; }
-.btn-sm { padding: 6px 12px; font-size: 12px; }
+/* ── Ranking ── */
+.rank-row{display:flex;align-items:center;gap:10px;background:var(--parchment);border:2px solid var(--border);border-radius:4px;padding:12px 14px;margin-bottom:8px;box-shadow:2px 2px 0 rgba(0,0,0,.1)}
+.rank-row.rank-1{border-color:var(--gold);background:#fffbe6}
+.rank-row.rank-2{border-color:#a0a0a0}
+.rank-row.rank-3{border-color:#cd7f32}
+.rank-num{font-size:22px;width:30px;text-align:center;flex-shrink:0;font-family:'Pirata One',serif;color:var(--red-pirate)}
+.rank-bar-wrap{flex:1;min-width:0}
+.rank-name{font-size:14px;font-weight:700;margin-bottom:4px;font-family:'Pirata One',serif;color:var(--wood);letter-spacing:.5px}
+.rank-bar-bg{height:5px;background:var(--border);border-radius:3px;overflow:hidden}
+.rank-bar-fill{height:100%;border-radius:3px;background:linear-gradient(90deg,var(--red-pirate),#ff4d4d);transition:width .6s ease}
+.rank-pts{font-size:18px;font-weight:700;color:var(--red-pirate);flex-shrink:0;font-family:'Pirata One',serif}
+.rank-detail{font-size:10px;color:var(--text2);margin-top:1px;font-weight:700}
 
-/* ── Login Screen ── */
-#login-screen {
-  background: url('http://googleusercontent.com/image_generation_content/2') center/cover no-repeat;
-  min-height: 100vh; display: flex; align-items: center; justify-content: center; position: relative; z-index: 10;
-}
-#login-screen::before { content: ''; position: absolute; inset: 0; background: rgba(0,0,0,0.6); z-index: -1;}
-.login-box {
-  background: var(--parchment); border: 4px solid var(--wood); 
-  border-radius: 8px; padding: 2.5rem 2rem; width: 90%; max-width: 420px; box-shadow: 0 15px 35px rgba(0,0,0,0.6);
-}
-.login-box h1 { font-size: 42px; color: var(--red-pirate); text-align: center; margin-bottom: 5px; text-shadow: 1px 1px 0 #fff; }
-.login-box p.subtitle { text-align: center; font-weight: 700; color: var(--wood); margin-bottom: 20px; text-transform: uppercase; letter-spacing: 2px; font-size: 12px;}
+/* ── Buttons/Inputs ── */
+input,select{width:100%;padding:9px 12px;border:2px solid var(--border);border-radius:4px;font-size:13px;background:#fff;color:var(--text);height:38px;font-family:'Nunito',sans-serif;font-weight:600}
+input:focus,select:focus{outline:none;border-color:var(--red-pirate);box-shadow:0 0 0 3px rgba(155,17,30,.15)}
+button{cursor:pointer;padding:8px 16px;border:2px solid var(--wood);border-radius:4px;background:var(--parchment-dark);color:var(--wood);font-size:13px;font-weight:700;transition:all .15s;font-family:'Nunito',sans-serif}
+button:hover{background:#dfd1b5;transform:translateY(-1px);box-shadow:1px 2px 0 rgba(0,0,0,.2)}
+button.primary{background:var(--red-pirate);color:#fff;border-color:#5a0000}
+button.primary:hover{background:#b22222}
+button.secondary{background:var(--wood);color:#fff;border-color:var(--wood)}
+.btn-sm{padding:5px 10px;font-size:12px}
+.flex1{flex:1}
+.muted{color:var(--text3);font-size:12px}
 
-/* Utils */
-.muted { color: var(--text3); font-size: 12px; }
-.sp { display: inline-block; width: 14px; height: 14px; border: 2px solid var(--border2); border-top-color: var(--text); border-radius: 50%; animation: spin .6s linear infinite; vertical-align: middle; margin-right: 6px; }
-@keyframes spin { to { transform: rotate(360deg); } }
-.special-field-group { background: var(--parchment-dark); border-radius: 4px; padding: 1rem; margin-bottom: .75rem; border: 1px dashed var(--border); }
-table { width: 100%; border-collapse: collapse; font-size: 13px; }
-th { text-align: left; padding: 8px 10px; font-weight: 700; color: var(--wood); border-bottom: 2px solid var(--border); font-size: 11px; text-transform: uppercase; }
-td { padding: 9px 10px; border-bottom: 1px solid var(--border); font-weight: 600; }
-.gtable tr.qualify td { background: rgba(45,106,10,.08); }
+/* ── Avatar ── */
+.av{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;background:var(--wood);color:var(--gold);flex-shrink:0;border:2px solid var(--gold)}
 
-/* Modals */
-#mo, #rules-modal, #ko-rules-modal, .player-modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.7); z-index: 100; align-items: flex-start; justify-content: center; padding: 1rem; overflow-y: auto; }
-#mo.open, #rules-modal.open, #ko-rules-modal.open, .player-modal-overlay.open { display: flex; }
-#mb, #rules-box, .player-modal-box { margin: auto; max-width: 450px; width: 100%; border-width: 4px; border-color: var(--wood); }
-#ko-rules-modal { max-width: 500px; width: 100%; }
+/* ── Login ── */
+.hero-wrap{background:var(--bg-ocean-dark)}
+.hero-img{width:100%;height:auto;display:block}
+.hero-overlay{background:linear-gradient(135deg,var(--red-pirate),#5a0000);padding:12px 16px;display:flex;align-items:center;justify-content:space-between}
+.hero-overlay h1{color:var(--gold);font-size:22px;font-weight:800;letter-spacing:-.3px;font-family:'Pirata One',serif}
 
-#toast { position: fixed; bottom: 90px; left: 50%; transform: translateX(-50%); background: var(--wood); border: 2px solid var(--gold); color: var(--gold); padding: 10px 20px; border-radius: 4px; font-size: 14px; font-weight: bold; display: none; z-index: 200; box-shadow: 0 4px 16px rgba(0,0,0,.5); }
+/* ── Special fields ── */
+.special-field-group{background:var(--parchment-dark);border-radius:4px;padding:1rem;margin-bottom:.75rem;border:1px dashed var(--border)}
+.special-field-group label{font-size:12px;font-weight:700;color:var(--text2);display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
 
-/* Estilos para el nuevo bloque "¿Quién pasa?" */
-#ko-qualifier-wrap { background: var(--parchment-dark); border: 2px dashed var(--border); border-radius: 4px; padding: 1rem; margin-top: 1rem; margin-bottom: 1.5rem; text-align: center; }
-#ko-qualifier-wrap strong { display: block; margin-bottom: .75rem; color: var(--wood); }
-.ko-qualifier-btns { display: flex; gap: 8px; justify-content: center; }
-.ko-qualifier-btn { flex: 1; padding: 12px; font-size: 13px; font-weight: bold; border-color: var(--border); }
-.ko-qualifier-btn.active { background: var(--s-bg); color: var(--s-t); border-color: var(--s-t); box-shadow: 0 0 10px rgba(45, 106, 10, 0.4); }
+/* ── Spinner ── */
+.sp{display:inline-block;width:14px;height:14px;border:2px solid var(--border);border-top-color:var(--wood);border-radius:50%;animation:spin .6s linear infinite;vertical-align:middle;margin-right:6px}
+@keyframes spin{to{transform:rotate(360deg)}}
 
-.picks-grid{display:flex;flex-direction:column;gap:6px}
-.pick-row-view{display:flex;align-items:center;gap:8px;background:var(--parchment-dark);border-radius:var(--r);padding:8px 10px;font-size:12px; margin-bottom:5px; border: 1px solid var(--border)}
+/* ── Modals ── */
+#mo,#rules-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:100;align-items:flex-start;justify-content:center;padding:1rem;overflow-y:auto}
+#mo.open,#rules-modal.open{display:flex}
+#mb{background:var(--parchment);border-radius:4px;padding:1.5rem;width:100%;max-width:360px;border:3px solid var(--wood);margin:auto;box-shadow:0 8px 32px rgba(0,0,0,.4)}
+#rules-box{background:var(--parchment);border-radius:4px;padding:1.5rem;width:100%;max-width:480px;border:3px solid var(--wood);margin:auto;box-shadow:0 8px 32px rgba(0,0,0,.4)}
+
+/* ── Toast ── */
+#toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%);background:var(--wood);border:2px solid var(--gold);color:var(--gold);padding:10px 20px;border-radius:4px;font-size:13px;font-weight:700;display:none;z-index:200;box-shadow:0 4px 16px rgba(0,0,0,.5)}
+
+/* ── Rules ── */
+.rules-row{display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px dashed var(--border)}
+.rules-row:last-child{border-bottom:none}
+.rules-row .pts{font-size:15px;font-weight:700;padding:5px 12px;border-radius:4px;min-width:58px;text-align:center;flex-shrink:0;font-family:'Pirata One',serif}
+.rules-row .desc{font-size:13px;flex:1;margin-right:12px;line-height:1.4;font-weight:600}
+.rsec{font-size:12px;font-weight:700;color:var(--wood);text-transform:uppercase;letter-spacing:.6px;margin:1rem 0 .25rem;display:flex;align-items:center;gap:6px;font-family:'Pirata One',serif;font-size:16px}
+.rsec::after{content:'';flex:1;height:1px;background:var(--border)}
+
+/* ── Accordion ── */
+.accord{border:2px solid var(--border);background:var(--parchment);margin-bottom:10px;box-shadow:2px 2px 0 rgba(0,0,0,.1)}
+.accord-header{display:flex;align-items:center;gap:10px;padding:12px 14px;cursor:pointer;background:var(--parchment-dark);user-select:none;transition:background .15s}
+.accord-header:hover{background:#dfd1b5}
+.accord-header.open{border-bottom:2px dashed var(--border)}
+.accord-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;border:1px solid rgba(0,0,0,.2)}
+.accord-title{font-size:14px;font-weight:700;flex:1;color:var(--wood);text-transform:capitalize}
+.accord-meta{font-size:11px;color:var(--text2);display:flex;align-items:center;gap:8px;font-weight:700}
+.accord-body{display:none;padding:10px}
+.accord-body.open{display:block}
+.accord-chevron{color:var(--wood);font-size:14px;transition:transform .2s;flex-shrink:0}
+.accord-header.open .accord-chevron{transform:rotate(180deg)}
+
+/* ── Player modal ── */
+.player-modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:110;align-items:flex-start;justify-content:center;padding:1rem;overflow-y:auto}
+.player-modal-overlay.open{display:flex}
+.player-modal-box{background:var(--parchment);border-radius:4px;padding:1.5rem;width:100%;max-width:560px;border:3px solid var(--wood);margin:auto;box-shadow:0 8px 32px rgba(0,0,0,.3)}
+
+/* ── Pick row view ── */
+.pick-row-view{display:flex;align-items:center;gap:8px;background:var(--parchment-dark);border-radius:4px;padding:8px 10px;font-size:12px;margin-bottom:5px;border:1px solid var(--border)}
 .pick-row-view .teams{flex:1;font-weight:700}
-.pick-row-view .pick-val{font-weight:700;color:var(--wood);min-width:40px;text-align:center; font-size:14px}
+.pick-row-view .pick-val{font-weight:700;color:var(--wood);min-width:40px;text-align:center;font-size:13px}
 .pick-row-view .pick-empty{color:var(--text3);font-style:italic;min-width:40px;text-align:center}
 .pick-row-view .pts-chip{font-size:11px;padding:2px 6px;border-radius:4px;flex-shrink:0}
-.quiniellas-tab .qrow{background:var(--parchment);border:2px solid var(--border);border-radius:var(--rl);padding:12px 14px;margin-bottom:8px;cursor:pointer;transition:box-shadow .15s}
-.quiniellas-tab .qrow:hover{box-shadow:0 2px 12px rgba(0,0,0,.1)}
+
+/* ── Quinielas tab ── */
+.quiniellas-tab .qrow{background:var(--parchment);border:2px solid var(--border);border-radius:4px;padding:12px 14px;margin-bottom:8px;cursor:pointer;transition:box-shadow .15s;box-shadow:2px 2px 0 rgba(0,0,0,.1)}
+.quiniellas-tab .qrow:hover{box-shadow:3px 3px 0 rgba(0,0,0,.15)}
 .quiniellas-tab .qrow-header{display:flex;align-items:center;gap:10px}
-.quiniellas-tab .qrow-body{display:none;margin-top:10px;border-top:1px solid var(--border);padding-top:10px}
+.quiniellas-tab .qrow-body{display:none;margin-top:10px;border-top:1px dashed var(--border);padding-top:10px}
 .quiniellas-tab .qrow-body.open{display:block}
-.av{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;background:var(--wood);color:var(--gold);flex-shrink:0; border: 2px solid var(--gold)}
-.selected-player{font-size:13px;font-weight:600;color:var(--wood);padding:6px 10px;background:var(--parchment-dark);border: 1px solid var(--border); border-radius:var(--r);display:flex;align-items:center;justify-content:space-between}
+
+/* ── KO advances ── */
+.ko-advances{display:flex;gap:8px;margin-top:8px}
+.ko-adv-btn{flex:1;padding:10px;border-radius:4px;font-size:12px;font-weight:700;text-align:center;cursor:pointer;border:2px solid var(--border);background:var(--parchment-dark);transition:all .15s;display:flex;align-items:center;justify-content:center;gap:6px;font-family:'Nunito',sans-serif}
+.ko-adv-btn:hover{border-color:var(--wood)}
+.ko-adv-btn.selected{border-color:var(--s-t);background:var(--s-bg);color:var(--s-t)}
+
+/* ── Announce popup ── */
+.announce-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:120;align-items:center;justify-content:center;padding:1rem;overflow-y:auto}
+.announce-overlay.open{display:flex}
+.announce-box{background:var(--parchment);border:3px solid var(--wood);border-radius:4px;width:100%;max-width:480px;margin:auto;box-shadow:6px 6px 0 rgba(0,0,0,.3);overflow:hidden}
+.announce-header{background:linear-gradient(135deg,var(--wood),var(--wood-light));padding:1.5rem;text-align:center;color:#fff;border-bottom:3px solid var(--border2)}
+.announce-header h2{font-size:22px;font-weight:800;margin-bottom:4px;font-family:'Pirata One',serif;color:var(--gold);letter-spacing:1px}
+.announce-header p{font-size:12px;opacity:.8}
+.announce-body{padding:1.25rem;background:var(--parchment)}
+.announce-rule{display:flex;align-items:center;gap:12px;padding:10px;background:var(--parchment-dark);border-radius:4px;margin-bottom:8px;border-left:3px solid var(--gold);border:1px solid var(--border);border-left:3px solid var(--gold)}
+.announce-rule .ar-pts{font-size:22px;font-weight:800;color:var(--red-pirate);min-width:50px;text-align:center;font-family:'Pirata One',serif}
+.announce-rule .ar-desc{font-size:12px;line-height:1.5;flex:1;color:var(--text)}
+.announce-combo{background:var(--s-bg);border:2px solid var(--s-t);border-radius:4px;padding:12px;margin:12px 0;text-align:center}
+.announce-combo .combo-pts{font-size:22px;font-weight:800;color:var(--s-t);font-family:'Pirata One',serif}
+.announce-combo .combo-desc{font-size:11px;color:var(--text2);margin-top:6px;line-height:1.6}
+
+/* ── Player selector ── */
+.player-selector{display:flex;flex-direction:column;gap:8px}
+.player-selector select{width:100%}
+.selected-player{font-size:13px;font-weight:600;color:var(--wood);padding:6px 10px;background:var(--parchment-dark);border:1px solid var(--border);border-radius:4px;display:flex;align-items:center;justify-content:space-between}
 </style>
 </head>
 <body>
 
+<!-- STICKY HEADER (hidden on login) -->
 <div id="app-header" style="display:none">
   <div class="header-inner">
     <div class="header-logo">
       <span class="header-logo-ball">🏴‍☠️</span>
       <div class="header-logo-text">
-        <strong class="pirata-font">Grand Line 2026</strong>
-        <small>EE.UU · México · Canadá</small>
+        <strong style="font-family:'Pirata One',serif">Grand Line 2026</strong>
+        <small style="color:var(--gold);font-weight:700">EE.UU · México · Canadá</small>
       </div>
     </div>
     <div id="header-user" class="header-chip" style="display:none"></div>
-    <button class="header-btn" onclick="openRules()"><i class="ti ti-info-circle"></i> Reglas</button>
+    <button class="header-btn" onclick="openRules()"><i class="ti ti-info-circle"></i> Normas</button>
   </div>
 </div>
 
 <div class="app" id="app">
 
+<!-- LOGIN -->
 <div id="login-screen" class="view active">
-  <div class="login-box">
-    <h1 class="pirata-font">QUINIELA MUNDIAL</h1>
-    <p class="subtitle">Grand Line Edition 2026</p>
-    
-    <div style="margin-bottom:1rem">
-      <label style="font-size:12px;color:var(--text2);display:block;margin-bottom:6px;font-weight:700">Selecciona tu Tripulante</label>
-      <select id="login-select" onchange="onNameSelected()"><option value="">Selecciona...</option></select>
+  <div class="hero-wrap">
+    <img src="hero.png" class="hero-img" alt="Quiniela Mundial 2026">
+    <div class="hero-overlay">
+      <h1 style="font-family:'Pirata One',serif;color:var(--gold)">⚔️ Quiniela Mundial 2026</h1>
+      <button class="btn-sm" onclick="openRules()" style="background:rgba(255,255,255,0.2);border-color:rgba(255,255,255,0.4);color:#fff"><i class="ti ti-info-circle"></i> Normas</button>
     </div>
-    <div id="pin-field-wrap" style="margin-bottom:1.25rem;display:none">
-      <label style="font-size:12px;color:var(--text2);display:block;margin-bottom:6px;font-weight:700" id="pin-label">Código Secreto (PIN)</label>
-      <input type="password" id="user-pin" placeholder="••••" inputmode="numeric" maxlength="4" pattern="[0-9]*" onkeydown="if(event.key==='Enter')doLogin()">
-      <p id="pin-hint" style="font-size:11px;color:var(--text2);margin-top:6px;line-height:1.4"></p>
+  </div>
+  <div class="inner">
+    <div class="card">
+      <div style="margin-bottom:1rem">
+        <label style="font-size:12px;color:var(--text2);display:block;margin-bottom:6px;font-weight:600">Tu nombre</label>
+        <select id="login-select" onchange="onNameSelected()"><option value="">Selecciona...</option></select>
+      </div>
+      <div id="pin-field-wrap" style="margin-bottom:1.25rem;display:none">
+        <label style="font-size:12px;color:var(--text2);display:block;margin-bottom:6px;font-weight:600" id="pin-label">PIN (4 dígitos)</label>
+        <input type="password" id="user-pin" placeholder="••••" inputmode="numeric" maxlength="4" pattern="[0-9]*" onkeydown="if(event.key==='Enter')doLogin()">
+        <p id="pin-hint" style="font-size:11px;color:var(--text2);margin-top:6px;line-height:1.4"></p>
+      </div>
+      <div style="margin-bottom:1.25rem">
+        <label style="font-size:12px;color:var(--text2);display:block;margin-bottom:6px;font-weight:600">¿Eres el admin?</label>
+        <input type="password" id="admin-pw" placeholder="Contraseña admin">
+      </div>
+      <button class="primary" style="width:100%;height:42px;font-size:15px;font-weight:600" onclick="doLogin()" style="font-family:'Pirata One',serif;letter-spacing:1px;font-size:16px">ZARPAR ➡</button>
     </div>
-    <div style="margin-bottom:1.5rem">
-      <label style="font-size:12px;color:var(--text2);display:block;margin-bottom:6px;font-weight:700">Llave del Almirante (Admin)</label>
-      <input type="password" id="admin-pw" placeholder="Contraseña admin">
-    </div>
-    <button class="primary" style="width:100%;height:46px;font-size:18px;letter-spacing:1px;font-family:'Pirata One',serif" onclick="doLogin()">ZARPAR ➔</button>
-    
-    <p id="lmsg" style="text-align:center;color:var(--text2);font-size:13px;margin-top:15px"><span class="sp"></span>Cargando tripulación...</p>
+    <p id="lmsg" style="text-align:center;color:var(--text2);font-size:13px"><span class="sp"></span>Cargando participantes...</p>
   </div>
 </div>
 
+<!-- PLAYER VIEW -->
 <div id="player-view" class="view">
-  <div class="inner desktop-layout">
-    
-    <aside class="sidebar-left">
-      <div class="welcome-card" id="welcome-card">
-        <h3 id="wc-name">¡Hola!</h3>
-        <p id="wc-msg" style="font-weight:bold; font-size:12px;">Rellena tus resultados antes de zarpar</p>
-        <div class="welcome-stats">
-          <div class="welcome-stat"><div class="n pirata-font" id="wc-pts">0</div><div class="l">Berries</div></div>
-          <div class="welcome-stat"><div class="n pirata-font" id="wc-rank">#-</div><div class="l">Rango</div></div>
-          <div class="welcome-stat"><div class="n pirata-font" id="wc-pending" style="color:#ff7b7b">0</div><div class="l">Pendientes</div></div>
-        </div>
+  <div class="inner">
+    <!-- Welcome card -->
+    <div class="welcome-card" id="welcome-card">
+      <h3 id="wc-name" style="font-family:'Pirata One',serif;color:var(--gold)">¡Hola!</h3>
+      <p id="wc-msg">Rellena tus resultados antes de que empiecen los partidos</p>
+      <div class="welcome-stats">
+        <div class="welcome-stat"><div class="n" id="wc-pts">0</div><div class="l">Berries</div></div>
+        <div class="welcome-stat"><div class="n" id="wc-rank">#-</div><div class="l">Posición</div></div>
+        <div class="welcome-stat"><div class="n" id="wc-pending">0</div><div class="l">Pendientes</div></div>
       </div>
-      
-      <div class="countdown-bar" id="countdown-bar">
-        <div class="cd-icon">🧭</div>
-        <div class="cd-text">
-          <strong id="cd-match">Log Pose...</strong>
-          <span id="cd-teams">Buscando rumbo</span>
-        </div>
-        <div class="cd-time pirata-font" id="cd-timer">--:--:--</div>
+    </div>
+    <!-- Countdown -->
+    <div class="countdown-bar" id="countdown-bar">
+      <div class="cd-icon">⏱</div>
+      <div class="cd-text">
+        <strong id="cd-match">Próximo partido</strong>
+        <span id="cd-teams">-</span>
       </div>
+      <div class="cd-time" id="cd-timer" style="font-family:'Pirata One',serif">--:--:--</div>
+    </div>
 
-      <div class="tabs">
-        <button class="tab active" onclick="pvTab(this,'pv-picks')"><i class="ti ti-map"></i> Mapa de Picks</button>
-        <button class="tab" onclick="pvTab(this,'pv-groups')"><i class="ti ti-layout-grid"></i> Mar de Grupos</button>
-        <button class="tab" id="tab-btn-ranking" onclick="pvTab(this,'pv-ranking')"><i class="ti ti-skull"></i> Recompensas (Ranking)</button>
-        <button class="tab" onclick="pvTab(this,'pv-quiniellas')"><i class="ti ti-telescope"></i> Espiar Rivales</button>
-        <button class="tab" onclick="pvTab(this,'pv-special')"><i class="ti ti-star"></i> Tesoros Especiales</button>
-        <button class="tab" onclick="logout()" style="background:var(--parchment); color:var(--red-pirate); border-color:var(--red-pirate); margin-top:10px;"><i class="ti ti-door-exit"></i> Abandonar Barco</button>
+    <div class="tabs">
+      <button class="tab active" onclick="pvTab(this,'pv-picks')"><i class="ti ti-ball-football"></i> Resultados</button>
+      <button class="tab" onclick="pvTab(this,'pv-groups')"><i class="ti ti-layout-grid"></i> Grupos</button>
+      <button class="tab" onclick="pvTab(this,'pv-ranking')"><i class="ti ti-trophy"></i> Ranking</button>
+      <button class="tab" onclick="pvTab(this,'pv-quiniellas')"><i class="ti ti-eye"></i> Quinielas</button>
+      <button class="tab" onclick="pvTab(this,'pv-special')"><i class="ti ti-star"></i> Especiales</button>
+    </div>
+    <div id="pv-picks" class="pvp">
+      <div class="tab-banner" style="background:linear-gradient(135deg,#c0392b,#e74c3c)">
+        <svg width="52" height="52" viewBox="0 0 52 52" fill="none"><ellipse cx="26" cy="18" rx="18" ry="5" fill="#f5c842" stroke="#c9962b" stroke-width="1.5"/><ellipse cx="26" cy="16" rx="12" ry="9" fill="#f5c842" stroke="#c9962b" stroke-width="1.5"/><circle cx="26" cy="28" r="9" fill="#f5c5a0" stroke="#c0704a" stroke-width="1.2"/><path d="M30 27 Q31 29 30 31" stroke="#c0392b" stroke-width="1.5" stroke-linecap="round" fill="none"/><path d="M22 31 Q26 35 30 31" stroke="#c0392b" stroke-width="1.8" stroke-linecap="round" fill="none"/><ellipse cx="23" cy="27" rx="2" ry="2.5" fill="#1a1a2e"/><ellipse cx="29" cy="27" rx="2" ry="2.5" fill="#1a1a2e"/><rect x="10" y="36" width="14" height="11" rx="4" fill="#f5c5a0" stroke="#c0704a" stroke-width="1.2"/><line x1="2" y1="40" x2="8" y2="40" stroke="rgba(255,255,255,0.5)" stroke-width="1.5" stroke-linecap="round"/><line x1="2" y1="43" x2="7" y2="43" stroke="rgba(255,255,255,0.4)" stroke-width="1" stroke-linecap="round"/></svg>
+        <div class="tab-banner-text" style="color:#fff"><h4>Tus resultados</h4><p>Rellena antes de que empiece cada partido</p></div>
       </div>
-    </aside>
-
-    <main class="content-center">
-      <div id="pv-picks" class="pvp">
-        <div class="section-title pirata-font" style="font-size:26px; margin-top:0;">Tus Predicciones</div>
-        <p class="muted" style="margin-bottom:15px;">Asegura tus pronósticos antes de que comience la batalla.</p>
-        <div id="pv-ml"></div>
+      <div id="pv-ml"></div>
+    </div>
+    <div id="pv-groups" class="pvp" style="display:none">
+      <div class="tab-banner" style="background:linear-gradient(135deg,#1a5276,#2980b9)">
+        <svg width="52" height="52" viewBox="0 0 52 52" fill="none"><rect x="0" y="30" width="52" height="22" rx="4" fill="#1a6fa0" opacity="0.5"/><path d="M0 32 Q6 28 12 32 Q18 36 24 32 Q30 28 36 32 Q42 36 52 32" stroke="#7ecef4" stroke-width="1.5" fill="none"/><path d="M12 32 Q26 38 40 32 L38 26 Q26 30 14 26 Z" fill="#f5e6c8" stroke="#c9962b" stroke-width="1.2"/><line x1="26" y1="10" x2="26" y2="30" stroke="#8B6914" stroke-width="2" stroke-linecap="round"/><path d="M26 12 Q36 16 34 26 L26 26 Z" fill="#fff" stroke="#ddd" stroke-width="1"/><path d="M26 10 L32 13 L26 16 Z" fill="#c0392b"/></svg>
+        <div class="tab-banner-text" style="color:#fff"><h4>Clasificación de grupos</h4><p>Provisional según tus picks y resultados confirmados</p></div>
       </div>
-      
-      <div id="pv-groups" class="pvp" style="display:none">
-        <div class="section-title pirata-font" style="font-size:26px; margin-top:0;">Clasificación de Grupos</div>
-        <div id="pv-gl" class="card"></div>
+      <div id="pv-gl"></div>
+    </div>
+    <div id="pv-quiniellas" class="pvp quiniellas-tab" style="display:none">
+      <div class="tab-banner" style="background:linear-gradient(135deg,#1a5276,#2471a3)">
+        <svg width="52" height="52" viewBox="0 0 52 52" fill="none"><circle cx="26" cy="20" r="10" fill="#aed6f1" stroke="#2980b9" stroke-width="1.5"/><ellipse cx="26" cy="20" rx="5" ry="10" fill="none" stroke="#2980b9" stroke-width="1"/><line x1="16" y1="20" x2="36" y2="20" stroke="#2980b9" stroke-width="1"/><path d="M12 38 Q20 30 26 28 Q32 30 40 38" fill="#2471a3" stroke="#1a5276" stroke-width="1"/></svg>
+        <div class="tab-banner-text" style="color:#fff"><h4>Quinielas</h4><p>Picks de todos los participantes (partidos cerrados)</p></div>
       </div>
-      
-      <div id="pv-quiniellas" class="pvp quiniellas-tab" style="display:none">
-        <div class="section-title pirata-font" style="font-size:26px; margin-top:0;">Cartas de Navegación Rivales</div>
-        <div id="pv-quiniellas-list"></div>
+      <div id="pv-quiniellas-list"></div>
+    </div>
+    <div id="pv-ranking" class="pvp" style="display:none">
+      <div class="tab-banner" style="background:linear-gradient(135deg,#7d6608,#d4ac0d)">
+        <svg width="52" height="52" viewBox="0 0 52 52" fill="none"><line x1="26" y1="4" x2="26" y2="44" stroke="#e8e8e8" stroke-width="3" stroke-linecap="round"/><rect x="22" y="19" width="8" height="2.5" rx="1" fill="#c9962b"/><line x1="16" y1="8" x2="22" y2="44" stroke="#e8e8e8" stroke-width="2.5" stroke-linecap="round" transform="rotate(-12,26,26)"/><line x1="36" y1="8" x2="30" y2="44" stroke="#e8e8e8" stroke-width="2.5" stroke-linecap="round" transform="rotate(12,26,26)"/><circle cx="12" cy="44" r="5" fill="#FFD700" stroke="#c9962b" stroke-width="1"/><text x="12" y="47" text-anchor="middle" font-size="6" fill="#7d6608" font-weight="bold">1</text><circle cx="26" cy="46" r="4" fill="#C0C0C0" stroke="#888" stroke-width="1"/><text x="26" y="49" text-anchor="middle" font-size="6" fill="#555" font-weight="bold">2</text><circle cx="40" cy="44" r="3.5" fill="#cd7f32" stroke="#8B4513" stroke-width="1"/><text x="40" y="47" text-anchor="middle" font-size="6" fill="#4a2500" font-weight="bold">3</text></svg>
+        <div class="tab-banner-text" style="color:#fff"><h4>Ranking</h4><p>¿Quién lidera la quiniela?</p></div>
       </div>
-      
-      <div id="pv-ranking" class="pvp" style="display:none">
-        <div class="wanted-board">
-          <h3 class="pirata-font">WANTED - TOP PIRATAS</h3>
-          <div id="pv-rl"></div>
+      <div id="pv-rl"></div>
+    </div>
+    <div id="pv-special" class="pvp" style="display:none">
+      <div class="tab-banner" style="background:linear-gradient(135deg,#4a235a,#8e44ad)">
+        <svg width="52" height="52" viewBox="0 0 52 52" fill="none"><circle cx="26" cy="26" r="10" fill="#6c3483" stroke="#a569bd" stroke-width="1"/><ellipse cx="26" cy="12" rx="3.5" ry="6" fill="#f1c6f5" opacity="0.9"/><ellipse cx="26" cy="40" rx="3.5" ry="6" fill="#f1c6f5" opacity="0.9"/><ellipse cx="12" cy="26" rx="6" ry="3.5" fill="#f1c6f5" opacity="0.9"/><ellipse cx="40" cy="26" rx="6" ry="3.5" fill="#f1c6f5" opacity="0.9"/><ellipse cx="15" cy="15" rx="3" ry="5.5" fill="#d7bde2" opacity="0.8" transform="rotate(-45,15,15)"/><ellipse cx="37" cy="15" rx="3" ry="5.5" fill="#d7bde2" opacity="0.8" transform="rotate(45,37,15)"/><ellipse cx="15" cy="37" rx="3" ry="5.5" fill="#d7bde2" opacity="0.8" transform="rotate(45,15,37)"/><ellipse cx="37" cy="37" rx="3" ry="5.5" fill="#d7bde2" opacity="0.8" transform="rotate(-45,37,37)"/><circle cx="26" cy="26" r="5" fill="#f5e94a"/><text x="26" y="29" text-anchor="middle" font-size="7" fill="#7d6608">★</text></svg>
+        <div class="tab-banner-text" style="color:#fff"><h4>Especiales</h4><p>Campeón, goleador, portero y MVP · Cierre 11 jun 20:00h</p></div>
+      </div>
+      <div class="card">
+        <!-- CAMPEÓN -->
+        <div class="special-field-group">
+          <label>🏆 Campeón del mundial <span class="badge bs">+20 pts</span></label>
+          <div class="player-selector">
+            <select id="pv-champ" style="width:100%" class="team-sel" onchange="champChanged()">
+              <option value="">Selecciona un equipo...</option>
+            </select>
+          </div>
         </div>
-      </div>
-      
-      <div id="pv-special" class="pvp" style="display:none">
-        <div class="section-title pirata-font" style="font-size:26px; margin-top:0;">Tesoros Especiales</div>
-        <div class="card">
-          <div class="special-field-group">
-            <label>👑 Rey de los Piratas (Campeón) <span class="badge bs">+ ฿20</span></label>
-            <select id="pv-champ" onchange="champChanged()"><option value="">Selecciona tripulación...</option></select>
+        <!-- GOLEADOR -->
+        <div class="special-field-group">
+          <label>⚽ Goleador del torneo <span class="badge bw">+10 pts</span></label>
+          <div class="player-selector">
+            <select id="scorer-team" class="team-sel" onchange="loadPlayers('scorer-team','pv-scorer-sel','all')"><option value="">1. Elige el equipo...</option></select>
+            <select id="pv-scorer-sel" onchange="syncHidden('pv-scorer-sel','pv-scorer')"><option value="">2. Elige el jugador...</option></select>
+            <input type="hidden" id="pv-scorer">
+            <div id="scorer-preview" class="selected-player" style="display:none"></div>
           </div>
-          <div class="special-field-group">
-            <label>⚔️ Mejor Espadachín (Goleador) <span class="badge bw">+ ฿10</span></label>
-            <div style="display:flex; flex-direction:column; gap:8px;">
-              <select id="scorer-team" onchange="loadPlayers('scorer-team','pv-scorer-sel','all')"><option value="">1. Elige tripulación...</option></select>
-              <select id="pv-scorer-sel" onchange="syncHidden('pv-scorer-sel','pv-scorer')"><option value="">2. Elige guerrero...</option></select>
-              <input type="hidden" id="pv-scorer">
-            </div>
-          </div>
-          <div class="special-field-group">
-            <label>🛡️ Escudo de Hierro (Portero) <span class="badge bw">+ ฿10</span></label>
-            <div style="display:flex; flex-direction:column; gap:8px;">
-              <select id="keeper-team" onchange="loadPlayers('keeper-team','pv-keeper-sel','P')"><option value="">1. Elige tripulación...</option></select>
-              <select id="pv-keeper-sel" onchange="syncHidden('pv-keeper-sel','pv-keeper')"><option value="">2. Elige guardián...</option></select>
-              <input type="hidden" id="pv-keeper">
-            </div>
-          </div>
-          <div class="special-field-group">
-            <label>⭐ MVP de Grand Line <span class="badge bw">+ ฿10</span></label>
-            <div style="display:flex; flex-direction:column; gap:8px;">
-              <select id="mvp-team" onchange="loadPlayers('mvp-team','pv-mvp-sel','all')"><option value="">1. Elige tripulación...</option></select>
-              <select id="pv-mvp-sel" onchange="syncHidden('pv-mvp-sel','pv-mvp')"><option value="">2. Elige leyenda...</option></select>
-              <input type="hidden" id="pv-mvp">
-            </div>
-          </div>
-          <button class="primary" onclick="saveSpecial()" id="btn-save-special" style="width:100%; font-size:16px; margin-top:10px;">Enterrar Tesoro (Guardar)</button>
-          <p id="special-closed-msg" style="display:none;margin-top:.75rem;font-size:12px;color:var(--d-t);background:var(--d-bg);padding:8px 10px;border-radius:4px; border:1px solid var(--d-t)">🔒 Cofre cerrado. Plazo vencido.</p>
         </div>
-        <div class="card" id="pv-sr" style="display:none"><div class="section-title">Resultados Especiales</div><div id="pv-srb"></div></div>
+        <!-- PORTERO -->
+        <div class="special-field-group">
+          <label>🧤 Mejor portero <span class="badge bw">+10 pts</span></label>
+          <div class="player-selector">
+            <select id="keeper-team" class="team-sel" onchange="loadPlayers('keeper-team','pv-keeper-sel','P')"><option value="">1. Elige el equipo...</option></select>
+            <select id="pv-keeper-sel" onchange="syncHidden('pv-keeper-sel','pv-keeper')"><option value="">2. Elige el portero...</option></select>
+            <input type="hidden" id="pv-keeper">
+            <div id="keeper-preview" class="selected-player" style="display:none"></div>
+          </div>
+        </div>
+        <!-- MVP -->
+        <div class="special-field-group">
+          <label>⭐ MVP del torneo <span class="badge bw">+10 pts</span></label>
+          <div class="player-selector">
+            <select id="mvp-team" class="team-sel" onchange="loadPlayers('mvp-team','pv-mvp-sel','all')"><option value="">1. Elige el equipo...</option></select>
+            <select id="pv-mvp-sel" onchange="syncHidden('pv-mvp-sel','pv-mvp')"><option value="">2. Elige el jugador...</option></select>
+            <input type="hidden" id="pv-mvp">
+            <div id="mvp-preview" class="selected-player" style="display:none"></div>
+          </div>
+        </div>
+        <button class="primary" onclick="saveSpecial()" id="btn-save-special" style="width:100%;margin-top:.5rem">Guardar especiales</button>
+        <p id="special-closed-msg" style="display:none;margin-top:.75rem;font-size:12px;color:var(--d-t);background:var(--d-bg);padding:8px 10px;border-radius:var(--r)">🔒 El plazo para especiales cerró el 11 de junio a las 20:00h España.</p>
       </div>
-    </main>
-
-    <aside class="sidebar-right">
-      <div class="wanted-board">
-        <h3 class="pirata-font">WANTED - TOP PIRATAS</h3>
-        <div id="pv-rl-desktop"></div>
-      </div>
-    </aside>
-
+      <div class="card" id="pv-sr" style="display:none"><div style="font-size:13px;font-weight:600;margin-bottom:.75rem">Resultados especiales</div><div id="pv-srb"></div></div>
+    </div>
   </div>
 </div>
 
+<!-- ADMIN VIEW -->
 <div id="admin-view" class="view">
-  <div class="inner" style="max-width: 800px;">
-    <div style="display:flex;align-items:center;gap:10px;margin-bottom:1.25rem; background:var(--parchment); padding:15px; border:2px solid var(--wood); border-radius:8px;">
-      <div style="font-size:30px">🏴‍☠️</div>
-      <div><div style="font-weight:700;font-size:18px; color:var(--red-pirate)" class="pirata-font">Camarote del Capitán (Admin)</div><div class="muted">Control absoluto del torneo</div></div>
-      <div style="margin-left:auto"><button class="btn-sm" onclick="logout()">Abandonar</button></div>
+  <div class="inner">
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:1.25rem">
+      <div class="av" style="background:var(--d-bg);color:var(--d-t);width:42px;height:42px;font-size:16px">AD</div>
+      <div><div style="font-weight:700;font-size:15px"><span style="font-family:'Pirata One',serif;letter-spacing:1px">Camarote del Capitán</span></div><div class="muted">Gestiona resultados y participantes</div></div>
+      <div style="margin-left:auto"><button class="btn-sm" onclick="logout()">Salir</button></div>
     </div>
     <div class="tabs">
       <button class="tab active" onclick="adminTab(this,'ad-res')"><i class="ti ti-ball-football"></i> Resultados</button>
-      <button class="tab" onclick="adminTab(this,'ad-pl')"><i class="ti ti-users"></i> Tripulantes</button>
-      <button class="tab" onclick="adminTab(this,'ad-sp')"><i class="ti ti-star"></i> Tesoros</button>
-      <button class="tab" onclick="adminTab(this,'ad-rk')"><i class="ti ti-skull"></i> Recompensas</button>
+      <button class="tab" onclick="adminTab(this,'ad-pl')"><i class="ti ti-users"></i> Participantes</button>
+      <button class="tab" onclick="adminTab(this,'ad-sp')"><i class="ti ti-star"></i> Especiales</button>
+      <button class="tab" onclick="adminTab(this,'ad-rk')"><i class="ti ti-trophy"></i> Ranking</button>
     </div>
-    
-    <div id="ad-res" class="adp"><div id="ad-ml"></div></div>
-    
+    <div id="ad-res" class="adp">
+      <p class="muted" style="margin-bottom:1rem">Introduce el marcador y pulsa <strong>OK</strong>. En fases KO puedes editar los equipos.</p>
+      <div id="ad-ml"></div>
+    </div>
     <div id="ad-pl" class="adp" style="display:none">
-      <div class="card"><div style="font-weight:700;margin-bottom:.75rem">Añadir Tripulante</div>
+      <div class="card"><div style="font-weight:600;margin-bottom:.75rem">Añadir participante</div>
         <div style="display:flex;gap:8px">
-          <input type="text" id="np" placeholder="Nombre" class="flex1" onkeydown="if(event.key==='Enter')addPlayer()">
-          <button class="primary" onclick="addPlayer()">Añadir</button>
+          <input type="text" id="np" placeholder="Nombre del participante" class="flex1" onkeydown="if(event.key==='Enter')addPlayer()">
+          <button class="primary" onclick="addPlayer()"><i class="ti ti-plus"></i> Añadir</button>
         </div>
       </div>
-      <div class="card"><div style="font-weight:700;margin-bottom:.75rem">Lista</div><div id="pl-list"></div></div>
+      <div class="card"><div style="font-weight:600;margin-bottom:.75rem">Participantes</div><div id="pl-list"></div></div>
     </div>
-    
     <div id="ad-sp" class="adp" style="display:none">
-      <div class="card"><div style="font-weight:700;margin-bottom:.75rem">Realidad del Torneo</div>
-        <div style="margin-bottom:1rem"><label class="muted">Rey Pirata</label><select id="ad-rc"><option value="">Sin definir</option></select></div>
-        <div style="margin-bottom:1rem"><label class="muted">Mejor Espadachín</label><input type="text" id="ad-rs"></div>
-        <div style="margin-bottom:1rem"><label class="muted">Escudo</label><input type="text" id="ad-rk2"></div>
-        <div style="margin-bottom:1rem"><label class="muted">MVP</label><input type="text" id="ad-rm"></div>
-        <button class="primary" onclick="saveRealSpecial()">Guardar Verdad</button>
+      <div class="card"><div style="font-weight:600;margin-bottom:.75rem">Resultados reales finales</div>
+        <div style="margin-bottom:1rem"><label class="muted" style="display:block;margin-bottom:6px">🏆 Campeón real</label><select id="ad-rc" style="width:100%"><option value="">Sin definir</option></select></div>
+        <div style="margin-bottom:1rem"><label class="muted" style="display:block;margin-bottom:6px">⚽ Goleador real</label><input type="text" id="ad-rs" placeholder="Nombre" style="width:100%"></div>
+        <div style="margin-bottom:1rem"><label class="muted" style="display:block;margin-bottom:6px">🧤 Mejor portero real</label><input type="text" id="ad-rk2" placeholder="Nombre" style="width:100%"></div>
+        <div style="margin-bottom:1rem"><label class="muted" style="display:block;margin-bottom:6px">⭐ MVP real</label><input type="text" id="ad-rm" placeholder="Nombre" style="width:100%"></div>
+        <button class="primary" onclick="saveRealSpecial()">Guardar</button>
       </div>
     </div>
-    
-    <div id="ad-rk" class="adp" style="display:none">
-      <div class="wanted-board"><h3 class="pirata-font">WANTED</h3><div id="ad-rkl"></div></div>
-    </div>
+    <div id="ad-rk" class="adp" style="display:none"><div id="ad-rkl"></div></div>
   </div>
 </div>
+</div>
 
+<!-- STICKY FOOTER -->
 <div id="app-footer">
   <div class="footer-inner">
-    <div><div class="footer-pts pirata-font" id="footer-pts">0</div></div>
-    <div class="footer-label"><strong id="footer-name" style="color:var(--wood); font-size:14px;">-</strong><br>Berries (฿)</div>
+    <div>
+      <div class="footer-pts" id="footer-pts" style="font-family:'Pirata One',serif">0</div>
+    </div>
+    <div class="footer-label">
+      <strong id="footer-name">-</strong><br>puntos totales
+    </div>
     <div class="footer-next" id="footer-next"></div>
-    <div class="footer-rank pirata-font" id="footer-rank">#-</div>
+    <div class="footer-rank pirata" id="footer-rank" style="font-family:'Pirata One',serif">#-</div>
   </div>
 </div>
 
+<!-- PICK MODAL -->
 <div id="mo" onclick="if(event.target===this)closePick()">
   <div id="mb">
-    <div style="font-size:22px; margin-bottom:10px; color:var(--red-pirate); text-align:center" id="mo-t" class="pirata-font">Tu resultado</div>
-    <p id="mo-time" class="muted" style="text-align:center; margin-bottom:15px; font-weight:bold;"></p>
-    <div style="display:flex;align-items:center;gap:10px;margin-bottom:1.5rem">
-      <div style="flex:1;text-align:right;font-size:14px;font-weight:700" id="mo-h">-</div>
-      <input type="number" min="0" max="20" id="pm-h" style="width:60px;text-align:center;height:50px;font-size:24px;font-weight:700">
-      <span style="color:var(--text3);font-size:24px">-</span>
-      <input type="number" min="0" max="20" id="pm-a" style="width:60px;text-align:center;height:50px;font-size:24px;font-weight:700">
-      <div style="flex:1;font-size:14px;font-weight:700" id="mo-a">-</div>
+    <div style="font-size:15px;font-weight:700;margin-bottom:4px" id="mo-t">Tu resultado</div>
+    <p id="mo-time" class="muted" style="margin-bottom:1rem;font-size:11px;line-height:1.6"></p>
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:1.25rem">
+      <div style="flex:1;text-align:right;font-size:13px;font-weight:600" id="mo-h">-</div>
+      <input type="number" min="0" max="20" id="pm-h" style="width:54px;text-align:center;flex-shrink:0;height:42px;font-size:20px;font-weight:700">
+      <span style="color:var(--text3);font-size:18px">-</span>
+      <input type="number" min="0" max="20" id="pm-a" style="width:54px;text-align:center;flex-shrink:0;height:42px;font-size:20px;font-weight:700">
+      <div style="flex:1;font-size:13px;font-weight:600" id="mo-a">-</div>
     </div>
-    
-    <div id="ko-qualifier-wrap" style="display:none">
-      <strong>¿Quién pasa la eliminatoria?</strong>
-      <div class="ko-qualifier-btns">
-        <button class="ko-qualifier-btn" id="ko-q-h" onclick="setQualifier('h')">-</button>
-        <button class="ko-qualifier-btn" id="ko-q-a" onclick="setQualifier('a')">-</button>
+    <!-- KO: Quien pasa? -->
+    <div id="mo-ko-section" style="display:none;margin-bottom:1.25rem">
+      <div style="font-size:12px;font-weight:600;color:var(--text2);margin-bottom:8px">¿Quién pasa la eliminatoria?</div>
+      <div class="ko-advances">
+        <div class="ko-adv-btn" id="ko-adv-home" onclick="selectAdvances('home')">
+          <span id="ko-adv-home-label">Local</span> ✓
+        </div>
+        <div class="ko-adv-btn" id="ko-adv-away" onclick="selectAdvances('away')">
+          <span id="ko-adv-away-label">Visitante</span> ✓
+        </div>
       </div>
-      <input type="hidden" id="pm-qualifier">
+      <input type="hidden" id="ko-advances-val">
     </div>
-
-    <div style="display:flex;gap:8px;justify-content:center">
+    <div style="display:flex;gap:8px;justify-content:flex-end">
       <button onclick="closePick()">Cancelar</button>
-      <button class="primary" onclick="savePick()">Sellar Destino</button>
+      <button class="primary" onclick="savePick()" style="font-family:'Pirata One',serif">Sellar Destino ⚔️</button>
     </div>
   </div>
 </div>
 
+<!-- RULES MODAL -->
 <div id="rules-modal" onclick="if(event.target===this)closeRules()">
   <div id="rules-box">
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem; border-bottom:2px solid var(--border); padding-bottom:10px;">
-      <div style="font-size:24px; color:var(--wood)" class="pirata-font">📜 Leyes del Grand Line</div>
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.25rem">
+      <div style="font-size:16px;font-weight:700">📋 Sistema de puntuación</div>
       <button class="btn-sm" onclick="closeRules()"><i class="ti ti-x"></i></button>
     </div>
-    <div class="section-title" style="font-size:14px; margin-top:0;">Fase de Grupos</div>
-    <div class="rules-row"><div class="desc"><strong>Pleno (Marcador exacto)</strong></div><div class="pts bs">฿ 5</div></div>
-    <div class="rules-row"><div class="desc"><strong>Acierto (Ganador/Empate)</strong></div><div class="pts bw">฿ 3</div></div>
-    
-    <div class="section-title" style="font-size:14px; margin-top:15px;">Fase Eliminatoria (KO)</div>
-    <div class="rules-row"><div class="desc"><strong>Marcador exacto (90 min)</strong></div><div class="pts bs">฿ 15</div></div>
-    <div class="rules-row"><div class="desc"><strong>Acierto tipo resultado (90 min)</strong></div><div class="pts bw">฿ 5</div></div>
-    <div class="rules-row"><div class="desc"><strong>Acertar quién clasifica</strong></div><div class="pts bi" style="background:var(--i-bg); color:var(--i-t)">฿ 10</div></div>
-    
-    <div class="section-title" style="font-size:14px; margin-top:15px;">Tesoros Finales</div>
-    <div class="rules-row"><div class="desc"><strong>Rey Pirata (Campeón)</strong></div><div class="pts bs">฿ 20</div></div>
-    <div class="rules-row"><div class="desc"><strong>Mejor Espadachín (Goleador)</strong></div><div class="pts bw">฿ 10</div></div>
-    <div class="rules-row"><div class="desc"><strong>Escudo (Portero) / MVP</strong></div><div class="pts bw">฿ 10</div></div>
-    <button class="primary" style="width:100%;margin-top:20px" onclick="closeRules()">Entendido, Capitán</button>
+    <div class="rsec">Partidos</div>
+    <div class="rules-row"><div class="desc"><strong>Resultado exacto</strong> — aciertas el marcador completo</div><div class="pts bs">5 pts</div></div>
+    <div class="rules-row"><div class="desc"><strong>Ganador o empate correcto</strong> — aciertas el resultado sin acertar el marcador</div><div class="pts bw">3 pts</div></div>
+    <div class="rsec">Especiales — se puntúan al final del torneo</div>
+    <div class="rules-row"><div class="desc"><strong>🏆 Campeón del mundial</strong></div><div class="pts bs">20 pts</div></div>
+    <div class="rules-row"><div class="desc"><strong>⚽ Goleador del torneo</strong></div><div class="pts bw">10 pts</div></div>
+    <div class="rules-row"><div class="desc"><strong>🧤 Mejor portero</strong></div><div class="pts bw">10 pts</div></div>
+    <div class="rules-row"><div class="desc"><strong>⭐ MVP del torneo</strong></div><div class="pts bw">10 pts</div></div>
+    <hr>
+    <p style="font-size:12px;color:var(--text2);line-height:1.7">⏱ Los resultados de cada partido se cierran <strong>1 hora antes</strong> del inicio.<br>🏆 Los especiales se cierran el <strong>11 de junio a las 20:00h España</strong> (12h antes del inicio).<br>🔓 Las fases eliminatorias se desbloquean cuando el admin confirma los equipos clasificados.</p>
+    <button class="primary" style="width:100%;margin-top:1rem" onclick="closeRules()" style="font-family:'Pirata One',serif">Entendido, Capitán ⚔️</button>
   </div>
 </div>
 
-<div id="ko-rules-modal" class="card open" style="display:none; position:fixed; top:50%; left:50%; transform:translate(-50%, -50%); z-index:1000; max-width:500px; width:90%; padding:2rem;">
-  <div style="text-align:center;">
-    <div style="font-size:50px;">🗺️</div>
-    <h2 class="pirata-font" style="color:var(--red-pirate); font-size:32px; margin-bottom:10px;">¡Nuevas Cartas de Navegación!</h2>
-    <p style="font-weight:bold; color:var(--wood); margin-bottom:1.5rem;">Entramos en la Fase Eliminatoria (KO) y las reglas cambian.</p>
+<div id="toast"></div>
+
+<!-- ANNOUNCEMENT POPUP (KO Rules) -->
+<div class="announce-overlay" id="announce-popup" onclick="if(event.target===this)closeAnnounce()">
+  <div class="announce-box">
+    <div class="announce-header">
+      <h2>🏆 ¡FASE ELIMINATORIA!</h2>
+      <p>Nuevas reglas · Más puntos · Más emoción</p>
+    </div>
+    <div class="announce-body">
+      <p style="font-size:13px;color:var(--text2);margin-bottom:1rem;line-height:1.6">
+        Los equipos de los <strong>dieciseisavos</strong> se activarán pronto. 
+        ¡Recuerda entrar y poner tus resultados con las nuevas reglas!
+      </p>
+
+      <div style="font-size:11px;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px">Puntuación fase eliminatoria</div>
+
+      <div class="announce-rule">
+        <div class="ar-pts">15</div>
+        <div class="ar-desc"><strong>Resultado exacto</strong> en 90 minutos — sea empate o victoria</div>
+      </div>
+      <div class="announce-rule">
+        <div class="ar-pts">5</div>
+        <div class="ar-desc"><strong>Tipo de resultado correcto</strong> — aciertas si hay ganador o empate, sin el marcador exacto</div>
+      </div>
+      <div class="announce-rule">
+        <div class="ar-pts">10</div>
+        <div class="ar-desc"><strong>Quién pasa la eliminatoria</strong> — obligatorio elegir siempre</div>
+      </div>
+
+      <div class="announce-combo">
+        <div class="combo-pts">Hasta 25 pts por partido</div>
+        <div class="combo-desc">Marcador exacto (15) + quién pasa (10) = 25 pts<br>
+        Si pones empate y aciertas quién pasa → 5 + 10 = 15 pts<br>
+        Si pones ganador y aciertas todo → 15 + 10 = 25 pts</div>
+      </div>
+
+      <p style="font-size:11px;color:var(--text2);margin-bottom:1rem;line-height:1.5">
+        🎯 El techo es igual para todos — pongas empate o ganador, puedes llegar a 25 pts
+      </p>
+
+      <button class="primary" style="width:100%;height:44px;font-size:15px;font-weight:700" onclick="closeAnnounce()">
+        ¡Entendido, a jugar! ⚽
+      </button>
+    </div>
   </div>
-  <div style="background:var(--parchment-dark); padding:1rem; border-radius:4px; border:1px solid var(--border); margin-bottom:1.5rem;">
-    <p style="margin-bottom:0.5rem;">Ahora, para cada partido KO, debes predecir:</p>
-    <ul style="margin-left:1.5rem; margin-bottom:1rem; font-size:13px;">
-      <li>El marcador de los <strong>90 minutos reglamentarios</strong>.</li>
-      <li><strong>Quién pasa la eliminatoria</strong> (obligatorio).</li>
-    </ul>
-    <p style="font-size:13px; font-weight:bold; color:var(--red-pirate);">¡Los puntos son mayores! 15 por pleno, 10 por clasificado...</p>
-  </div>
-  <button class="primary" style="width:100%; font-size:18px; font-family:'Pirata One',serif; letter-spacing:1px;" onclick="closeKORules()">¡A por el One Piece!</button>
 </div>
 
+<!-- PLAYER PICKS MODAL (admin) -->
 <div class="player-modal-overlay" id="player-modal" onclick="if(event.target===this)closePlayerModal()">
   <div class="player-modal-box">
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem; border-bottom:2px solid var(--border); padding-bottom:10px;">
-      <div style="font-size:22px; color:var(--red-pirate)" class="pirata-font" id="pm-title">Mapa de </div>
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem">
+      <div style="font-size:16px;font-weight:700" id="pm-title">Picks del jugador</div>
       <button class="btn-sm" onclick="closePlayerModal()"><i class="ti ti-x"></i></button>
     </div>
     <div id="pm-content"></div>
   </div>
 </div>
-
-<div id="toast"></div>
 
 <script type="module">
 import{initializeApp}from'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
@@ -551,76 +574,449 @@ import{getFirestore,doc,getDoc,setDoc,onSnapshot,collection,getDocs,deleteDoc}fr
 const fbApp=initializeApp({apiKey:"AIzaSyB9APbkXsCqAkkXgA9DiVXNlvhy_8TcWTs",authDomain:"quiniela-c4186.firebaseapp.com",projectId:"quiniela-c4186",storageBucket:"quiniela-c4186.firebasestorage.app",messagingSenderId:"1069209810424",appId:"1:1069209810424:web:6a6461c344e138d93c120d"});
 const db=getFirestore(fbApp);
 
-const FLAGS={ 'México':'🇲🇽','Sudáfrica':'🇿🇦','Corea del Sur':'🇰🇷','Rep. Checa':'🇨🇿', 'Canadá':'🇨🇦','Bosnia-Herz.':'🇧🇦','Qatar':'🇶🇦','Suiza':'🇨🇭', 'Brasil':'🇧🇷','Marruecos':'🇲🇦','Haití':'🇭🇹','Escocia':'🏴󠁧󠁢󠁳󠁣󠁴󠁿', 'EE.UU.':'🇺🇸','Paraguay':'🇵🇾','Australia':'🇦🇺','Turquía':'🇹🇷', 'Alemania':'🇩🇪','Curazao':'🇨🇼','Costa de Marfil':'🇨🇮','Ecuador':'🇪🇨', 'Países Bajos':'🇳🇱','Japón':'🇯🇵','Túnez':'🇹🇳','Suecia':'🇸🇪', 'Bélgica':'🇧🇪','Egipto':'🇪🇬','Irán':'🇮🇷','Nueva Zelanda':'🇳🇿', 'España':'🇪🇸','Cabo Verde':'🇨🇻','Arabia Saudita':'🇸🇦','Uruguay':'🇺🇾', 'Francia':'🇫🇷','Senegal':'🇸🇳','Noruega':'🇳🇴','Irak':'🇮🇶', 'Argentina':'🇦🇷','Argelia':'🇩🇿','Austria':'🇦🇹','Jordania':'🇯🇴', 'Portugal':'🇵🇹','Colombia':'🇨🇴','Uzbekistán':'🇺🇿','R.D. Congo':'🇨🇩', 'Inglaterra':'🏴󠁧󠁢󠁥󠁮󠁧󠁿','Croacia':'🇭🇷','Ghana':'🇬🇭','Panamá':'🇵🇦' };
-function flag(t){return FLAGS[t]||'🏴‍☠️';}
+const FLAGS = {
+  'México': '<img src="https://flagcdn.com/w20/mx.png" width="20" height="15" style="vertical-align:middle;border-radius:2px;margin-right:2px" alt="México">',
+  'Sudáfrica': '<img src="https://flagcdn.com/w20/za.png" width="20" height="15" style="vertical-align:middle;border-radius:2px;margin-right:2px" alt="Sudáfrica">',
+  'Corea del Sur': '<img src="https://flagcdn.com/w20/kr.png" width="20" height="15" style="vertical-align:middle;border-radius:2px;margin-right:2px" alt="Corea del Sur">',
+  'Rep. Checa': '<img src="https://flagcdn.com/w20/cz.png" width="20" height="15" style="vertical-align:middle;border-radius:2px;margin-right:2px" alt="Rep. Checa">',
+  'Canadá': '<img src="https://flagcdn.com/w20/ca.png" width="20" height="15" style="vertical-align:middle;border-radius:2px;margin-right:2px" alt="Canadá">',
+  'Bosnia-Herz.': '<img src="https://flagcdn.com/w20/ba.png" width="20" height="15" style="vertical-align:middle;border-radius:2px;margin-right:2px" alt="Bosnia-Herz.">',
+  'Qatar': '<img src="https://flagcdn.com/w20/qa.png" width="20" height="15" style="vertical-align:middle;border-radius:2px;margin-right:2px" alt="Qatar">',
+  'Suiza': '<img src="https://flagcdn.com/w20/ch.png" width="20" height="15" style="vertical-align:middle;border-radius:2px;margin-right:2px" alt="Suiza">',
+  'Brasil': '<img src="https://flagcdn.com/w20/br.png" width="20" height="15" style="vertical-align:middle;border-radius:2px;margin-right:2px" alt="Brasil">',
+  'Marruecos': '<img src="https://flagcdn.com/w20/ma.png" width="20" height="15" style="vertical-align:middle;border-radius:2px;margin-right:2px" alt="Marruecos">',
+  'Haití': '<img src="https://flagcdn.com/w20/ht.png" width="20" height="15" style="vertical-align:middle;border-radius:2px;margin-right:2px" alt="Haití">',
+  'Escocia': '<img src="https://flagcdn.com/w20/gb-sct.png" width="20" height="15" style="vertical-align:middle;border-radius:2px;margin-right:2px" alt="Escocia">',
+  'EE.UU.': '<img src="https://flagcdn.com/w20/us.png" width="20" height="15" style="vertical-align:middle;border-radius:2px;margin-right:2px" alt="EE.UU.">',
+  'Paraguay': '<img src="https://flagcdn.com/w20/py.png" width="20" height="15" style="vertical-align:middle;border-radius:2px;margin-right:2px" alt="Paraguay">',
+  'Australia': '<img src="https://flagcdn.com/w20/au.png" width="20" height="15" style="vertical-align:middle;border-radius:2px;margin-right:2px" alt="Australia">',
+  'Turquía': '<img src="https://flagcdn.com/w20/tr.png" width="20" height="15" style="vertical-align:middle;border-radius:2px;margin-right:2px" alt="Turquía">',
+  'Alemania': '<img src="https://flagcdn.com/w20/de.png" width="20" height="15" style="vertical-align:middle;border-radius:2px;margin-right:2px" alt="Alemania">',
+  'Curazao': '<img src="https://flagcdn.com/w20/cw.png" width="20" height="15" style="vertical-align:middle;border-radius:2px;margin-right:2px" alt="Curazao">',
+  'Costa de Marfil': '<img src="https://flagcdn.com/w20/ci.png" width="20" height="15" style="vertical-align:middle;border-radius:2px;margin-right:2px" alt="Costa de Marfil">',
+  'Ecuador': '<img src="https://flagcdn.com/w20/ec.png" width="20" height="15" style="vertical-align:middle;border-radius:2px;margin-right:2px" alt="Ecuador">',
+  'Países Bajos': '<img src="https://flagcdn.com/w20/nl.png" width="20" height="15" style="vertical-align:middle;border-radius:2px;margin-right:2px" alt="Países Bajos">',
+  'Japón': '<img src="https://flagcdn.com/w20/jp.png" width="20" height="15" style="vertical-align:middle;border-radius:2px;margin-right:2px" alt="Japón">',
+  'Túnez': '<img src="https://flagcdn.com/w20/tn.png" width="20" height="15" style="vertical-align:middle;border-radius:2px;margin-right:2px" alt="Túnez">',
+  'Suecia': '<img src="https://flagcdn.com/w20/se.png" width="20" height="15" style="vertical-align:middle;border-radius:2px;margin-right:2px" alt="Suecia">',
+  'Bélgica': '<img src="https://flagcdn.com/w20/be.png" width="20" height="15" style="vertical-align:middle;border-radius:2px;margin-right:2px" alt="Bélgica">',
+  'Egipto': '<img src="https://flagcdn.com/w20/eg.png" width="20" height="15" style="vertical-align:middle;border-radius:2px;margin-right:2px" alt="Egipto">',
+  'Irán': '<img src="https://flagcdn.com/w20/ir.png" width="20" height="15" style="vertical-align:middle;border-radius:2px;margin-right:2px" alt="Irán">',
+  'Nueva Zelanda': '<img src="https://flagcdn.com/w20/nz.png" width="20" height="15" style="vertical-align:middle;border-radius:2px;margin-right:2px" alt="Nueva Zelanda">',
+  'España': '<img src="https://flagcdn.com/w20/es.png" width="20" height="15" style="vertical-align:middle;border-radius:2px;margin-right:2px" alt="España">',
+  'Cabo Verde': '<img src="https://flagcdn.com/w20/cv.png" width="20" height="15" style="vertical-align:middle;border-radius:2px;margin-right:2px" alt="Cabo Verde">',
+  'Arabia Saudita': '<img src="https://flagcdn.com/w20/sa.png" width="20" height="15" style="vertical-align:middle;border-radius:2px;margin-right:2px" alt="Arabia Saudita">',
+  'Uruguay': '<img src="https://flagcdn.com/w20/uy.png" width="20" height="15" style="vertical-align:middle;border-radius:2px;margin-right:2px" alt="Uruguay">',
+  'Francia': '<img src="https://flagcdn.com/w20/fr.png" width="20" height="15" style="vertical-align:middle;border-radius:2px;margin-right:2px" alt="Francia">',
+  'Senegal': '<img src="https://flagcdn.com/w20/sn.png" width="20" height="15" style="vertical-align:middle;border-radius:2px;margin-right:2px" alt="Senegal">',
+  'Noruega': '<img src="https://flagcdn.com/w20/no.png" width="20" height="15" style="vertical-align:middle;border-radius:2px;margin-right:2px" alt="Noruega">',
+  'Irak': '<img src="https://flagcdn.com/w20/iq.png" width="20" height="15" style="vertical-align:middle;border-radius:2px;margin-right:2px" alt="Irak">',
+  'Argentina': '<img src="https://flagcdn.com/w20/ar.png" width="20" height="15" style="vertical-align:middle;border-radius:2px;margin-right:2px" alt="Argentina">',
+  'Argelia': '<img src="https://flagcdn.com/w20/dz.png" width="20" height="15" style="vertical-align:middle;border-radius:2px;margin-right:2px" alt="Argelia">',
+  'Austria': '<img src="https://flagcdn.com/w20/at.png" width="20" height="15" style="vertical-align:middle;border-radius:2px;margin-right:2px" alt="Austria">',
+  'Jordania': '<img src="https://flagcdn.com/w20/jo.png" width="20" height="15" style="vertical-align:middle;border-radius:2px;margin-right:2px" alt="Jordania">',
+  'Portugal': '<img src="https://flagcdn.com/w20/pt.png" width="20" height="15" style="vertical-align:middle;border-radius:2px;margin-right:2px" alt="Portugal">',
+  'Colombia': '<img src="https://flagcdn.com/w20/co.png" width="20" height="15" style="vertical-align:middle;border-radius:2px;margin-right:2px" alt="Colombia">',
+  'Uzbekistán': '<img src="https://flagcdn.com/w20/uz.png" width="20" height="15" style="vertical-align:middle;border-radius:2px;margin-right:2px" alt="Uzbekistán">',
+  'R.D. Congo': '<img src="https://flagcdn.com/w20/cd.png" width="20" height="15" style="vertical-align:middle;border-radius:2px;margin-right:2px" alt="R.D. Congo">',
+  'Inglaterra': '<img src="https://flagcdn.com/w20/gb-eng.png" width="20" height="15" style="vertical-align:middle;border-radius:2px;margin-right:2px" alt="Inglaterra">',
+  'Croacia': '<img src="https://flagcdn.com/w20/hr.png" width="20" height="15" style="vertical-align:middle;border-radius:2px;margin-right:2px" alt="Croacia">',
+  'Ghana': '<img src="https://flagcdn.com/w20/gh.png" width="20" height="15" style="vertical-align:middle;border-radius:2px;margin-right:2px" alt="Ghana">',
+  'Panamá': '<img src="https://flagcdn.com/w20/pa.png" width="20" height="15" style="vertical-align:middle;border-radius:2px;margin-right:2px" alt="Panamá">',
+};
+function flag(t){return FLAGS[t]||'🏳️';}
 
 const SQUADS = {
-  'México': { P: ['Raúl Rangel','Guillermo Ochoa','Carlos Acevedo'], D: ['Jorge Sánchez','Israel Reyes','César Montes','Johan Vásquez','Jesús Gallardo','Mateo Chávez'], C: ['Erik Lira','Orbelín Pineda','Álvaro Fidalgo','Roberto Alvarado','Brian Gutiérrez','Luis Romo','Edson Álvarez','Obed Vargas','Gilberto Mora','Luis Chávez'], F: ['César Huerta','Alexis Vega','Julián Quiñones','Guillermo Martínez','Armando González','Santiago Giménez','Raúl Jiménez'] },
-  'Sudáfrica': { P: ['Ronwen Williams','Ricardo Goss','Sipho Chaine'], D: ['Khuliso Mudau','Aubrey Modiba','Khulumani Ndamane','Olwethu Makhanya','Bradley Cross','Thabang Matuludi','Nkosinathi Sibisi','Kamogelo Sebelebele','Ime Okon','Samukele Kabini','Mbekezeli Mbokazi'], C: ['Teboho Mokoena','Jayden Adams','Thalente Mbatha','Sphephelo Sithole'], F: ['Oswin Appollis','Tshepang Moremi','Evidence Makgopa','Relebohile Mofokeng','Lyle Foster','Iqraam Rayners','Themba Zwane','Thapelo Maseko'] },
-  'Corea del Sur': { P: ['Jo Hyeon-woo','Kim Seung-gyu','Song Bum-keun'], D: ['Kim Moon-hwan','Kim Min-jae','Kim Tae-hyon','Park Jin-seob','Seol Young-woo','Jens Castrop','Cho Yu-min'], C: ['Kim Jin-gyu','Bae Jun-ho','Paik Seung-ho','Yang Hyun-jun','Eom Ji-sung','Lee Kang-in','Lee Dong-gyeong','Hwang Hee-chan'], F: ['Son Heung-min','Oh Hyeon-gyu','Cho Gue-sung'] },
-  'Rep. Checa': { P: ['Lukas Hornicek','Matej Kovar','Jindrich Stanek'], D: ['Vladimir Coufal','David Doudera','Tomas Holes','Robin Hranac','Stepan Chaloupek','David Jurasek','Ladislav Krejci','Jaroslav Zeleny','David Zima'], C: ['Lukas Cerv','Vladimir Darida','Lukas Provod','Michal Sadilek','Hugo Sochurek','Alexandr Sojka','Tomas Soucek','Pavel Sulc','Denis Visinsky'], F: ['Adam Hlozek','Tomas Chory','Mojmir Chytil','Jan Kuchta','Patrik Schick'] },
-  'Canadá': { P: ['Dayne St Clair','Maxime Crepeau','Owen Goodman'], D: ['Alistair Johnston','Derek Cornelius','Richie Laryea','Niko Sigur','Joel Waterman','Luc de Fougerolles','Moise Bombito','Alphonso Davies','Alfie Jones'], C: ['Stephen Eustaquio','Ismael Kone','Tajon Buchanan','Mathieu Choiniere','Ali Ahmed','Nathan Saliba','Liam Millar','Jacob Shaffelburg','Jonathan Osorio'], F: ['Jonathan David','Cyle Larin','Tani Oluwaseyi','Promise David'] },
-  'Bosnia-Herz.': { P: ['Nikola Vasilj','Martin Zlomislic','Osman Hadzikic'], D: ['Sead Kolasinac','Amar Dedic','Nihad Mujakic','Nikola Katic','Tarik Muharemovic','Stjepan Radeljic','Dennis Hadzikadunic','Nidal Celik'], C: ['Amir Hadziahmetovic','Ivan Sunjic','Ivan Basic','Dzenis Burnic','Ermin Mahmic','Benjamin Tahirovic','Amar Memic','Armin Gigovic','Kerim Alajbegovic','Esmir Bajraktarevic'], F: ['Ermedin Demirovic','Jovo Lukic','Samed Bazdar','Haris Tabakovic','Edin Dzeko'] },
-  'Qatar': { P: ['Meshaal Barsham','Mahmoud Abunada','Salah Zakaria'], D: ['Hashmi Hussein','Ayoub Alawi','Boualem Khoukhi','Pedro Miguel','Issa Laaye','Lucas Mendes','Sultan Al-Brake','Homam Al-Amin'], C: ['Mohammed Al-Manai','Jassem Jaber','Karim Boudiaf','Ahmed Fathi','Abdulaziz Hatem','Assim Madibo'], F: ['Tahseen Mohammed','Edmilson Junior','Almoez Ali','Akram Afif','Mohammed Muntari','Youssef Abdulrazzaq','Ahmed Alaa','Hassan Al-Haydos','Ahmed Al-Janahi'] },
-  'Suiza': { P: ['Marvin Keller','Gregor Kobel','Yvon Mvogo'], D: ['Manuel Akanji','Aurele Amenda','Eray Comert','Nico Elvedi','Luca Jaquez','Miro Muheim','Ricardo Rodriguez','Silvan Widmer'], C: ['Michel Aebischer','Christian Fassnacht','Remo Freuler','Ardon Jashari','Johan Manzambi','Fabian Rieder','Djibril Sow','Ruben Vargas','Granit Xhaka','Denis Zakaria'], F: ['Zeki Amdouni','Breel Embolo','Cedric Itten','Dan Ndoye','Noah Okafor'] },
-  'Brasil': { P: ['Alisson','Ederson','Weverton'], D: ['Alex Sandro','Bremer','Danilo','Douglas Santos','Gabriel Magalhães','Ibanez','Leo Pereira','Marquinhos','Wesley'], C: ['Bruno Guimarães','Casemiro','Danilo Santos','Fabinho','Lucas Paquetá'], F: ['Endrick','Gabriel Martinelli','Igor Thiago','Luiz Henrique','Matheus Cunha','Neymar','Raphinha','Rayan','Vinícius Jr.'] },
-  'Marruecos': { P: ['Yassine Bounou','Munir El Kajoui','Ahmed Reda Tagnaouti'], D: ['Nayef Aguerd','Youssef Belammari','Issa Diop','Zakaria El Ouahdi','Achraf Hakimi','Redouane Halhal','Noussair Mazraoui','Chadi Riad','Anass Salah-Eddine'], C: ['Sofyan Amrabat','Ayyoub Bouaddi','Neil El Aynaoui','Bilal El Khannouss','Samir El Mourabet','Azzedine Ounahi','Ismael Saibari'], F: ['Ayoube Amaimouni','Brahim Díaz','Ayoub El Kaabi','Abdessamad Ezzalzouli','Yassine Gessime','Soufiane Rahimi','Chemsdine Talbi'] },
-  'Haití': { P: ['Johnny Placide','Alexandre Pierre','Josue Duverger'], D: ['Carlens Arcus','Wilguens Pauguain','Duke Lacroix','Martin Experience','Jean-Kevin Duverne','Ricardo Ade','Hannes Delcroix','Keeto Thermoncy'], C: ['Leverton Pierre','Carl-Fred Sainthe','Jean-Jacques Danley','Jean-Ricner Bellegarde','Pierre Woodenski','Dominique Simon'], F: ['Louicius Deedson','Ruben Providence','Josue Casimir','Derrick Etienne','Wilson Isidor','Duckens Nazon','Frantzdy Pierrot','Yassin Fortune','Lenny Joseph'] },
-  'Escocia': { P: ['Craig Gordon','Angus Gunn','Liam Kelly'], D: ['Grant Hanley','Jack Hendry','Aaron Hickey','Dom Hyam','Scott McKenna','Nathan Patterson','Anthony Ralston','Andy Robertson','John Souttar','Kieran Tierney'], C: ['Ryan Christie','Finlay Curtis','Lewis Ferguson','Ben Gannon-Doak','Tyler Fletcher','John McGinn','Kenny McLean','Scott McTominay'], F: ['Che Adams','Lyndon Dykes','George Hirst','Lawrence Shankland','Ross Stewart'] },
-  'EE.UU.': { P: ['Chris Brady','Matt Freese','Matt Turner'], D: ['Max Arfsten','Sergino Dest','Alex Freeman','Mark McKenzie','Tim Ream','Chris Richards','Antonee Robinson','Miles Robinson','Joe Scally','Auston Trusty'], C: ['Tyler Adams','Sebastian Berhalter','Weston McKennie','Cristian Roldan','Brenden Aaronson','Christian Pulisic','Gio Reyna','Malik Tillman','Tim Weah','Alejandro Zendejas'], F: ['Folarin Balogun','Ricardo Pepi','Haji Wright'] },
-  'Paraguay': { P: ['Roberto Fernández','Orlando Gill','Gastón Olveira'], D: ['Omar Alderete','Junior Alonso','Fabián Balbuena','Juan José Cáceres','José Canale','Gustavo Gómez','Alexandro Maidana','Gustavo Velázquez'], C: ['Damián Bobadilla','Gustavo Caballero','Andrés Cubas','Matías Galarza','Diego Gómez','Mauricio Magalhaes','Briaian Ojeda','Alejandro Romero'], F: ['Miguel Almirón','Gabriel Ávalos','Alex Arce','Julio Enciso','Isidro Pitta','Antonio Sanabria','Ramón Sosa'] },
-  'Australia': { P: ['Mat Ryan','Paul Izzo','Patrick Beach'], D: ['Aziz Behich','Jordan Bos','Cameron Burgess','Alessandro Circati','Milos Degenek','Jason Geria','Lucas Herrington','Jacob Italiano','Harry Souttar','Kai Trewin'], C: ['Cammy Devlin','Ajdin Hrustic','Jackson Irvine','Connor Metcalfe','Paul Okon-Englster','Aiden O’Neill'], F: ['Nestory Irankunda','Mathew Leckie','Awer Mabil','Mohamed Toure','Nishan Velupilly','Cristian Volpato','Tete Yengi'] },
-  'Turquía': { P: ['Altay Bayindir','Mert Gunok','Ugurcan Cakir'], D: ['Abdulkerim Bardakci','Caglar Soyuncu','Eren Elmali','Ferdi Kadioglu','Merih Demiral','Mert Muldur','Ozan Kabak','Samet Akaydin','Zeki Celik'], C: ['Hakan Çalhanoğlu','Ismail Yuksek','Kaan Ayhan','Orkun Kokcu','Salih Ozcan'], F: ['Arda Güler','Baris Alper Yilmaz','Can Uzun','Deniz Gul','Irfan Can Kahveci','Kenan Yildiz','Kerem Akturkoglu','Oguz Aydin','Yunus Akgun'] },
-  'Alemania': { P: ['Oliver Baumann','Manuel Neuer','Alexander Nübel'], D: ['Joshua Kimmich','Nico Schlotterbeck','Nathaniel Brown','David Raum','Waldemar Anton','Antonio Rüdiger','Malick Thiaw','Jonathan Tah'], C: ['Jamal Musiala','Jamie Leweling','Aleksandar Pavlovic','Nadiem Amiri','Felix Nmecha','Angelo Stiller','Leon Goretzka','Pascal Gross'], F: ['Kai Havertz','Deniz Undav','Maximilian Beier','Florian Wirtz','Nick Woltemade','Lennart Karl','Leroy Sané'] },
-  'Curazao': { P: ['Tyrick Bodak','Trevor Doornbusch','Eloy Room'], D: ['Riechedly Bazoer','Joshua Brenet','Roshon Van Eijma','Sherel Floranus','Deveron Fonville','Jurien Gaari','Armando Obispo','Shurandy Sambo'], C: ['Juninho Bacuna','Leandro Bacuna','Livano Comenencia','Kevin Felida','Ar’Jany Martha','Tyrese Noslin','Godfried Roemeratoe'], F: ['Jeremy Antonisse','Tahith Chong','Kenji Gorre','Sontje Hansen','Gervane Kastaneer','Brandley Kuwas','Jurgen Locadia','Jearl Margaritha'] },
-  'Costa de Marfil': { P: ['Yahia Fofana','Mohamed Kone','Alban Lafont'], D: ['Emmanuel Agbadou','Ousmane Diomandé','Guela Doue','Ghislain Konan','Odilon Kossonou','Evan Ndicka','Wilfried Singo','Christopher Operi'], C: ['Seko Fofana','Parfait Guiagon','Franck Kessié','Christ Oulai','Ibrahim Sangaré','Jean-Michael Seri'], F: ['Simon Adingra','Ange-Yoan Bonny','Amad Diallo','Oumar Diakite','Yan Diomande','Evann Guessand','Nicolas Pépé','Bazoumana Touré','Elye Wahi'] },
-  'Ecuador': { P: ['Hernán Galíndez','Moisés Ramírez','Gonzalo Valle'], D: ['Piero Hincapié','William Pacho','Pervis Estupiñán','Félix Torres','Joel Ordoñez','Jackson Porozo','Ángelo Preciado'], C: ['Moisés Caicedo','Alan Franco','Kendry Páez','Pedro Vite','Jordy Alcivar','Denil Castillo','Yaimar Medina'], F: ['Enner Valencia','Kevin Rodríguez','Jordy Caicedo','Nilson Angulo','Anthony Valencia','Jeremy Arévalo'] },
-  'Países Bajos': { P: ['Mark Flekken','Robin Roefs','Bart Verbruggen'], D: ['Nathan Aké','Denzel Dumfries','Jorrel Hato','Jurrien Timber','Micky van de Ven','Virgil van Dijk','Jan Paul van Hecke'], C: ['Frenkie de Jong','Marten de Roon','Ryan Gravenberch','Justin Kluivert','Teun Koopmeiners','Tijjani Reijnders','Guus Til','Quinten Timber','Mats Wieffer'], F: ['Brian Brobbey','Memphis Depay','Cody Gakpo','Noa Lang','Donyell Malen','Crysencio Summerville','Wout Weghorst'] },
-  'Japón': { P: ['Tomoki Hayakawa','Keisuke Osako','Aya Suzuka'], D: ['Yuto Nagatomo','Shogo Taniguchi','Ko Itakura','Tsuyoshi Watanabe','Takehiro Tomiyasu','Hiroki Ito','Ayumu Seko','Yukinari Sugawara','Junosuke Suzuki'], C: ['Wataru Endo','Junya Ito','Daichi Kamada','Koki Ogawa','Daizen Maeda','Ritsu Doan','Ao Tanaka','Kaishu Sano','Takefusa Kubo'], F: ['Ayase Ueda','Keito Nakamura','Ito Suzuki','Kento Shiode','Keisuke Goto'] },
-  'Túnez': { P: ['Sabri Ben Hessen','Abdelmouhib Chamakh','Aymen Dahman'], D: ['Ali Abdi','Adem Arous','Mohamed Amine Ben Hamida','Dylan Bronn','Raed Chikhaoui','Moutaz Neffati','Omar Rekik','Montassar Talbi','Yan Valery'], C: ['Mortadha Ben Ouanes','Anis Ben Slimane','Ismael Gharbi','Rani Khedira','Mohamed Hadj Mahmoud','Hannibal Mejbri','Ellyes Skhiri'], F: ['Elias Achouri','Khalil Ayari','Firas Chaouat','Rayan Elloumi','Hazem Mastouri','Elias Saad','Sebastian Tounekti'] },
-  'Suecia': { P: ['Kristoffer Nordfeldt','Viktor Johansson','Jacob Widell Zetterstrom'], D: ['Daniel Svensson','Victor Lindelof','Isak Hien','Carl Starfelt','Elliot Stroud','Gustaf Lagerbielke','Gabriel Gudmundsson','Herman Johansson','Hjalmar Ekdal','Erik Smith'], C: ['Taha Ali','Yasin Ayari','Lucas Bergvall','Jesper Karlstrom','Mattias Svanberg','Besfort Zeneli','Ken Sema'], F: ['Anthony Elanga','Viktor Gyökeres','Gustaf Nilsson','Benjamin Nygren','Alexander Isak','Alexander Bernhardsson'] },
-  'Bélgica': { P: ['Thibaut Courtois','Senne Lammens','Mike Penders'], D: ['Timothy Castagne','Zeno Debast','Maxim De Cuyper','Koni De Winter','Brandon Mechele','Thomas Meunier','Nathan Ngoy','Joaquin Seys','Arthur Theate'], C: ['Kevin De Bruyne','Amadou Onana','Nicolas Raskin','Youri Tielemans','Hans Vanaken','Axel Witsel'], F: ['Charles De Ketelaere','Jeremy Doku','Matias Fernandez-Pardo','Romelu Lukaku','Dodi Lukebakio','Diego Moreira','Alexis Saelemaekers','Leandro Trossard'] },
-  'Egipto': { P: ['Mohamed El Shenawy','Mostafa Shobeir','El Mahdi Soliman','Mohamed Alaa'], D: ['Mohamed Hany','Tarek Alaa','Hamdy Fathy','Rami Rabia','Yasser Ibrahim','Hossam Abdelmaguid','Mohamed Abdelmonem','Ahmed Fatouh','Karim Hafez'], C: ['Marwan Ateya','Mohanad Lasheen','Nabil Emad','Mahmoud Saber','Ahmed Zizo','Emam Ashour','Mostafa Ziko','Mahmoud Trezeguet','Ibrahim Adel','Haissem Hassan'], F: ['Omar Marmoush','Mohamed Salah','Aqtay Abdallah','Hamza Abdelkarim'] },
-  'Irán': { P: ['Alireza Beiranvand','Hossein Hosseini','Payam Niazmand'], D: ['Danial Eiri','Ehsan Hajsafi','Saleh Hardani','Hossein Kanaani','Shoja Khalilzadeh','Milad Mohammadi','Ramin Rezaeian'], C: ['Rouzbeh Cheshmi','Saeid Ezatolahi','Mehdi Ghaedi','Saman Ghoddos','Mohammad Ghorbani','Alireza Jahanbakhsh','Mohammad Mohebi','Amir Mohammad Razzaghinia','Mehdi Torabi','Aria Yousefi'], F: ['Ali Alipour','Dennis Dargahi','Amirhossein Hosseinzadeh','Shahriyar Moghanlou','Mehdi Taremi'] },
-  'Nueva Zelanda': { P: ['Max Crocombe','Alex Paulsen','Michael Woud'], D: ['Tim Payne','Francis De Vries','Tyler Bindon','Michael Boxall','Liberato Cacace','Nando Pijnaker','Finn Surman','Callan Elliot','Tommy Smith'], C: ['Joe Bell','Marko Stamenic','Alex Rufer','Ryan Thomas','Lachlan Bayliss','Ben Old','Sarpreet Singh'], F: ['Kosta Barbarouses','Chris Wood','Ben Waine','Jesse Randall'] },
-  'España': { P: ['Unai Simón','Joan García','David Raya'], D: ['Marc Cucurella','Alejandro Grimaldo','Pau Cubarsí','Aymeric Laporte','Marc Pubill','Eric García','Marcos Llorente','Pedro Porro'], C: ['Pedri','Fabián Ruiz','Martín Zubimendi','Gavi','Rodrigo Hernández','Álex Baena','Mikel Merino'], F: ['Mikel Oyarzabal','Dani Olmo','Nico Williams','Yeremy Pino','Ferran Torres','Borja Iglesias','Víctor Muñoz','Lamine Yamal'] },
-  'Cabo Verde': { P: ['Vozinha','Marcelo Boiça','Patrick Tamás'], D: ['Roberto Lopes','Dylan Tavares','Zé Lopes','Bryan Tchissola','Diney','Steven Fortes'], C: ['Ryan Mendes','Jamiro Monteiro','Stopira','Sergio Rodrigues','Kenny Rocha'], F: ['Garry Rodrigues','Jovane Cabral','Héldon','Vagner','Willy Semedo'] },
-  'Arabia Saudita': { P: ['Mohammed Al-Owais','Fawaz Al-Qarni','Nawaf Al-Aqidi'], D: ['Sultan Al-Ghannam','Ali Al-Bulayhi','Abdulelah Al-Amri','Hassan Tambakti','Saud Abdulhamid','Ziyad Al-Sahafi'], C: ['Sami Al-Najei','Riyadh Sharahili','Mohamed Kanno','Nasser Al-Dawsari','Saleh Al-Shehri','Abdulrahman Al-Aboud'], F: ['Firas Al-Buraikan','Abdullah Radif','Ahmed Sharahili','Salem Al-Dawsari','Hattan Bahebri'] },
-  'Uruguay': { P: ['Sergio Rochet','Sebastian Sosa','Augustin Rossi'], D: ['José María Giménez','Ronald Araújo','Mathías Olivera','Facundo González','Sebastián Cáceres','Guillermo Varela','Matías Vina'], C: ['Federico Valverde','Rodrigo Bentancur','Lucas Torreira','Manuel Ugarte','Nicolás De La Cruz','Matías Vecino','Giorgian De Arrascaeta'], F: ['Darwin Núñez','Luis Suárez','Edinson Cavani','Facundo Torres','Luciano Rodríguez','Brian Rodríguez'] },
-  'Francia': { P: ['Mike Maignan','Alphonse Areola','Brice Samba'], D: ['William Saliba','Dayot Upamecano','Jules Koundé','Theo Hernández','Benjamin Pavard','Lucas Hernández','Jonathan Clauss'], C: ['Aurélien Tchouaméni','Adrien Rabiot','Antoine Griezmann','Youssouf Fofana','Warren Zaïre-Emery'], F: ['Kylian Mbappé','Ousmane Dembélé','Marcus Thuram','Kingsley Coman','Randal Kolo Muani','Bradley Barcola'] },
-  'Senegal': { P: ['Édouard Mendy','Seny Dieng','Alfred Gomis'], D: ['Kalidou Koulibaly','Abdou Diallo','Formose Mendy','Ismail Jakobs','Pape Abou Cissé','Youssouf Sabaly'], C: ['Idrissa Gueye','Cheikhou Kouyaté','Nampalys Mendy','Pape Guèye','Lamine Camara','Pathé Ciss'], F: ['Sadio Mané','Ismaïla Sarr','Habib Diallo','Nicolas Jackson','Boulaye Dia','Iliman Ndiaye','Krepin Diatta'] },
-  'Noruega': { P: ['Rune Almenning Jarstein','Ørjan Nyland','Jørgen Strand Larsen'], D: ['Leo Skiri Østigård','Andreas Hanche-Olsen','Birger Meling','Kristian Thorstvedt','Stefan Strandberg','Marcus Holmgren Pedersen'], C: ['Sander Berge','Martin Ødegaard','Mathias Normann','Fredrik Aursnes','Morten Thorsby'], F: ['Erling Haaland','Alexander Sørloth','Joshua King','Antonio Nusa','Ola Solbakken','Oscar Bobb'] },
-  'Irak': { P: ['Fahad Talib','Jalal Hassan','Martyn Reuser'], D: ['Ali Adnan','Rebin Sulaka','Saman Shway','Ahmed Ibrahim','Mustafa Nadhim','Amjed Attwan'], C: ['Safaa Hadi','Bashar Rasan','Aymen Hussein','Mohanad Abdulraheem','Ibrahim Bayesh'], F: ['Ayman Hussein','Alaa Abbas','Moatasem Amin','Hassan Abdulkareem','Ahmed Yasin'] },
-  'Argentina': { P: ['Emiliano Martínez','Gerónimo Rulli','Juan Musso'], D: ['Gonzalo Montiel','Nahuel Molina','Lisandro Martínez','Nicolás Otamendi','Leonardo Balerdi','Cristian Romero','Nicolás Tagliafico','Facundo Medina'], C: ['Leandro Paredes','Alexis Mac Allister','Rodrigo De Paul','Giovani Lo Celso','Exequiel Palacios','Enzo Fernández','Valentín Barco'], F: ['Lionel Messi','Julián Álvarez','Lautaro Martínez','Thiago Almada','Nicolás Paz','Nicolás González','Giuliano Simeone','José Manuel López'] },
-  'Argelia': { P: ['Raïs M’Bolhi','Alexandre Oukidja','Youcef Gassouah'], D: ['Riyad Mahrez','Djamel Benlamri','Aïssa Mandi','Mehdi Zeffane','Yacine Brahimi','Abdelkader Bedrane'], C: ['Sofiane Feghouli','Adlène Guedioura','Haris Belkebla','Mehdi Tahrat','Billal Brahimi'], F: ['Islam Slimani','Youcef Atal','Baghdad Bounedjah','Adem Zorgane','Hossam Aouar'] },
-  'Austria': { P: ['Patrick Pentz','Heinz Lindner','Alexander Schlager'], D: ['David Alaba','Phillipp Lienhart','Stefan Posch','Maximilian Wöber','Andreas Ulmer','Flavius Daniliuc'], C: ['Marcel Sabitzer','Florian Grillitsch','Xaver Schlager','Nicolas Seiwald','Konrad Laimer','Christoph Baumgartner'], F: ['Marko Arnautovic','Michael Gregoritsch','Patrick Wimmer','Louis Schaub','Sasa Kalajdzic'] },
-  'Jordania': { P: ['Yazeed Abo Layla','Mahmoud Shuqair','Anas Ghorab'], D: ['Badr Al-Rawabdeh','Khaled Al-Qudah','Ahmad Saleh','Moath Abu Adailah','Osama Al-Rashdan'], C: ['Musa Al-Tamari','Yaser Al-Naimat','Baha Faisal','Mahmoud Al-Mardi','Omar Nawaf','Yazan Al-Naimat'], F: ['Ahmed Hayel','Mousa Al-Taamari','Zaid Al-Hamoud','Hesham Abu Ali'] },
-  'Portugal': { P: ['Diogo Costa','José Sá','Rui Patrício'], D: ['Rúben Dias','Pepe','Nuno Mendes','João Cancelo','Diogo Dalot','Gonçalo Inácio','Toti Gomes'], C: ['Bruno Fernandes','João Palhinha','Vitinha','Bernardo Silva','Rúben Neves','João Neves','Otávio'], F: ['Cristiano Ronaldo','Rafael Leão','Pedro Neto','Francisco Conceição','João Félix','Gonçalo Ramos','Trincão','Gonçalo Guedes'] },
-  'Colombia': { P: ['Camilo Vargas','David Ospina','Kevin Mier'], D: ['Santiago Arias','Dávinson Sánchez','Yerry Mina','Johan Mojica','Daniel Muñoz','Carlos Cuesta','Jhon Lucumí'], C: ['Wilmar Barrios','Gustavo Cuéllar','Mateus Uribe','Richard Ríos','Juan Cuadrado','James Rodríguez','Jhon Arias'], F: ['Luis Díaz','Radamel Falcao','Rafael Santos Borré','Jhon Córdoba','Duván Zapata','Cucho Hernández'] },
-  'Uzbekistán': { P: ['Ulugbek Nishonov','Abbosbek Fayzullayev','Jahongir Murodov'], D: ['Sanjar Tursunov','Dostonbek Khamdamov','Sherzod Nasrullayev','Husayn Norchaev','Jasur Yakhshiboyev'], C: ['Otabek Shukurov','Bekhruz Tursunov','Jakhongir Sidikov','Umidjon Malikov','Khojiakbar Alijonov'], F: ['Eldor Shomurodov','Javlon Guseynov','Islom Tukhtakhujaev','Bobur Abdixoliqov'] },
-  'R.D. Congo': { P: ['Joël Kiassumbua','Ley Matampi','Dimitri Bertaud'], D: ['Axel Tuanzebe','Aaron Wan-Bissaka','Chancel Mbemba','Marcel Tisserand','Arthur Masuaku','Jordan Ikoko'], C: ['Silas Katompa','Noah Sadiki','Edo Kayembe','Yoane Wissa','Paul-José Mpoku','Gael Kakuta'], F: ['Cédric Bakambu','Yannick Bolasie','Emmanuel Lathomme','Jean-Marc Makusu'] },
-  'Inglaterra': { P: ['Jordan Pickford','Dean Henderson','James Trafford'], D: ['Kyle Walker','John Stones','Marc Guehi','Ben White','Trent Alexander-Arnold','Luke Shaw','Ezri Konsa'], C: ['Jude Bellingham','Declan Rice','Conor Gallagher','Kobbie Mainoo','Lewis Hall','Adam Wharton'], F: ['Harry Kane','Bukayo Saka','Jack Grealish','Ollie Watkins','Jarrod Bowen','Anthony Gordon','Eberechi Eze'] },
-  'Croacia': { P: ['Dominik Livaković','Ivica Ivušić','Dominik Kotarski'], D: ['Joško Gvardiol','Duje Ćaleta-Car','Josip Šutalo','Josip Stanisic','Marin Pongracic','Martin Erlić','Luka Voskovic'], C: ['Luka Modrić','Mateo Kovačić','Mario Pašalić','Lovro Majer','Martin Baturina','Kristijan Jakic','Petar Sucic'], F: ['Ivan Perišić','Andrej Kramarić','Ante Budimir','Petar Musa','Marco Pasalic'] },
-  'Ghana': { P: ['Lawrence Ati-Zigi','Benjamin Asare','Joseph Anang'], D: ['Baba Abdul Rahman','Gideon Mensah','Alidu Seidu','Abdul Mumin','Jonas Adjetey','Jerome Opoku','Kojo Oppong Peprah'], C: ['Thomas Partey','Elisha Owusu','Augustine Boakye','Abdul Fatawu Issahaku','Caleb Yirenkyi'], F: ['Iñaki Williams','Jordan Ayew','Kamal Deen Sulemana','Antoine Semenyo','Ernest Nuamah','Christopher Bonsu Baah'] },
-  'Panamá': { P: ['Luis Mejía','Orlando Mosquera','Rodrigo Montoya'], D: ['Fidel Escobar','Andrés Andrade','Édgar Yoel Bárcenas','Harold Cummings','Martín Olave','Ronaldo Walker'], C: ['Aníbal Godoy','Adalberto Carrasquilla','Éric Davis','Armando Cooper','Rodolfo Pitti'], F: ['Ismael Díaz','Cecilio Waterman','Alfredo Stephens','Alberto Quintero','José Fajardo','Rolando Blackburn'] }
+  // ── GRUPO A ──
+  'México': {
+    P: ['Raúl Rangel','Guillermo Ochoa','Carlos Acevedo'],
+    D: ['Jorge Sánchez','Israel Reyes','César Montes','Johan Vásquez','Jesús Gallardo','Mateo Chávez'],
+    C: ['Erik Lira','Orbelín Pineda','Álvaro Fidalgo','Roberto Alvarado','Brian Gutiérrez','Luis Romo','Edson Álvarez','Obed Vargas','Gilberto Mora','Luis Chávez'],
+    F: ['César Huerta','Alexis Vega','Julián Quiñones','Guillermo Martínez','Armando González','Santiago Giménez','Raúl Jiménez'],
+  },
+  'Sudáfrica': {
+    P: ['Ronwen Williams','Ricardo Goss','Sipho Chaine'],
+    D: ['Khuliso Mudau','Aubrey Modiba','Khulumani Ndamane','Olwethu Makhanya','Bradley Cross','Thabang Matuludi','Nkosinathi Sibisi','Kamogelo Sebelebele','Ime Okon','Samukele Kabini','Mbekezeli Mbokazi'],
+    C: ['Teboho Mokoena','Jayden Adams','Thalente Mbatha','Sphephelo Sithole'],
+    F: ['Oswin Appollis','Tshepang Moremi','Evidence Makgopa','Relebohile Mofokeng','Lyle Foster','Iqraam Rayners','Themba Zwane','Thapelo Maseko'],
+  },
+  'Corea del Sur': {
+    P: ['Jo Hyeon-woo','Kim Seung-gyu','Song Bum-keun'],
+    D: ['Kim Moon-hwan','Kim Min-jae','Kim Tae-hyon','Park Jin-seob','Seol Young-woo','Jens Castrop','Cho Yu-min'],
+    C: ['Kim Jin-gyu','Bae Jun-ho','Paik Seung-ho','Yang Hyun-jun','Eom Ji-sung','Lee Kang-in','Lee Dong-gyeong','Hwang Hee-chan'],
+    F: ['Son Heung-min','Oh Hyeon-gyu','Cho Gue-sung'],
+  },
+  'Rep. Checa': {
+    P: ['Lukas Hornicek','Matej Kovar','Jindrich Stanek'],
+    D: ['Vladimir Coufal','David Doudera','Tomas Holes','Robin Hranac','Stepan Chaloupek','David Jurasek','Ladislav Krejci','Jaroslav Zeleny','David Zima'],
+    C: ['Lukas Cerv','Vladimir Darida','Lukas Provod','Michal Sadilek','Hugo Sochurek','Alexandr Sojka','Tomas Soucek','Pavel Sulc','Denis Visinsky'],
+    F: ['Adam Hlozek','Tomas Chory','Mojmir Chytil','Jan Kuchta','Patrik Schick'],
+  },
+  // ── GRUPO B ──
+  'Canadá': {
+    P: ['Dayne St Clair','Maxime Crepeau','Owen Goodman'],
+    D: ['Alistair Johnston','Derek Cornelius','Richie Laryea','Niko Sigur','Joel Waterman','Luc de Fougerolles','Moise Bombito','Alphonso Davies','Alfie Jones'],
+    C: ['Stephen Eustaquio','Ismael Kone','Tajon Buchanan','Mathieu Choiniere','Ali Ahmed','Nathan Saliba','Liam Millar','Jacob Shaffelburg','Jonathan Osorio'],
+    F: ['Jonathan David','Cyle Larin','Tani Oluwaseyi','Promise David'],
+  },
+  'Bosnia-Herz.': {
+    P: ['Nikola Vasilj','Martin Zlomislic','Osman Hadzikic'],
+    D: ['Sead Kolasinac','Amar Dedic','Nihad Mujakic','Nikola Katic','Tarik Muharemovic','Stjepan Radeljic','Dennis Hadzikadunic','Nidal Celik'],
+    C: ['Amir Hadziahmetovic','Ivan Sunjic','Ivan Basic','Dzenis Burnic','Ermin Mahmic','Benjamin Tahirovic','Amar Memic','Armin Gigovic','Kerim Alajbegovic','Esmir Bajraktarevic'],
+    F: ['Ermedin Demirovic','Jovo Lukic','Samed Bazdar','Haris Tabakovic','Edin Dzeko'],
+  },
+  'Qatar': {
+    P: ['Meshaal Barsham','Mahmoud Abunada','Salah Zakaria'],
+    D: ['Hashmi Hussein','Ayoub Alawi','Boualem Khoukhi','Pedro Miguel','Issa Laaye','Lucas Mendes','Sultan Al-Brake','Homam Al-Amin'],
+    C: ['Mohammed Al-Manai','Jassem Jaber','Karim Boudiaf','Ahmed Fathi','Abdulaziz Hatem','Assim Madibo'],
+    F: ['Tahseen Mohammed','Edmilson Junior','Almoez Ali','Akram Afif','Mohammed Muntari','Youssef Abdulrazzaq','Ahmed Alaa','Hassan Al-Haydos','Ahmed Al-Janahi'],
+  },
+  'Suiza': {
+    P: ['Marvin Keller','Gregor Kobel','Yvon Mvogo'],
+    D: ['Manuel Akanji','Aurele Amenda','Eray Comert','Nico Elvedi','Luca Jaquez','Miro Muheim','Ricardo Rodriguez','Silvan Widmer'],
+    C: ['Michel Aebischer','Christian Fassnacht','Remo Freuler','Ardon Jashari','Johan Manzambi','Fabian Rieder','Djibril Sow','Ruben Vargas','Granit Xhaka','Denis Zakaria'],
+    F: ['Zeki Amdouni','Breel Embolo','Cedric Itten','Dan Ndoye','Noah Okafor'],
+  },
+  // ── GRUPO C ──
+  'Brasil': {
+    P: ['Alisson','Ederson','Weverton'],
+    D: ['Alex Sandro','Bremer','Danilo','Douglas Santos','Gabriel Magalhães','Ibanez','Leo Pereira','Marquinhos','Wesley'],
+    C: ['Bruno Guimarães','Casemiro','Danilo Santos','Fabinho','Lucas Paquetá'],
+    F: ['Endrick','Gabriel Martinelli','Igor Thiago','Luiz Henrique','Matheus Cunha','Neymar','Raphinha','Rayan','Vinícius Jr.'],
+  },
+  'Marruecos': {
+    P: ['Yassine Bounou','Munir El Kajoui','Ahmed Reda Tagnaouti'],
+    D: ['Nayef Aguerd','Youssef Belammari','Issa Diop','Zakaria El Ouahdi','Achraf Hakimi','Redouane Halhal','Noussair Mazraoui','Chadi Riad','Anass Salah-Eddine'],
+    C: ['Sofyan Amrabat','Ayyoub Bouaddi','Neil El Aynaoui','Bilal El Khannouss','Samir El Mourabet','Azzedine Ounahi','Ismael Saibari'],
+    F: ['Ayoube Amaimouni','Brahim Díaz','Ayoub El Kaabi','Abdessamad Ezzalzouli','Yassine Gessime','Soufiane Rahimi','Chemsdine Talbi'],
+  },
+  'Haití': {
+    P: ['Johnny Placide','Alexandre Pierre','Josue Duverger'],
+    D: ['Carlens Arcus','Wilguens Pauguain','Duke Lacroix','Martin Experience','Jean-Kevin Duverne','Ricardo Ade','Hannes Delcroix','Keeto Thermoncy'],
+    C: ['Leverton Pierre','Carl-Fred Sainthe','Jean-Jacques Danley','Jean-Ricner Bellegarde','Pierre Woodenski','Dominique Simon'],
+    F: ['Louicius Deedson','Ruben Providence','Josue Casimir','Derrick Etienne','Wilson Isidor','Duckens Nazon','Frantzdy Pierrot','Yassin Fortune','Lenny Joseph'],
+  },
+  'Escocia': {
+    P: ['Craig Gordon','Angus Gunn','Liam Kelly'],
+    D: ['Grant Hanley','Jack Hendry','Aaron Hickey','Dom Hyam','Scott McKenna','Nathan Patterson','Anthony Ralston','Andy Robertson','John Souttar','Kieran Tierney'],
+    C: ['Ryan Christie','Finlay Curtis','Lewis Ferguson','Ben Gannon-Doak','Tyler Fletcher','John McGinn','Kenny McLean','Scott McTominay'],
+    F: ['Che Adams','Lyndon Dykes','George Hirst','Lawrence Shankland','Ross Stewart'],
+  },
+  // ── GRUPO D ──
+  'EE.UU.': {
+    P: ['Chris Brady','Matt Freese','Matt Turner'],
+    D: ['Max Arfsten','Sergino Dest','Alex Freeman','Mark McKenzie','Tim Ream','Chris Richards','Antonee Robinson','Miles Robinson','Joe Scally','Auston Trusty'],
+    C: ['Tyler Adams','Sebastian Berhalter','Weston McKennie','Cristian Roldan','Brenden Aaronson','Christian Pulisic','Gio Reyna','Malik Tillman','Tim Weah','Alejandro Zendejas'],
+    F: ['Folarin Balogun','Ricardo Pepi','Haji Wright'],
+  },
+  'Paraguay': {
+    P: ['Roberto Fernández','Orlando Gill','Gastón Olveira'],
+    D: ['Omar Alderete','Junior Alonso','Fabián Balbuena','Juan José Cáceres','José Canale','Gustavo Gómez','Alexandro Maidana','Gustavo Velázquez'],
+    C: ['Damián Bobadilla','Gustavo Caballero','Andrés Cubas','Matías Galarza','Diego Gómez','Mauricio Magalhaes','Briaian Ojeda','Alejandro Romero'],
+    F: ['Miguel Almirón','Gabriel Ávalos','Alex Arce','Julio Enciso','Isidro Pitta','Antonio Sanabria','Ramón Sosa'],
+  },
+  'Australia': {
+    P: ['Mat Ryan','Paul Izzo','Patrick Beach'],
+    D: ['Aziz Behich','Jordan Bos','Cameron Burgess','Alessandro Circati','Milos Degenek','Jason Geria','Lucas Herrington','Jacob Italiano','Harry Souttar','Kai Trewin'],
+    C: ['Cammy Devlin','Ajdin Hrustic','Jackson Irvine','Connor Metcalfe','Paul Okon-Englster','Aiden O’Neill'],
+    F: ['Nestory Irankunda','Mathew Leckie','Awer Mabil','Mohamed Toure','Nishan Velupilly','Cristian Volpato','Tete Yengi'],
+  },
+  'Turquía': {
+    P: ['Altay Bayindir','Mert Gunok','Ugurcan Cakir'],
+    D: ['Abdulkerim Bardakci','Caglar Soyuncu','Eren Elmali','Ferdi Kadioglu','Merih Demiral','Mert Muldur','Ozan Kabak','Samet Akaydin','Zeki Celik'],
+    C: ['Hakan Çalhanoğlu','Ismail Yuksek','Kaan Ayhan','Orkun Kokcu','Salih Ozcan'],
+    F: ['Arda Güler','Baris Alper Yilmaz','Can Uzun','Deniz Gul','Irfan Can Kahveci','Kenan Yildiz','Kerem Akturkoglu','Oguz Aydin','Yunus Akgun'],
+  },
+  // ── GRUPO E ──
+  'Alemania': {
+    P: ['Oliver Baumann','Manuel Neuer','Alexander Nübel'],
+    D: ['Joshua Kimmich','Nico Schlotterbeck','Nathaniel Brown','David Raum','Waldemar Anton','Antonio Rüdiger','Malick Thiaw','Jonathan Tah'],
+    C: ['Jamal Musiala','Jamie Leweling','Aleksandar Pavlovic','Nadiem Amiri','Felix Nmecha','Angelo Stiller','Leon Goretzka','Pascal Gross'],
+    F: ['Kai Havertz','Deniz Undav','Maximilian Beier','Florian Wirtz','Nick Woltemade','Lennart Karl','Leroy Sané'],
+  },
+  'Curazao': {
+    P: ['Tyrick Bodak','Trevor Doornbusch','Eloy Room'],
+    D: ['Riechedly Bazoer','Joshua Brenet','Roshon Van Eijma','Sherel Floranus','Deveron Fonville','Jurien Gaari','Armando Obispo','Shurandy Sambo'],
+    C: ['Juninho Bacuna','Leandro Bacuna','Livano Comenencia','Kevin Felida','Ar’Jany Martha','Tyrese Noslin','Godfried Roemeratoe'],
+    F: ['Jeremy Antonisse','Tahith Chong','Kenji Gorre','Sontje Hansen','Gervane Kastaneer','Brandley Kuwas','Jurgen Locadia','Jearl Margaritha'],
+  },
+  'Costa de Marfil': {
+    P: ['Yahia Fofana','Mohamed Kone','Alban Lafont'],
+    D: ['Emmanuel Agbadou','Ousmane Diomandé','Guela Doue','Ghislain Konan','Odilon Kossonou','Evan Ndicka','Wilfried Singo','Christopher Operi'],
+    C: ['Seko Fofana','Parfait Guiagon','Franck Kessié','Christ Oulai','Ibrahim Sangaré','Jean-Michael Seri'],
+    F: ['Simon Adingra','Ange-Yoan Bonny','Amad Diallo','Oumar Diakite','Yan Diomande','Evann Guessand','Nicolas Pépé','Bazoumana Touré','Elye Wahi'],
+  },
+  'Ecuador': {
+    P: ['Hernán Galíndez','Moisés Ramírez','Gonzalo Valle'],
+    D: ['Piero Hincapié','William Pacho','Pervis Estupiñán','Félix Torres','Joel Ordoñez','Jackson Porozo','Ángelo Preciado'],
+    C: ['Moisés Caicedo','Alan Franco','Kendry Páez','Pedro Vite','Jordy Alcivar','Denil Castillo','Yaimar Medina'],
+    F: ['Enner Valencia','Kevin Rodríguez','Jordy Caicedo','Nilson Angulo','Anthony Valencia','Jeremy Arévalo'],
+  },
+  // ── GRUPO F ──
+  'Países Bajos': {
+    P: ['Mark Flekken','Robin Roefs','Bart Verbruggen'],
+    D: ['Nathan Aké','Denzel Dumfries','Jorrel Hato','Jurrien Timber','Micky van de Ven','Virgil van Dijk','Jan Paul van Hecke'],
+    C: ['Frenkie de Jong','Marten de Roon','Ryan Gravenberch','Justin Kluivert','Teun Koopmeiners','Tijjani Reijnders','Guus Til','Quinten Timber','Mats Wieffer'],
+    F: ['Brian Brobbey','Memphis Depay','Cody Gakpo','Noa Lang','Donyell Malen','Crysencio Summerville','Wout Weghorst'],
+  },
+  'Japón': {
+    P: ['Tomoki Hayakawa','Keisuke Osako','Aya Suzuka'],
+    D: ['Yuto Nagatomo','Shogo Taniguchi','Ko Itakura','Tsuyoshi Watanabe','Takehiro Tomiyasu','Hiroki Ito','Ayumu Seko','Yukinari Sugawara','Junosuke Suzuki'],
+    C: ['Wataru Endo','Junya Ito','Daichi Kamada','Koki Ogawa','Daizen Maeda','Ritsu Doan','Ao Tanaka','Kaishu Sano','Takefusa Kubo'],
+    F: ['Ayase Ueda','Keito Nakamura','Ito Suzuki','Kento Shiode','Keisuke Goto'],
+  },
+  'Túnez': {
+    P: ['Sabri Ben Hessen','Abdelmouhib Chamakh','Aymen Dahman'],
+    D: ['Ali Abdi','Adem Arous','Mohamed Amine Ben Hamida','Dylan Bronn','Raed Chikhaoui','Moutaz Neffati','Omar Rekik','Montassar Talbi','Yan Valery'],
+    C: ['Mortadha Ben Ouanes','Anis Ben Slimane','Ismael Gharbi','Rani Khedira','Mohamed Hadj Mahmoud','Hannibal Mejbri','Ellyes Skhiri'],
+    F: ['Elias Achouri','Khalil Ayari','Firas Chaouat','Rayan Elloumi','Hazem Mastouri','Elias Saad','Sebastian Tounekti'],
+  },
+  'Suecia': {
+    P: ['Kristoffer Nordfeldt','Viktor Johansson','Jacob Widell Zetterstrom'],
+    D: ['Daniel Svensson','Victor Lindelof','Isak Hien','Carl Starfelt','Elliot Stroud','Gustaf Lagerbielke','Gabriel Gudmundsson','Herman Johansson','Hjalmar Ekdal','Erik Smith'],
+    C: ['Taha Ali','Yasin Ayari','Lucas Bergvall','Jesper Karlstrom','Mattias Svanberg','Besfort Zeneli','Ken Sema'],
+    F: ['Anthony Elanga','Viktor Gyökeres','Gustaf Nilsson','Benjamin Nygren','Alexander Isak','Alexander Bernhardsson'],
+  },
+  // ── GRUPO G ──
+  'Bélgica': {
+    P: ['Thibaut Courtois','Senne Lammens','Mike Penders'],
+    D: ['Timothy Castagne','Zeno Debast','Maxim De Cuyper','Koni De Winter','Brandon Mechele','Thomas Meunier','Nathan Ngoy','Joaquin Seys','Arthur Theate'],
+    C: ['Kevin De Bruyne','Amadou Onana','Nicolas Raskin','Youri Tielemans','Hans Vanaken','Axel Witsel'],
+    F: ['Charles De Ketelaere','Jeremy Doku','Matias Fernandez-Pardo','Romelu Lukaku','Dodi Lukebakio','Diego Moreira','Alexis Saelemaekers','Leandro Trossard'],
+  },
+  'Egipto': {
+    P: ['Mohamed El Shenawy','Mostafa Shobeir','El Mahdi Soliman','Mohamed Alaa'],
+    D: ['Mohamed Hany','Tarek Alaa','Hamdy Fathy','Rami Rabia','Yasser Ibrahim','Hossam Abdelmaguid','Mohamed Abdelmonem','Ahmed Fatouh','Karim Hafez'],
+    C: ['Marwan Ateya','Mohanad Lasheen','Nabil Emad','Mahmoud Saber','Ahmed Zizo','Emam Ashour','Mostafa Ziko','Mahmoud Trezeguet','Ibrahim Adel','Haissem Hassan'],
+    F: ['Omar Marmoush','Mohamed Salah','Aqtay Abdallah','Hamza Abdelkarim'],
+  },
+  'Irán': {
+    P: ['Alireza Beiranvand','Hossein Hosseini','Payam Niazmand'],
+    D: ['Danial Eiri','Ehsan Hajsafi','Saleh Hardani','Hossein Kanaani','Shoja Khalilzadeh','Milad Mohammadi','Ramin Rezaeian'],
+    C: ['Rouzbeh Cheshmi','Saeid Ezatolahi','Mehdi Ghaedi','Saman Ghoddos','Mohammad Ghorbani','Alireza Jahanbakhsh','Mohammad Mohebi','Amir Mohammad Razzaghinia','Mehdi Torabi','Aria Yousefi'],
+    F: ['Ali Alipour','Dennis Dargahi','Amirhossein Hosseinzadeh','Shahriyar Moghanlou','Mehdi Taremi'],
+  },
+  'Nueva Zelanda': {
+    P: ['Max Crocombe','Alex Paulsen','Michael Woud'],
+    D: ['Tim Payne','Francis De Vries','Tyler Bindon','Michael Boxall','Liberato Cacace','Nando Pijnaker','Finn Surman','Callan Elliot','Tommy Smith'],
+    C: ['Joe Bell','Marko Stamenic','Alex Rufer','Ryan Thomas','Lachlan Bayliss','Ben Old','Sarpreet Singh'],
+    F: ['Kosta Barbarouses','Chris Wood','Ben Waine','Jesse Randall'],
+  },
+  // ── GRUPO H ──
+  'España': {
+    P: ['Unai Simón','Joan García','David Raya'],
+    D: ['Marc Cucurella','Alejandro Grimaldo','Pau Cubarsí','Aymeric Laporte','Marc Pubill','Eric García','Marcos Llorente','Pedro Porro'],
+    C: ['Pedri','Fabián Ruiz','Martín Zubimendi','Gavi','Rodrigo Hernández','Álex Baena','Mikel Merino'],
+    F: ['Mikel Oyarzabal','Dani Olmo','Nico Williams','Yeremy Pino','Ferran Torres','Borja Iglesias','Víctor Muñoz','Lamine Yamal'],
+  },
+  'Cabo Verde': {
+    P: ['Vozinha','Marcelo Boiça','Patrick Tamás'],
+    D: ['Roberto Lopes','Dylan Tavares','Zé Lopes','Bryan Tchissola','Diney','Steven Fortes'],
+    C: ['Ryan Mendes','Jamiro Monteiro','Stopira','Sergio Rodrigues','Kenny Rocha'],
+    F: ['Garry Rodrigues','Jovane Cabral','Héldon','Vagner','Willy Semedo'],
+  },
+  'Arabia Saudita': {
+    P: ['Mohammed Al-Owais','Fawaz Al-Qarni','Nawaf Al-Aqidi'],
+    D: ['Sultan Al-Ghannam','Ali Al-Bulayhi','Abdulelah Al-Amri','Hassan Tambakti','Saud Abdulhamid','Ziyad Al-Sahafi'],
+    C: ['Sami Al-Najei','Riyadh Sharahili','Mohamed Kanno','Nasser Al-Dawsari','Saleh Al-Shehri','Abdulrahman Al-Aboud'],
+    F: ['Firas Al-Buraikan','Abdullah Radif','Ahmed Sharahili','Salem Al-Dawsari','Hattan Bahebri'],
+  },
+  'Uruguay': {
+    P: ['Sergio Rochet','Sebastian Sosa','Augustin Rossi'],
+    D: ['José María Giménez','Ronald Araújo','Mathías Olivera','Facundo González','Sebastián Cáceres','Guillermo Varela','Matías Vina'],
+    C: ['Federico Valverde','Rodrigo Bentancur','Lucas Torreira','Manuel Ugarte','Nicolás De La Cruz','Matías Vecino','Giorgian De Arrascaeta'],
+    F: ['Darwin Núñez','Luis Suárez','Edinson Cavani','Facundo Torres','Luciano Rodríguez','Brian Rodríguez'],
+  },
+  // ── GRUPO I ──
+  'Francia': {
+    P: ['Mike Maignan','Alphonse Areola','Brice Samba'],
+    D: ['William Saliba','Dayot Upamecano','Jules Koundé','Theo Hernández','Benjamin Pavard','Lucas Hernández','Jonathan Clauss'],
+    C: ['Aurélien Tchouaméni','Adrien Rabiot','Antoine Griezmann','Youssouf Fofana','Warren Zaïre-Emery'],
+    F: ['Kylian Mbappé','Ousmane Dembélé','Marcus Thuram','Kingsley Coman','Randal Kolo Muani','Bradley Barcola'],
+  },
+  'Senegal': {
+    P: ['Édouard Mendy','Seny Dieng','Alfred Gomis'],
+    D: ['Kalidou Koulibaly','Abdou Diallo','Formose Mendy','Ismail Jakobs','Pape Abou Cissé','Youssouf Sabaly'],
+    C: ['Idrissa Gueye','Cheikhou Kouyaté','Nampalys Mendy','Pape Guèye','Lamine Camara','Pathé Ciss'],
+    F: ['Sadio Mané','Ismaïla Sarr','Habib Diallo','Nicolas Jackson','Boulaye Dia','Iliman Ndiaye','Krepin Diatta'],
+  },
+  'Noruega': {
+    P: ['Rune Almenning Jarstein','Ørjan Nyland','Jørgen Strand Larsen'],
+    D: ['Leo Skiri Østigård','Andreas Hanche-Olsen','Birger Meling','Kristian Thorstvedt','Stefan Strandberg','Marcus Holmgren Pedersen'],
+    C: ['Sander Berge','Martin Ødegaard','Mathias Normann','Fredrik Aursnes','Morten Thorsby'],
+    F: ['Erling Haaland','Alexander Sørloth','Joshua King','Antonio Nusa','Ola Solbakken','Oscar Bobb'],
+  },
+  'Irak': {
+    P: ['Fahad Talib','Jalal Hassan','Martyn Reuser'],
+    D: ['Ali Adnan','Rebin Sulaka','Saman Shway','Ahmed Ibrahim','Mustafa Nadhim','Amjed Attwan'],
+    C: ['Safaa Hadi','Bashar Rasan','Aymen Hussein','Mohanad Abdulraheem','Ibrahim Bayesh'],
+    F: ['Ayman Hussein','Alaa Abbas','Moatasem Amin','Hassan Abdulkareem','Ahmed Yasin'],
+  },
+  // ── GRUPO J ──
+  'Argentina': {
+    P: ['Emiliano Martínez','Gerónimo Rulli','Juan Musso'],
+    D: ['Gonzalo Montiel','Nahuel Molina','Lisandro Martínez','Nicolás Otamendi','Leonardo Balerdi','Cristian Romero','Nicolás Tagliafico','Facundo Medina'],
+    C: ['Leandro Paredes','Alexis Mac Allister','Rodrigo De Paul','Giovani Lo Celso','Exequiel Palacios','Enzo Fernández','Valentín Barco'],
+    F: ['Lionel Messi','Julián Álvarez','Lautaro Martínez','Thiago Almada','Nicolás Paz','Nicolás González','Giuliano Simeone','José Manuel López'],
+  },
+  'Argelia': {
+    P: ['Raïs M’Bolhi','Alexandre Oukidja','Youcef Gassouah'],
+    D: ['Riyad Mahrez','Djamel Benlamri','Aïssa Mandi','Mehdi Zeffane','Yacine Brahimi','Abdelkader Bedrane'],
+    C: ['Sofiane Feghouli','Adlène Guedioura','Haris Belkebla','Mehdi Tahrat','Billal Brahimi'],
+    F: ['Islam Slimani','Youcef Atal','Baghdad Bounedjah','Adem Zorgane','Hossam Aouar'],
+  },
+  'Austria': {
+    P: ['Patrick Pentz','Heinz Lindner','Alexander Schlager'],
+    D: ['David Alaba','Phillipp Lienhart','Stefan Posch','Maximilian Wöber','Andreas Ulmer','Flavius Daniliuc'],
+    C: ['Marcel Sabitzer','Florian Grillitsch','Xaver Schlager','Nicolas Seiwald','Konrad Laimer','Christoph Baumgartner'],
+    F: ['Marko Arnautovic','Michael Gregoritsch','Patrick Wimmer','Louis Schaub','Sasa Kalajdzic'],
+  },
+  'Jordania': {
+    P: ['Yazeed Abo Layla','Mahmoud Shuqair','Anas Ghorab'],
+    D: ['Badr Al-Rawabdeh','Khaled Al-Qudah','Ahmad Saleh','Moath Abu Adailah','Osama Al-Rashdan'],
+    C: ['Musa Al-Tamari','Yaser Al-Naimat','Baha Faisal','Mahmoud Al-Mardi','Omar Nawaf','Yazan Al-Naimat'],
+    F: ['Ahmed Hayel','Mousa Al-Taamari','Zaid Al-Hamoud','Hesham Abu Ali'],
+  },
+  // ── GRUPO K ──
+  'Portugal': {
+    P: ['Diogo Costa','José Sá','Rui Patrício'],
+    D: ['Rúben Dias','Pepe','Nuno Mendes','João Cancelo','Diogo Dalot','Gonçalo Inácio','Toti Gomes'],
+    C: ['Bruno Fernandes','João Palhinha','Vitinha','Bernardo Silva','Rúben Neves','João Neves','Otávio'],
+    F: ['Cristiano Ronaldo','Rafael Leão','Pedro Neto','Francisco Conceição','João Félix','Gonçalo Ramos','Trincão','Gonçalo Guedes'],
+  },
+  'Colombia': {
+    P: ['Camilo Vargas','David Ospina','Kevin Mier'],
+    D: ['Santiago Arias','Dávinson Sánchez','Yerry Mina','Johan Mojica','Daniel Muñoz','Carlos Cuesta','Jhon Lucumí'],
+    C: ['Wilmar Barrios','Gustavo Cuéllar','Mateus Uribe','Richard Ríos','Juan Cuadrado','James Rodríguez','Jhon Arias'],
+    F: ['Luis Díaz','Radamel Falcao','Rafael Santos Borré','Jhon Córdoba','Duván Zapata','Cucho Hernández'],
+  },
+  'Uzbekistán': {
+    P: ['Ulugbek Nishonov','Abbosbek Fayzullayev','Jahongir Murodov'],
+    D: ['Sanjar Tursunov','Dostonbek Khamdamov','Sherzod Nasrullayev','Husayn Norchaev','Jasur Yakhshiboyev'],
+    C: ['Otabek Shukurov','Bekhruz Tursunov','Jakhongir Sidikov','Umidjon Malikov','Khojiakbar Alijonov'],
+    F: ['Eldor Shomurodov','Javlon Guseynov','Islom Tukhtakhujaev','Bobur Abdixoliqov'],
+  },
+  'R.D. Congo': {
+    P: ['Joël Kiassumbua','Ley Matampi','Dimitri Bertaud'],
+    D: ['Axel Tuanzebe','Aaron Wan-Bissaka','Chancel Mbemba','Marcel Tisserand','Arthur Masuaku','Jordan Ikoko'],
+    C: ['Silas Katompa','Noah Sadiki','Edo Kayembe','Yoane Wissa','Paul-José Mpoku','Gael Kakuta'],
+    F: ['Cédric Bakambu','Yannick Bolasie','Emmanuel Lathomme','Jean-Marc Makusu'],
+  },
+  // ── GRUPO L ──
+  'Inglaterra': {
+    P: ['Jordan Pickford','Dean Henderson','James Trafford'],
+    D: ['Kyle Walker','John Stones','Marc Guehi','Ben White','Trent Alexander-Arnold','Luke Shaw','Ezri Konsa'],
+    C: ['Jude Bellingham','Declan Rice','Conor Gallagher','Kobbie Mainoo','Lewis Hall','Adam Wharton'],
+    F: ['Harry Kane','Bukayo Saka','Jack Grealish','Ollie Watkins','Jarrod Bowen','Anthony Gordon','Eberechi Eze'],
+  },
+  'Croacia': {
+    P: ['Dominik Livaković','Ivica Ivušić','Dominik Kotarski'],
+    D: ['Joško Gvardiol','Duje Ćaleta-Car','Josip Šutalo','Josip Stanisic','Marin Pongracic','Martin Erlić','Luka Voskovic'],
+    C: ['Luka Modrić','Mateo Kovačić','Mario Pašalić','Lovro Majer','Martin Baturina','Kristijan Jakic','Petar Sucic'],
+    F: ['Ivan Perišić','Andrej Kramarić','Ante Budimir','Petar Musa','Marco Pasalic'],
+  },
+  'Ghana': {
+    P: ['Lawrence Ati-Zigi','Benjamin Asare','Joseph Anang'],
+    D: ['Baba Abdul Rahman','Gideon Mensah','Alidu Seidu','Abdul Mumin','Jonas Adjetey','Jerome Opoku','Kojo Oppong Peprah'],
+    C: ['Thomas Partey','Elisha Owusu','Augustine Boakye','Abdul Fatawu Issahaku','Caleb Yirenkyi'],
+    F: ['Iñaki Williams','Jordan Ayew','Kamal Deen Sulemana','Antoine Semenyo','Ernest Nuamah','Christopher Bonsu Baah'],
+  },
+  'Panamá': {
+    P: ['Luis Mejía','Orlando Mosquera','Rodrigo Montoya'],
+    D: ['Fidel Escobar','Andrés Andrade','Édgar Yoel Bárcenas','Harold Cummings','Martín Olave','Ronaldo Walker'],
+    C: ['Aníbal Godoy','Adalberto Carrasquilla','Éric Davis','Armando Cooper','Rodolfo Pitti'],
+    F: ['Ismael Díaz','Cecilio Waterman','Alfredo Stephens','Alberto Quintero','José Fajardo','Rolando Blackburn'],
+  },
 };
 
 const GROUPS={A:['México','Sudáfrica','Corea del Sur','Rep. Checa'],B:['Canadá','Bosnia-Herz.','Qatar','Suiza'],C:['Brasil','Marruecos','Haití','Escocia'],D:['EE.UU.','Paraguay','Australia','Turquía'],E:['Alemania','Curazao','Costa de Marfil','Ecuador'],F:['Países Bajos','Japón','Túnez','Suecia'],G:['Bélgica','Egipto','Irán','Nueva Zelanda'],H:['España','Cabo Verde','Arabia Saudita','Uruguay'],I:['Francia','Senegal','Noruega','Irak'],J:['Argentina','Argelia','Austria','Jordania'],K:['Portugal','Colombia','Uzbekistán','R.D. Congo'],L:['Inglaterra','Croacia','Ghana','Panamá']};
 const ALL_TEAMS=Object.values(GROUPS).flat();
 
 const MATCH_TIMES={
-  'G1': '2026-06-11T19:00:00Z', 'G6': '2026-06-12T02:00:00Z', 'G4': '2026-06-25T01:00:00Z', 'G2': '2026-06-19T01:00:00Z', 'G3': '2026-06-25T01:00:00Z', 'G5': '2026-06-18T16:00:00Z',
-  'G7': '2026-06-12T19:00:00Z', 'G12':'2026-06-13T19:00:00Z', 'G11':'2026-06-18T19:00:00Z', 'G8': '2026-06-18T22:00:00Z', 'G9': '2026-06-24T19:00:00Z', 'G10':'2026-06-24T19:00:00Z',
-  'G13':'2026-06-13T22:00:00Z', 'G18':'2026-06-14T01:00:00Z', 'G17':'2026-06-19T22:00:00Z', 'G14':'2026-06-20T00:30:00Z', 'G15':'2026-06-24T22:00:00Z', 'G16':'2026-06-24T22:00:00Z',
-  'G19':'2026-06-13T01:00:00Z', 'G24':'2026-06-14T04:00:00Z', 'G20':'2026-06-19T19:00:00Z', 'G23':'2026-06-20T03:00:00Z', 'G21':'2026-06-26T02:00:00Z', 'G22':'2026-06-26T02:00:00Z',
-  'G25':'2026-06-14T17:00:00Z', 'G30':'2026-06-14T23:00:00Z', 'G26':'2026-06-20T20:00:00Z', 'G29':'2026-06-21T00:00:00Z', 'G27':'2026-06-25T20:00:00Z', 'G28':'2026-06-25T20:00:00Z',
-  'G31':'2026-06-14T20:00:00Z', 'G36':'2026-06-15T02:00:00Z', 'G33':'2026-06-20T17:00:00Z', 'G34':'2026-06-21T04:00:00Z', 'G35':'2026-06-25T23:00:00Z', 'G32':'2026-06-25T23:00:00Z',
-  'G37':'2026-06-15T19:00:00Z', 'G42':'2026-06-16T01:00:00Z', 'G38':'2026-06-21T19:00:00Z', 'G41':'2026-06-22T01:00:00Z', 'G40':'2026-06-27T03:00:00Z', 'G39':'2026-06-27T03:00:00Z',
-  'G43':'2026-06-15T16:00:00Z', 'G48':'2026-06-15T22:00:00Z', 'G44':'2026-06-21T16:00:00Z', 'G47':'2026-06-21T22:00:00Z', 'G45':'2026-06-27T00:00:00Z', 'G46':'2026-06-27T00:00:00Z',
-  'G49':'2026-06-16T19:00:00Z', 'G54':'2026-06-16T22:00:00Z', 'G51':'2026-06-22T21:00:00Z', 'G52':'2026-06-23T00:00:00Z', 'G50':'2026-06-26T19:00:00Z', 'G53':'2026-06-26T19:00:00Z',
-  'G55':'2026-06-17T01:00:00Z', 'G60':'2026-06-17T04:00:00Z', 'G56':'2026-06-22T17:00:00Z', 'G59':'2026-06-23T03:00:00Z', 'G57':'2026-06-28T02:00:00Z', 'G58':'2026-06-28T02:00:00Z',
-  'G63':'2026-06-17T17:00:00Z', 'G64':'2026-06-18T02:00:00Z', 'G62':'2026-06-23T17:00:00Z', 'G65':'2026-06-24T02:00:00Z', 'G61':'2026-06-27T23:30:00Z', 'G66':'2026-06-27T23:30:00Z',
-  'G67':'2026-06-17T20:00:00Z', 'G72':'2026-06-17T23:00:00Z', 'G68':'2026-06-23T20:00:00Z', 'G71':'2026-06-23T23:00:00Z', 'G69':'2026-06-27T21:00:00Z', 'G70':'2026-06-27T21:00:00Z'
+  // GRUPO A — México(G1,G2,G3) Sudáfrica(G1,G4,G5) Corea(G2,G4,G6) RepCheca(G3,G5,G6)
+  'G1': '2026-06-11T19:00:00Z', // J1: México vs Sudáfrica          ES 21:00 11jun
+  'G6': '2026-06-12T02:00:00Z', // J1: Corea del Sur vs Rep. Checa  ES 04:00 12jun
+  'G4': '2026-06-25T00:00:00Z', // J2: Sudáfrica vs Corea del Sur   ES 18:00 18jun
+  'G2': '2026-06-19T01:00:00Z', // J2: México vs Corea del Sur      ES 03:00 19jun
+  'G3': '2026-06-25T00:00:00Z', // J3: México vs Rep. Checa         ES 03:00 25jun
+  'G5': '2026-06-18T16:00:00Z', // J3: Sudáfrica vs Rep. Checa      ES 03:00 25jun
+  // GRUPO B — Canadá(G7,G8,G9) Bosnia(G7,G10,G11) Qatar(G8,G10,G12) Suiza(G9,G11,G12)
+  'G7': '2026-06-12T19:00:00Z', // J1: Canadá vs Bosnia-Herz.       ES 21:00 12jun
+  'G12':'2026-06-13T19:00:00Z', // J1: Qatar vs Suiza               ES 21:00 13jun
+  'G11':'2026-06-18T19:00:00Z', // J2: Suiza vs Bosnia-Herz.        ES 21:00 18jun
+  'G8': '2026-06-18T22:00:00Z', // J2: Canadá vs Qatar              ES 00:00 19jun
+  'G9': '2026-06-24T19:00:00Z', // J3: Suiza vs Canadá              ES 21:00 24jun
+  'G10':'2026-06-24T19:00:00Z', // J3: Bosnia-Herz. vs Qatar        ES 21:00 24jun
+  // GRUPO C — Brasil(G13,G14,G15) Marruecos(G13,G16,G17) Haití(G14,G16,G18) Escocia(G15,G17,G18)
+  'G13':'2026-06-13T22:00:00Z', // J1: Brasil vs Marruecos          ES 00:00 14jun
+  'G18':'2026-06-14T01:00:00Z', // J1: Haití vs Escocia             ES 03:00 14jun
+  'G17':'2026-06-19T22:00:00Z', // J2: Escocia vs Marruecos         ES 00:00 20jun
+  'G14':'2026-06-20T00:30:00Z', // J2: Brasil vs Haití              ES 02:30 20jun
+  'G15':'2026-06-24T22:00:00Z', // J3: Escocia vs Brasil            ES 00:00 25jun
+  'G16':'2026-06-24T22:00:00Z', // J3: Marruecos vs Haití           ES 00:00 25jun
+  // GRUPO D — EE.UU.(G19,G20,G21) Paraguay(G19,G22,G23) Australia(G20,G22,G24) Turquía(G21,G23,G24)
+  'G19':'2026-06-13T01:00:00Z', // J1: EE.UU. vs Paraguay           ES 03:00 13jun
+  'G24':'2026-06-14T04:00:00Z', // J1: Australia vs Turquía         ES 18:00 14jun
+  'G20':'2026-06-19T19:00:00Z', // J2: EE.UU. vs Australia          ES 21:00 19jun
+  'G23':'2026-06-20T03:00:00Z', // J2: Turquía vs Paraguay          ES 05:00 20jun
+  'G21':'2026-06-27T02:00:00Z', // J3: Turquía vs EE.UU.            ES 04:00 26jun
+  'G22':'2026-06-27T02:00:00Z', // J3: Paraguay vs Australia        ES 04:00 26jun
+  // GRUPO E — Alemania(G25,G26,G27) Curazao(G25,G28,G29) CostaMarf.(G26,G28,G30) Ecuador(G27,G29,G30)
+  'G25':'2026-06-14T17:00:00Z', // J1: Alemania vs Curazao          ES 19:00 14jun
+  'G30':'2026-06-14T23:00:00Z', // J1: Costa de Marfil vs Ecuador   ES 01:00 15jun
+  'G26':'2026-06-20T20:00:00Z', // J2: Alemania vs Costa de Marfil  ES 22:00 20jun
+  'G29':'2026-06-21T02:00:00Z', // J2: Ecuador vs Curazao           ES 02:00 21jun
+  'G27':'2026-06-25T20:00:00Z', // J3: Ecuador vs Alemania          ES 22:00 25jun
+  'G28':'2026-06-25T20:00:00Z', // J3: Curazao vs Costa de Marfil   ES 22:00 25jun
+  // GRUPO F — PaísesBajos(G31,G32,G33) Japón(G31,G34,G35) Túnez(G32,G34,G36) Suecia(G33,G35,G36)
+  'G31':'2026-06-14T20:00:00Z', // J1: Países Bajos vs Japón        ES 00:00 15jun
+  'G36':'2026-06-15T02:00:00Z', // J1: Suecia vs Túnez              ES 04:00 15jun
+  'G33':'2026-06-20T17:00:00Z', // J2: Países Bajos vs Suecia       ES 19:00 20jun
+  'G34':'2026-06-21T04:00:00Z', // J2: Túnez vs Japón               ES 06:00 21jun
+  'G35':'2026-06-26T23:00:00Z', // J3: Japón vs Suecia              ES 01:00 26jun
+  'G32':'2026-06-26T23:00:00Z', // J3: Túnez vs Países Bajos        ES 01:00 26jun
+  // GRUPO G — Bélgica(G37,G38,G39) Egipto(G37,G40,G41) Irán(G38,G40,G42) NuevaZelanda(G39,G41,G42)
+  'G37':'2026-06-15T19:00:00Z', // J1: Bélgica vs Egipto            ES 21:00 15jun
+  'G42':'2026-06-16T01:00:00Z', // J1: Irán vs Nueva Zelanda        ES 03:00 16jun
+  'G38':'2026-06-21T19:00:00Z', // J2: Bélgica vs Irán              ES 21:00 21jun
+  'G41':'2026-06-22T01:00:00Z', // J2: Nueva Zelanda vs Egipto      ES 03:00 22jun
+  'G40':'2026-06-28T03:00:00Z', // J3: Egipto vs Irán               ES 05:00 27jun
+  'G39':'2026-06-28T03:00:00Z', // J3: Nueva Zelanda vs Bélgica     ES 05:00 27jun
+  // GRUPO H — España(G43,G44,G45) CaboVerde(G43,G46,G47) ArabiaSaudita(G44,G46,G48) Uruguay(G45,G47,G48)
+  'G43':'2026-06-15T16:00:00Z', // J1: España vs Cabo Verde         ES 18:00 15jun
+  'G48':'2026-06-15T22:00:00Z', // J1: Arabia Saudita vs Uruguay    ES 00:00 16jun
+  'G44':'2026-06-21T16:00:00Z', // J2: España vs Arabia Saudita     ES 18:00 21jun
+  'G47':'2026-06-21T22:00:00Z', // J2: Uruguay vs Cabo Verde        ES 00:00 22jun
+  'G45':'2026-06-28T00:00:00Z', // J3: Uruguay vs España            ES 02:00 27jun
+  'G46':'2026-06-28T00:00:00Z', // J3: Cabo Verde vs Arabia Saudita ES 02:00 27jun
+  // GRUPO I — Francia(G49,G50,G51) Senegal(G49,G52,G53) Noruega(G50,G52,G54) Irak(G51,G53,G54)
+  'G49':'2026-06-16T19:00:00Z', // J1: Francia vs Senegal           ES 21:00 16jun
+  'G54':'2026-06-16T22:00:00Z', // J1: Irak vs Noruega              ES 00:00 17jun
+  'G51':'2026-06-22T21:00:00Z', // J2: Francia vs Irak              ES 23:00 22jun
+  'G52':'2026-06-23T00:00:00Z', // J2: Noruega vs Senegal           ES 02:00 23jun
+  'G50':'2026-06-26T19:00:00Z', // J3: Noruega vs Francia           ES 21:00 26jun
+  'G53':'2026-06-26T19:00:00Z', // J3: Senegal vs Irak              ES 21:00 26jun
+  // GRUPO J — Argentina(G55,G56,G57) Argelia(G55,G58,G59) Austria(G56,G58,G60) Jordania(G57,G59,G60)
+  'G55':'2026-06-17T01:00:00Z', // J1: Argentina vs Argelia         ES 03:00 17jun
+  'G60':'2026-06-17T04:00:00Z', // J1: Austria vs Jordania          ES 06:00 17jun
+  'G56':'2026-06-22T17:00:00Z', // J2: Argentina vs Austria         ES 19:00 22jun
+  'G59':'2026-06-23T03:00:00Z', // J2: Jordania vs Argelia          ES 05:00 23jun
+  'G57':'2026-06-29T02:00:00Z', // J3: Jordania vs Argentina        ES 04:00 28jun
+  'G58':'2026-06-29T02:00:00Z', // J3: Argelia vs Austria           ES 04:00 28jun
+  // GRUPO K — Portugal(G61,G62,G63) Colombia(G61,G64,G65) Uzbekistán(G62,G64,G66) RDCongo(G63,G65,G66)
+  'G63':'2026-06-17T17:00:00Z', // J1: Portugal vs R.D. Congo       ES 19:00 17jun
+  'G64':'2026-06-18T02:00:00Z', // J1: Uzbekistán vs Colombia       ES 04:00 18jun (Azteca)
+  'G62':'2026-06-23T17:00:00Z', // J2: Portugal vs Uzbekistán       ES 19:00 23jun
+  'G65':'2026-06-24T02:00:00Z', // J2: Colombia vs R.D. Congo       ES 04:00 24jun
+  'G61':'2026-06-28T23:30:00Z', // J3: Colombia vs Portugal         ES 01:30 28jun
+  'G66':'2026-06-28T23:30:00Z', // J3: R.D. Congo vs Uzbekistán     ES 01:30 28jun
+  // GRUPO L — Inglaterra(G67,G68,G69) Croacia(G67,G70,G71) Ghana(G68,G70,G72) Panamá(G69,G71,G72)
+  'G67':'2026-06-17T20:00:00Z', // J1: Inglaterra vs Croacia        ES 22:00 17jun
+  'G72':'2026-06-17T23:00:00Z', // J1: Ghana vs Panamá              ES 01:00 18jun
+  'G68':'2026-06-23T20:00:00Z', // J2: Inglaterra vs Ghana          ES 22:00 23jun
+  'G71':'2026-06-23T23:00:00Z', // J2: Panamá vs Croacia            ES 01:00 24jun
+  'G69':'2026-06-27T21:00:00Z', // J3: Panamá vs Inglaterra         ES 23:00 27jun
+  'G70':'2026-06-27T21:00:00Z', // J3: Croacia vs Ghana             ES 23:00 27jun
 };
 
 function makeMatches(){
@@ -630,28 +1026,29 @@ function makeMatches(){
       for(let j=i+1;j<teams.length;j++)
         ms.push({id:'G'+id++,group:g,phase:'Grupos',home:teams[i],away:teams[j],homeGoals:'',awayGoals:'',played:false});
   return ms.concat([
-    {id:'D1',phase:'Dieciseisavos',home:'1º A',away:'2º B',actual_qualifier:''},{id:'D2',phase:'Dieciseisavos',home:'1º B',away:'2º A',actual_qualifier:''},
-    {id:'D3',phase:'Dieciseisavos',home:'1º C',away:'2º D',actual_qualifier:''},{id:'D4',phase:'Dieciseisavos',home:'1º D',away:'2º C',actual_qualifier:''},
-    {id:'D5',phase:'Dieciseisavos',home:'1º E',away:'2º F',actual_qualifier:''},{id:'D6',phase:'Dieciseisavos',home:'1º F',away:'2º E',actual_qualifier:''},
-    {id:'D7',phase:'Dieciseisavos',home:'1º G',away:'2º H',actual_qualifier:''},{id:'D8',phase:'Dieciseisavos',home:'1º H',away:'2º G',actual_qualifier:''},
-    {id:'D9',phase:'Dieciseisavos',home:'1º I',away:'2º J',actual_qualifier:''},{id:'D10',phase:'Dieciseisavos',home:'1º J',away:'2º I',actual_qualifier:''},
-    {id:'D11',phase:'Dieciseisavos',home:'1º K',away:'2º L',actual_qualifier:''},{id:'D12',phase:'Dieciseisavos',home:'1º L',away:'2º K',actual_qualifier:''},
-    {id:'D13',phase:'Dieciseisavos',home:'3º ABC',away:'3º DEF',actual_qualifier:''},{id:'D14',phase:'Dieciseisavos',home:'3º GHI',away:'3º JKL',actual_qualifier:''},
-    {id:'D15',phase:'Dieciseisavos',home:'3º ABF',away:'3º CDG',actual_qualifier:''},{id:'D16',phase:'Dieciseisavos',home:'3º EHL',away:'3º IJK',actual_qualifier:''},
-    {id:'O1',phase:'Octavos',home:'Gan. D1',away:'Gan. D2',actual_qualifier:''},{id:'O2',phase:'Octavos',home:'Gan. D3',away:'Gan. D4',actual_qualifier:''},
-    {id:'O3',phase:'Octavos',home:'Gan. D5',away:'Gan. D6',actual_qualifier:''},{id:'O4',phase:'Octavos',home:'Gan. D7',away:'Gan. D8',actual_qualifier:''},
-    {id:'O5',phase:'Octavos',home:'Gan. D9',away:'Gan. D10',actual_qualifier:''},{id:'O6',phase:'Octavos',home:'Gan. D11',away:'Gan. D12',actual_qualifier:''},
-    {id:'O7',phase:'Octavos',home:'Gan. D13',away:'Gan. D14',actual_qualifier:''},{id:'O8',phase:'Octavos',home:'Gan. D15',away:'Gan. D16',actual_qualifier:''},
-    {id:'Q1',phase:'Cuartos',home:'Gan. O1',away:'Gan. O2',actual_qualifier:''},{id:'Q2',phase:'Cuartos',home:'Gan. O3',away:'Gan. O4',actual_qualifier:''},
-    {id:'Q3',phase:'Cuartos',home:'Gan. O5',away:'Gan. O6',actual_qualifier:''},{id:'Q4',phase:'Cuartos',home:'Gan. O7',away:'Gan. O8',actual_qualifier:''},
-    {id:'S1',phase:'Semis',home:'Gan. Q1',away:'Gan. Q2',actual_qualifier:''},{id:'S2',phase:'Semis',home:'Gan. Q3',away:'Gan. Q4',actual_qualifier:''},
-    {id:'F1',phase:'Final',home:'Gan. S1',away:'Gan. S2',actual_qualifier:''},
+    {id:'D1',phase:'Dieciseisavos',home:'1º A',away:'2º B'},{id:'D2',phase:'Dieciseisavos',home:'1º B',away:'2º A'},
+    {id:'D3',phase:'Dieciseisavos',home:'1º C',away:'2º D'},{id:'D4',phase:'Dieciseisavos',home:'1º D',away:'2º C'},
+    {id:'D5',phase:'Dieciseisavos',home:'1º E',away:'2º F'},{id:'D6',phase:'Dieciseisavos',home:'1º F',away:'2º E'},
+    {id:'D7',phase:'Dieciseisavos',home:'1º G',away:'2º H'},{id:'D8',phase:'Dieciseisavos',home:'1º H',away:'2º G'},
+    {id:'D9',phase:'Dieciseisavos',home:'1º I',away:'2º J'},{id:'D10',phase:'Dieciseisavos',home:'1º J',away:'2º I'},
+    {id:'D11',phase:'Dieciseisavos',home:'1º K',away:'2º L'},{id:'D12',phase:'Dieciseisavos',home:'1º L',away:'2º K'},
+    {id:'D13',phase:'Dieciseisavos',home:'3º ABC',away:'3º DEF'},{id:'D14',phase:'Dieciseisavos',home:'3º GHI',away:'3º JKL'},
+    {id:'D15',phase:'Dieciseisavos',home:'3º ABF',away:'3º CDG'},{id:'D16',phase:'Dieciseisavos',home:'3º EHL',away:'3º IJK'},
+    {id:'O1',phase:'Octavos',home:'Gan. D1',away:'Gan. D2'},{id:'O2',phase:'Octavos',home:'Gan. D3',away:'Gan. D4'},
+    {id:'O3',phase:'Octavos',home:'Gan. D5',away:'Gan. D6'},{id:'O4',phase:'Octavos',home:'Gan. D7',away:'Gan. D8'},
+    {id:'O5',phase:'Octavos',home:'Gan. D9',away:'Gan. D10'},{id:'O6',phase:'Octavos',home:'Gan. D11',away:'Gan. D12'},
+    {id:'O7',phase:'Octavos',home:'Gan. D13',away:'Gan. D14'},{id:'O8',phase:'Octavos',home:'Gan. D15',away:'Gan. D16'},
+    {id:'Q1',phase:'Cuartos',home:'Gan. O1',away:'Gan. O2'},{id:'Q2',phase:'Cuartos',home:'Gan. O3',away:'Gan. O4'},
+    {id:'Q3',phase:'Cuartos',home:'Gan. O5',away:'Gan. O6'},{id:'Q4',phase:'Cuartos',home:'Gan. O7',away:'Gan. O8'},
+    {id:'S1',phase:'Semis',home:'Gan. Q1',away:'Gan. Q2'},{id:'S2',phase:'Semis',home:'Gan. Q3',away:'Gan. Q4'},
+    {id:'F1',phase:'Final',home:'Gan. S1',away:'Gan. S2'},
   ]);
 }
 
 function canPick(id){const t=MATCH_TIMES[id];if(!t)return true;return Date.now()<new Date(t).getTime()-60*60*1000;}
 function isKOPH(m){return m.phase!=='Grupos'&&(m.home.includes('º')||m.home.includes('Gan.')||m.away.includes('º')||m.away.includes('Gan.'));}
 const SPECIALS_DEADLINE=new Date('2026-06-11T18:00:00Z');
+// Excepciones: estas personas pueden rellenar/editar especiales sin límite de tiempo
 const SPECIALS_EXCEPTIONS=['Jose luis','Marco','Ale','Raul'];
 function specialsOpen(){
   if(currentUser && SPECIALS_EXCEPTIONS.includes(currentUser)) return true;
@@ -669,7 +1066,34 @@ let STATE={players:{},matches:makeMatches(),realSpecial:{champion:'',scorer:'',k
 let currentUser=null,isAdmin=false,editingMatchId=null,unsubs=[],cdInterval=null;
 
 function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.style.display='block';setTimeout(()=>t.style.display='none',2200);}
+let announceShown=false;
 window.openRules=function(){document.getElementById('rules-modal').classList.add('open');}
+window.closeAnnounce=function(){
+  document.getElementById('announce-popup').classList.remove('open');
+  announceShown=true;
+};
+window.showAnnounce=function(){
+  if(announceShown)return;
+  // Show once per session - no localStorage needed
+  setTimeout(()=>{
+    const el=document.getElementById('announce-popup');
+    if(el)el.classList.add('open');
+  },600);
+};
+window.selectAdvances=function(side){
+  document.getElementById('ko-advances-val').value=side;
+  document.getElementById('ko-adv-home').classList.toggle('selected',side==='home');
+  document.getElementById('ko-adv-away').classList.toggle('selected-away',side==='away');
+  document.getElementById('ko-adv-home').classList.toggle('selected-away',false);
+  // Clear wrong classes
+  if(side==='home'){
+    document.getElementById('ko-adv-home').className='ko-adv-btn selected';
+    document.getElementById('ko-adv-away').className='ko-adv-btn';
+  } else {
+    document.getElementById('ko-adv-home').className='ko-adv-btn';
+    document.getElementById('ko-adv-away').className='ko-adv-btn selected';
+  }
+};
 window.closeRules=function(){document.getElementById('rules-modal').classList.remove('open');}
 
 async function loadFromFirebase(){
@@ -678,12 +1102,12 @@ async function loadFromFirebase(){
     const sp=await getDoc(doc(db,'quiniela','special'));if(sp.exists())STATE.realSpecial={...STATE.realSpecial,...sp.data()};
     const ps=await getDocs(collection(db,'players'));STATE.players={};ps.forEach(d=>STATE.players[d.id]=d.data());
     document.getElementById('lmsg').style.display='none';populateSel();
-  }catch(e){document.getElementById('lmsg').textContent='Error al conectar con la base de datos.';console.error(e);}
+  }catch(e){document.getElementById('lmsg').textContent='Error al cargar.';console.error(e);}
 }
 
 function subscribeRT(){
   unsubs.push(onSnapshot(doc(db,'quiniela','matches'),s=>{if(s.exists())STATE.matches=s.data().list;if(currentUser&&!isAdmin){renderPlayer();renderGroupStandings();}if(isAdmin)renderAdminMatches();}));
-  unsubs.push(onSnapshot(collection(db,'players'),s=>{s.forEach(d=>STATE.players[d.id]=d.data());populateSel();if(currentUser&&!isAdmin)renderPlayer();if(isAdmin){renderPlayersList(); renderRankingAll(); }}));
+  unsubs.push(onSnapshot(collection(db,'players'),s=>{s.forEach(d=>STATE.players[d.id]=d.data());populateSel();if(currentUser&&!isAdmin)renderPlayer();if(isAdmin){renderPlayersList();renderRanking('ad-rkl');}}));
   unsubs.push(onSnapshot(doc(db,'quiniela','special'),s=>{if(s.exists())STATE.realSpecial={...STATE.realSpecial,...s.data()};if(currentUser&&!isAdmin)renderSpecialPlayer();}));
 }
 
@@ -702,10 +1126,10 @@ window.onNameSelected=function(){
   const hasPin=hasPlayer&&hasPlayer.pin;
   if(hasPin){
     label.textContent='Tu PIN (4 dígitos)';
-    hint.textContent='Introduce tu PIN para acceder.';
+    hint.textContent='Introduce el PIN que creaste la primera vez.';
   }else{
     label.textContent='Crea tu PIN (4 dígitos)';
-    hint.textContent='Elige 4 números para asegurar tu cuenta para siempre.';
+    hint.textContent='Es la primera vez que entras. Elige un PIN de 4 dígitos para proteger tu quiniela — lo necesitarás cada vez que entres.';
   }
   document.getElementById('user-pin').value='';
   document.getElementById('user-pin').focus();
@@ -717,31 +1141,22 @@ window.doLogin=function(){
   if(pw==='2026'){isAdmin=true;currentUser='admin';showView('admin-view');document.getElementById('app-header').style.display='block';renderAdmin();subscribeRT();return;}
   if(!sel){alert('Selecciona tu nombre');return;}
   const pin=document.getElementById('user-pin').value.trim();
-  if(!/^[0-9]{4}$/.test(pin)){alert('El PIN debe tener 4 dígitos');return;}
+  if(!/^[0-9]{4}$/.test(pin)){alert('El PIN debe tener exactamente 4 dígitos');return;}
   const existing=STATE.players[sel];
   if(existing&&existing.pin){
-    if(existing.pin!==pin){alert('PIN incorrecto.');return;}
+    if(existing.pin!==pin){alert('PIN incorrecto. Si lo has olvidado, pide al admin que lo restablezca.');return;}
   }
   currentUser=sel;isAdmin=false;
   if(!STATE.players[currentUser])STATE.players[currentUser]={picks:{},special:{champion:'',scorer:'',keeper:'',mvp:''},pin:pin};
   else if(!STATE.players[currentUser].pin){STATE.players[currentUser].pin=pin;savePlayer(currentUser);}
-  
   showView('player-view');
   document.getElementById('app-header').style.display='block';
   document.getElementById('app-footer').style.display='block';
   document.getElementById('header-user').style.display='flex';
-  document.getElementById('header-user').textContent='⚽ '+currentUser;
+  document.getElementById('header-user').textContent='👤 '+currentUser;
   renderPlayer();renderGroupStandings();subscribeRT();startCountdown();
-
-  const hasSeen=localStorage.getItem('seen_ko_rules_'+currentUser);
-  if(!hasSeen){document.getElementById('ko-rules-modal').classList.add('open');}
+  showAnnounce();
 };
-
-window.closeKORules=function(){
-  localStorage.setItem('seen_ko_rules_'+currentUser, 'true');
-  document.getElementById('ko-rules-modal').classList.remove('open');
-};
-
 window.logout=function(){
   unsubs.forEach(u=>u());unsubs=[];currentUser=null;isAdmin=false;
   if(cdInterval)clearInterval(cdInterval);
@@ -749,21 +1164,20 @@ window.logout=function(){
   document.getElementById('app-footer').style.display='none';
   showView('login-screen');
 };
-
 function showView(v){
-  document.querySelectorAll('#app>.view').forEach(e=>e.classList.remove('active'));
+  document.querySelectorAll('.view').forEach(e=>e.classList.remove('active'));
   document.getElementById(v).classList.add('active');
-  window.scrollTo(0, 0); 
+  window.scrollTo({top:0,behavior:'smooth'});
 }
 
 window.pvTab=function(btn,id){
-  btn.closest('.tabs').querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));btn.classList.add('active');
+  btn.closest('#player-view').querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));btn.classList.add('active');
   document.querySelectorAll('.pvp').forEach(p=>p.style.display='none');document.getElementById(id).style.display='block';
   if(id==='pv-groups')renderGroupStandings();
   if(id==='pv-quiniellas')renderQuiniellas();
 };
 window.adminTab=function(btn,id){
-  btn.closest('.tabs').querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));btn.classList.add('active');
+  btn.closest('#admin-view').querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));btn.classList.add('active');
   document.querySelectorAll('.adp').forEach(p=>p.style.display='none');document.getElementById(id).style.display='block';
 };
 
@@ -774,15 +1188,17 @@ function calcPts(player){
     if(!m.played)return;const pick=picks[m.id];if(!pick||pick.home===''||pick.away==='')return;
     const rH=parseInt(m.homeGoals),rA=parseInt(m.awayGoals),pH=parseInt(pick.home),pA=parseInt(pick.away);
     const rW=rH>rA?'h':rH<rA?'a':'d',pW=pH>pA?'h':pH<pA?'a':'d';
-    
-    if(m.phase==='Grupos'){
-      if(pick.home==m.homeGoals&&pick.away==m.awayGoals){total+=5;exact++;winners++;}
-      else if(rW===pW){total+=3;winners++;}
-    } else {
+    const isKO=m.phase!=='Grupos';
+    if(isKO){
+      // KO scoring: 15 exact, 5 right type, 10 who advances
       if(pick.home==m.homeGoals&&pick.away==m.awayGoals){total+=15;exact++;winners++;}
       else if(rW===pW){total+=5;winners++;}
-      
-      if(m.actual_qualifier&&pick.qualifier===m.actual_qualifier){total+=10;}
+      // Who advances bonus
+      if(m.advances&&pick.advances&&pick.advances===m.advances){total+=10;}
+    }else{
+      // Group scoring: 5 exact, 3 right type
+      if(pick.home==m.homeGoals&&pick.away==m.awayGoals){total+=5;exact++;winners++;}
+      else if(rW===pW){total+=3;winners++;}
     }
   });
   const sp=STATE.players[player]?.special||{},rs=STATE.realSpecial;
@@ -796,7 +1212,7 @@ function getRanking(){return Object.keys(STATE.players).map(p=>({name:p,...calcP
 
 function pendingCount(){
   const picks=STATE.players[currentUser]?.picks||{};
-  return STATE.matches.filter(m=>!m.played&&canPick(m.id)&&(!picks[m.id]||picks[m.id].home==='')).length;
+  return STATE.matches.filter(m=>m.phase==='Grupos'&&!m.played&&canPick(m.id)&&(!picks[m.id]||picks[m.id].home==='')).length;
 }
 
 function nextMatch(){
@@ -825,54 +1241,27 @@ function renderPlayer(){
   const ranking=getRanking();
   const rank=ranking.findIndex(r=>r.name===currentUser)+1;
   const pending=pendingCount();
-  
-  document.getElementById('wc-name').textContent=`¡Hola, ${currentUser}!`;
-  document.getElementById('wc-msg').textContent=pending>0?`¡Tienes ${pending} predicciones pendientes!`:'✅ Todo al día';
+  const maxPts=ranking.length?ranking[0].total:1;
+  // welcome card
+  document.getElementById('wc-name').textContent=`¡Hola, ${currentUser}! 👋`;
+  document.getElementById('wc-msg').textContent=pending>0?`Tienes ${pending} partido${pending>1?'s':''} pendiente${pending>1?'s':''} de rellenar`:'✅ Todos tus resultados al día';
   document.getElementById('wc-pts').textContent=pts.total;
   document.getElementById('wc-rank').textContent='#'+rank;
   document.getElementById('wc-pending').textContent=pending;
-  
+  // footer
   document.getElementById('footer-pts').textContent=pts.total;
   document.getElementById('footer-name').textContent=currentUser;
   document.getElementById('footer-rank').textContent='#'+rank;
   const nm=nextMatch();
   document.getElementById('footer-next').textContent=nm?`Próximo: ${flag(nm.home)} vs ${flag(nm.away)}`:'';
-  
-  renderPlayerMatches(); 
-  renderRankingAll(); 
-  renderSpecialPlayer();
-}
-
-function renderRankingAll() {
-  const ranking = getRanking();
-  let html = '';
-  if(!ranking.length) { html = '<p class="muted">Sin participantes.</p>'; }
-  else {
-    const maxPts = Math.max(ranking[0].total, 1);
-    ranking.forEach((r,i)=>{
-      const cls = i===0?'rank-1':i===1?'rank-2':i===2?'rank-3':'';
-      const medal = i===0?'🥇':i===1?'🥈':i===2?'🥉':'#'+(i+1);
-      const pct = Math.round((r.total/maxPts)*100);
-      const isCurrent = r.name===currentUser;
-      html+=`<div class="rank-row ${cls}" ${isCurrent?'style="border-color:var(--red-pirate) !important; background:#ffebcd"':''}>
-        <div class="rank-num pirata-font">${medal}</div>
-        <div class="rank-bar-wrap">
-          <div class="rank-name pirata-font">${r.name}${isCurrent?' <span style="font-size:12px;color:var(--text2); font-family:Nunito">(Tú)</span>':''}</div>
-          <div class="rank-detail">🎯 ${r.exact} Exactos · ⚽ ${r.winners} Ganadores</div>
-          <div class="rank-bar-bg"><div class="rank-bar-fill" style="width:${pct}%"></div></div>
-        </div>
-        <div class="rank-pts pirata-font" style="font-size:24px">฿ ${r.total}</div>
-      </div>`;
-    });
-  }
-  if(document.getElementById('pv-rl')) document.getElementById('pv-rl').innerHTML = html;
-  if(document.getElementById('pv-rl-desktop')) document.getElementById('pv-rl-desktop').innerHTML = html;
-  if(document.getElementById('ad-rkl')) document.getElementById('ad-rkl').innerHTML = html;
+  renderPlayerMatches();renderRanking('pv-rl');renderSpecialPlayer();
 }
 
 function renderPlayerMatches(){
   const picks=STATE.players[currentUser]?.picks||{};
   let html='';
+
+  // ── Fase de Grupos: acordeón por día ──
   const groupMs=STATE.matches.filter(m=>m.phase==='Grupos');
   groupMs.sort((a,b)=>{
     const ta=MATCH_TIMES[a.id]?new Date(MATCH_TIMES[a.id]).getTime():0;
@@ -891,14 +1280,17 @@ function renderPlayerMatches(){
     byDay[dayKey].push(m);
   });
 
+  html+=`<div class="section-title" style="margin-top:0">Fase de Grupos</div>`;
   const now=Date.now();
   Object.entries(byDay).forEach(([day,ms],idx)=>{
     const dayTs=byDayRaw[day];
+    // Determine status of this day
     const allPlayed=ms.every(m=>m.played);
     const hasOpen=ms.some(m=>!m.played&&canPick(m.id));
     const filled=ms.filter(m=>picks[m.id]&&picks[m.id].home!=='').length;
-    const dotColor=allPlayed?'var(--s-t)':hasOpen?'var(--red-pirate)':'var(--text3)';
+    const dotColor=allPlayed?'var(--s-t)':hasOpen?'var(--red)':'var(--text3)';
     const statusText=allPlayed?'Finalizado':hasOpen?`${filled}/${ms.length} rellenados`:'Cerrado';
+    // Auto-open today's day or next upcoming day
     const isToday=dayTs>0&&dayTs<now+24*60*60*1000&&dayTs>now-24*60*60*1000;
     const isNext=dayTs>now&&Object.values(byDayRaw).filter(t=>t>now).sort()[0]===dayTs;
     const openClass=(isToday||isNext||idx===0)?'open':'';
@@ -920,8 +1312,9 @@ function renderPlayerMatches(){
     </div>`;
   });
 
+  // ── Fases eliminatorias: acordeón por ronda ──
   const koPhases=['Dieciseisavos','Octavos','Cuartos','Semis','Final'];
-  html+=`<div class="section-title pirata-font" style="font-size:26px; margin-top:20px">Fases Eliminatorias</div>`;
+  html+=`<div class="section-title" style="margin-top:1rem">Fases Eliminatorias</div>`;
   koPhases.forEach(phase=>{
     const ms=STATE.matches.filter(m=>m.phase===phase);if(!ms.length)return;
     const phaseId='phase_'+phase;
@@ -956,7 +1349,7 @@ window.toggleAccord=function(id,header){
 };
 
 function matchRow(m,picks){
-  const pick=picks[m.id]||{home:'',away:'',qualifier:''};
+  const pick=picks[m.id]||{home:'',away:''};
   const koph=isKOPH(m),locked=!canPick(m.id),tl=timeLabel(m.id);
   let statusHtml='';
   if(koph)statusHtml=`<span class="badge bi">Por definir</span>`;
@@ -968,37 +1361,24 @@ function matchRow(m,picks){
   if(m.played&&pick.home!==''&&pick.away!==''){
     const rH=parseInt(m.homeGoals),rA=parseInt(m.awayGoals),pH=parseInt(pick.home),pA=parseInt(pick.away);
     const rW=rH>rA?'h':rH<rA?'a':'d',pW=pH>pA?'h':pH<pA?'a':'d';
+    const isKOMatch=m.phase!=='Grupos';
     let pts=0,cls='bd';
-    
-    if(m.phase==='Grupos'){
-        if(pick.home==m.homeGoals&&pick.away==m.awayGoals){pts=5;cls='bs';scoreClass='won';}
-        else if(rW===pW){pts=3;cls='bw';scoreClass='won';}
-        else{scoreClass='lost';}
-    } else {
-        if(pick.home==m.homeGoals&&pick.away==m.awayGoals){pts+=15;cls='bs';scoreClass='won';}
-        else if(rW===pW){pts+=5;cls='bw';scoreClass='won';}
-        else{scoreClass='lost';}
-        
-        if(m.actual_qualifier&&pick.qualifier===m.actual_qualifier){pts+=10;cls='bs';}
-        if(pts>0 && cls==='bd') cls='bw';
+    if(isKOMatch){
+      if(pick.home==m.homeGoals&&pick.away==m.awayGoals){pts+=15;cls='bs';scoreClass='won';}
+      else if(rW===pW){pts+=5;cls='bw';scoreClass='won';}
+      else{scoreClass='lost';}
+      if(m.advances&&pick.advances&&pick.advances===m.advances){pts+=10;if(!cls||cls==='bd')cls='bw';if(scoreClass==='lost')scoreClass='won';}
+    }else{
+      if(pick.home==m.homeGoals&&pick.away==m.awayGoals){pts=5;cls='bs';scoreClass='won';}
+      else if(rW===pW){pts=3;cls='bw';scoreClass='won';}
+      else{scoreClass='lost';}
     }
-    
-    if(pts>0)ptsHtml=`<span class="badge ${cls}">+ ฿${pts}</span>`;
+    if(pts>0)ptsHtml=`<span class="badge ${cls}">+${pts} pts</span>`;
   }
-  let myPick=pick.home!==''&&pick.away!==''?`${pick.home} - ${pick.away}`:'Sin rellenar';
-  if(m.phase!=='Grupos' && pick.qualifier) {
-      let qName = pick.qualifier==='h'?m.home:m.away;
-      myPick += ` <span style="font-size:10px; color:var(--text3)">(Pasa: ${qName})</span>`;
-  }
-  
-  let official=m.played?`${m.homeGoals} - ${m.awayGoals}`:'Pendiente';
-  if(m.phase!=='Grupos' && m.played && m.actual_qualifier) {
-      let qNameR = m.actual_qualifier==='h'?m.home:m.away;
-      official += ` <span style="font-size:10px; color:var(--text3)">(Pasa: ${qNameR})</span>`;
-  }
-
+  const myPick=pick.home!==''&&pick.away!==''?`${pick.home} - ${pick.away}`:'Sin rellenar';
+  const official=m.played?`${m.homeGoals} - ${m.awayGoals}`:'Pendiente';
   const editBtn=!koph&&!m.played&&!locked?`<button class="btn-sm primary" onclick="openPickModal('${m.id}')" style="margin-left:auto"><i class="ti ti-edit"></i> Editar</button>`:'';
-  const timeHtml=tl?`<div class="match-times-block"><span><em>🇪🇸 ESP</em>${tl.es}</span><span><em>🇺🇸 USA (ET)</em>${tl.us}</span><span><em>🇻🇪 VEN</em>${tl.ve}</span></div>`:'';
+  const timeHtml=tl?`<div class="match-times-block"><span><em>🇪🇸 España</em>${tl.es}</span><span><em>🇺🇸 EE.UU. (ET)</em>${tl.us}</span><span><em>🇻🇪 Venezuela</em>${tl.ve}</span></div>`:'';
   const hFlag=flag(m.home),aFlag=flag(m.away);
   return`<div class="match-card-big">
     <div class="mcb-header">
@@ -1017,54 +1397,63 @@ function matchRow(m,picks){
         ${editBtn}
       </div>
       <div class="mcb-score-row result-row">
-        <span class="mcb-score-label">Oficial</span>
+        <span class="mcb-score-label">Resultado oficial</span>
         <span class="mcb-score-val ${!m.played?'empty':''}">${official}</span>
       </div>
     </div>
+    ${m.phase!=='Grupos'&&!koph?`<div style="display:flex;align-items:center;gap:8px;margin-top:8px;padding:8px 12px;background:var(--bg2);border-radius:var(--r);font-size:12px">
+      <span style="color:var(--text2)">Pasa:</span>
+      <span style="font-weight:600">${pick.advances==='home'?flag(m.home)+' '+m.home:pick.advances==='away'?flag(m.away)+' '+m.away:'<em style="color:var(--text3)">Sin elegir</em>'}</span>
+      ${m.played&&m.advances?`<span style="margin-left:auto" class="badge ${pick.advances===m.advances?'bs':'bd'}">${pick.advances===m.advances?'+10 pts':'✗'}</span>`:''}
+    </div>`:''}
   </div>`;
 }
 
 window.openPickModal=function(id){
-  const m=STATE.matches.find(x=>x.id===id);if(!m||m.played||isKOPH(m)||!canPick(id))return;
+  const m=STATE.matches.find(x=>x.id===id);if(!m||m.played)return;
+  // For KO: allow if not isKOPH (teams defined) and canPick
+  if(m.phase==='Grupos'&&!canPick(id))return;
+  if(m.phase!=='Grupos'&&isKOPH(m))return;
   editingMatchId=id;
-  const pick=STATE.players[currentUser]?.picks?.[id]||{home:'',away:'',qualifier:''};
+  const pick=STATE.players[currentUser]?.picks?.[id]||{home:'',away:'',advances:''};
   const tl=timeLabel(id);
   document.getElementById('mo-t').textContent=`${flag(m.home)} ${m.home} vs ${m.away} ${flag(m.away)}`;
-  document.getElementById('mo-h').textContent=`${flag(m.home)} ${m.home}`;
-  document.getElementById('mo-a').textContent=`${flag(m.away)} ${m.away}`;
-  document.getElementById('mo-time').innerHTML=tl?`🇪🇸 ${tl.es} &nbsp;|&nbsp; 🇺🇸 ${tl.us} &nbsp;|&nbsp; 🇻🇪 ${tl.ve}`:'';
+  document.getElementById('mo-h').innerHTML=`${flag(m.home)} ${m.home}`;
+  document.getElementById('mo-a').innerHTML=`${flag(m.away)} ${m.away}`;
+  document.getElementById('mo-time').innerHTML=tl?`🇪🇸 ${tl.es}<br>🇺🇸 ${tl.us}<br>🇻🇪 ${tl.ve}`:'';
   document.getElementById('pm-h').value=pick.home;
   document.getElementById('pm-a').value=pick.away;
-  document.getElementById('pm-qualifier').value=pick.qualifier||'';
-  
-  const koWrap=document.getElementById('ko-qualifier-wrap');
+  // KO section
+  const koSec=document.getElementById('mo-ko-section');
   if(m.phase!=='Grupos'){
-    koWrap.style.display='block';
-    const btnH=document.getElementById('ko-q-h'),btnA=document.getElementById('ko-q-a');
-    btnH.textContent=`${flag(m.home)} ${m.home}`;btnA.textContent=`${flag(m.away)} ${m.away}`;
-    btnH.classList.remove('active');btnA.classList.remove('active');
-    if(pick.qualifier==='h')btnH.classList.add('active');else if(pick.qualifier==='a')btnA.classList.add('active');
-  }else{koWrap.style.display='none';}
-
+    koSec.style.display='block';
+    document.getElementById('ko-adv-home-label').innerHTML=`${flag(m.home)} ${m.home}`;
+    document.getElementById('ko-adv-away-label').innerHTML=`${flag(m.away)} ${m.away}`;
+    document.getElementById('ko-advances-val').value=pick.advances||'';
+    if(pick.advances==='home')selectAdvances('home');
+    else if(pick.advances==='away')selectAdvances('away');
+    else{document.getElementById('ko-adv-home').className='ko-adv-btn';document.getElementById('ko-adv-away').className='ko-adv-btn';}
+  }else{
+    koSec.style.display='none';
+  }
   document.getElementById('mo').classList.add('open');
   document.getElementById('pm-h').focus();
 };
-
-window.setQualifier=function(q){
-  document.getElementById('pm-qualifier').value=q;
-  document.getElementById('ko-q-h').classList.remove('active');document.getElementById('ko-q-a').classList.remove('active');
-  if(q==='h')document.getElementById('ko-q-h').classList.add('active');else if(q==='a')document.getElementById('ko-q-a').classList.add('active');
-};
-
 window.closePick=function(){document.getElementById('mo').classList.remove('open');editingMatchId=null;};
 window.savePick=async function(){
-  const h=document.getElementById('pm-h').value,a=document.getElementById('pm-a').value,q=document.getElementById('pm-qualifier').value;
+  const h=document.getElementById('pm-h').value,a=document.getElementById('pm-a').value;
   if(h===''||a===''){alert('Rellena ambos marcadores');return;}
   const m=STATE.matches.find(x=>x.id===editingMatchId);
-  if(m.phase!=='Grupos'&&!q){alert('Debes elegir quién pasa la eliminatoria');return;}
-  if(!canPick(editingMatchId)){alert('Este partido ya está cerrado.');closePick();return;}
+  if(m&&m.phase==='Grupos'&&!canPick(editingMatchId)){alert('Este partido ya está cerrado.');closePick();return;}
+  const pickData={home:h,away:a};
+  // KO: require advances selection
+  if(m&&m.phase!=='Grupos'){
+    const adv=document.getElementById('ko-advances-val').value;
+    if(!adv){alert('Debes elegir quién pasa la eliminatoria');return;}
+    pickData.advances=adv;
+  }
   if(!STATE.players[currentUser].picks)STATE.players[currentUser].picks={};
-  STATE.players[currentUser].picks[editingMatchId]={home:h,away:a,qualifier:m.phase!=='Grupos'?q:''};
+  STATE.players[currentUser].picks[editingMatchId]=pickData;
   await savePlayer(currentUser);closePick();toast('✅ Resultado guardado');renderPlayer();
 };
 
@@ -1089,8 +1478,8 @@ function renderGroupStandings(){
   let html='<p class="muted" style="margin-bottom:.75rem">Verde = clasificado (provisional). Basado en tus picks + resultados confirmados.</p>';
   Object.keys(GROUPS).forEach(g=>{
     const s=calcGroupStandings(g);
-    html+=`<div class="section-title">Grupo ${g}</div><table class="gtable" style="background:var(--parchment); border:1px solid var(--border)"><thead><tr><th>Equipo</th><th>J</th><th>Pts</th><th>GF</th><th>GC</th><th>DG</th></tr></thead><tbody>`;
-    s.forEach((t,i)=>{html+=`<tr class="${i<2?'qualify':''}"><td>${flag(t.name)} ${t.name}</td><td>${t.played}</td><td><strong style="color:var(--wood)">${t.pts}</strong></td><td>${t.gf}</td><td>${t.ga}</td><td>${t.gd>0?'+'+t.gd:t.gd}</td></tr>`;});
+    html+=`<div class="section-title">Grupo ${g}</div><table class="gtable"><thead><tr><th>Equipo</th><th>J</th><th>Pts</th><th>GF</th><th>GC</th><th>DG</th></tr></thead><tbody>`;
+    s.forEach((t,i)=>{html+=`<tr class="${i<2?'qualify':''}"><td>${flag(t.name)} ${t.name}</td><td>${t.played}</td><td><strong>${t.pts}</strong></td><td>${t.gf}</td><td>${t.ga}</td><td>${t.gd>0?'+'+t.gd:t.gd}</td></tr>`;});
     html+='</tbody></table><div style="height:.75rem"></div>';
   });
   c.innerHTML=html;
@@ -1099,20 +1488,26 @@ function renderGroupStandings(){
 function renderSpecialPlayer(){
   const sp=STATE.players[currentUser]?.special||{};
   populateTeamSelectors();
+  // Champion — set value after options are populated
   const champSel=document.getElementById('pv-champ');
   if(champSel){
+    // If saved value has a flag prefix (old format), extract just the team name
     let champVal = sp.champion||'';
+    // Check if value exists as an option, if not try stripping flag
     const optVals = Array.from(champSel.options).map(o=>o.value);
     if(champVal && !optVals.includes(champVal)){
+      // Try to find matching team name (in case stored with flag)
       const found = ALL_TEAMS.find(t => champVal.includes(t));
       if(found) champVal = found;
     }
     champSel.value = champVal;
   }
+  // Scorer
   if(sp.scorer) restorePlayerSelector('scorer-team','pv-scorer-sel','pv-scorer','all',sp.scorer);
+  // Keeper
   if(sp.keeper) restorePlayerSelector('keeper-team','pv-keeper-sel','pv-keeper','P',sp.keeper);
+  // MVP
   if(sp.mvp) restorePlayerSelector('mvp-team','pv-mvp-sel','pv-mvp','all',sp.mvp);
-  
   const closed=!specialsOpen();
   ['pv-champ','scorer-team','pv-scorer-sel','keeper-team','pv-keeper-sel','mvp-team','pv-mvp-sel'].forEach(id=>{
     const el=document.getElementById(id);if(el)el.disabled=closed;
@@ -1122,15 +1517,16 @@ function renderSpecialPlayer(){
   const rs=STATE.realSpecial;
   if(rs.champion||rs.scorer||rs.keeper||rs.mvp){
     document.getElementById('pv-sr').style.display='block';
-    const row=(label,real,guess,pts)=>{if(!real)return'';const ok=guess&&guess.trim().toLowerCase()===real.trim().toLowerCase();return`<div style="display:flex;align-items:center;gap:8px;margin-bottom:10px; padding-bottom:5px; border-bottom:1px dashed var(--border)"><span style="flex:1">${label}: <strong>${real}</strong></span><span class="badge ${ok?'bs':'bd'}">${ok?'+ ฿'+pts:'✗'}</span></div>`;};
+    const row=(label,real,guess,pts)=>{if(!real)return'';const ok=guess&&guess.trim().toLowerCase()===real.trim().toLowerCase();return`<div style="display:flex;align-items:center;gap:8px;margin-bottom:10px"><span style="flex:1">${label}: <strong>${real}</strong></span><span class="badge ${ok?'bs':'bd'}">${ok?'+'+pts+' pts':'✗'}</span></div>`;};
     document.getElementById('pv-srb').innerHTML=row('🏆 Campeón',rs.champion,sp.champion,20)+row('⚽ Goleador',rs.scorer,sp.scorer,10)+row('🧤 Portero',rs.keeper,sp.keeper,10)+row('⭐ MVP',rs.mvp,sp.mvp,10);
   }
 }
-
+// ── Two-step player selectors ──
 window.champChanged=function(){
   const sel=document.getElementById('pv-champ');
   if(sel && sel.value && currentUser && STATE.players[currentUser]){
     if(!STATE.players[currentUser].special) STATE.players[currentUser].special={};
+    // Store immediately in local state (still need to press Guardar to persist)
     STATE.players[currentUser].special._champPending = sel.value;
   }
 };
@@ -1143,10 +1539,11 @@ function populateTeamSelectors(){
     if(!sel || sel.options.length > 1) return;
     teams.forEach(t => sel.add(new Option(flag(t)+' '+t, t)));
   });
+  // Champion selector: always rebuild to ensure correct options
   const champSel = document.getElementById('pv-champ');
   if(champSel){
     const currentVal = champSel.value;
-    champSel.innerHTML = '<option value="">Selecciona equipo...</option>';
+    champSel.innerHTML = '<option value="">Selecciona un equipo...</option>';
     teams.forEach(t => champSel.add(new Option(flag(t)+' '+t, t)));
     if(currentVal) champSel.value = currentVal;
   }
@@ -1156,7 +1553,7 @@ window.loadPlayers=function(teamSelId, playerSelId, role){
   const team = document.getElementById(teamSelId)?.value;
   const playerSel = document.getElementById(playerSelId);
   if(!playerSel) return;
-  playerSel.innerHTML = '<option value="">2. Elige jugador...</option>';
+  playerSel.innerHTML = '<option value="">2. Elige el jugador...</option>';
   if(!team || !SQUADS[team]) return;
   const squad = SQUADS[team];
   const posLabels = {P:'Porteros',D:'Defensas',C:'Centrocampistas',F:'Delanteros'};
@@ -1169,6 +1566,7 @@ window.loadPlayers=function(teamSelId, playerSelId, role){
       playerSel.appendChild(og);
     });
   } else {
+    // only porteros
     (squad[role]||[]).forEach(p => playerSel.add(new Option(p, p)));
   }
 };
@@ -1177,6 +1575,7 @@ window.syncHidden=function(selId, hiddenId){
   const val = document.getElementById(selId)?.value || '';
   const hidden = document.getElementById(hiddenId);
   if(hidden) hidden.value = val;
+  // show preview
   const previewMap = {'pv-scorer-sel':'scorer-preview','pv-keeper-sel':'keeper-preview','pv-mvp-sel':'mvp-preview'};
   const previewId = previewMap[selId];
   if(previewId){
@@ -1195,6 +1594,7 @@ window.syncHidden=function(selId, hiddenId){
 
 function restorePlayerSelector(teamSelId, playerSelId, hiddenId, role, savedValue){
   if(!savedValue) return;
+  // Figure out which team this player belongs to
   let foundTeam = null;
   for(const [team, squad] of Object.entries(SQUADS)){
     const allPlayers = role === 'all'
@@ -1203,8 +1603,10 @@ function restorePlayerSelector(teamSelId, playerSelId, hiddenId, role, savedValu
     if(allPlayers.includes(savedValue)){ foundTeam=team; break; }
   }
   if(!foundTeam) return;
+  // Set team
   const teamSel = document.getElementById(teamSelId);
   if(teamSel){ teamSel.value = foundTeam; window.loadPlayers(teamSelId, playerSelId, role); }
+  // Set player
   setTimeout(()=>{
     const pSel = document.getElementById(playerSelId);
     if(pSel){ pSel.value = savedValue; window.syncHidden(playerSelId, hiddenId); }
@@ -1212,22 +1614,50 @@ function restorePlayerSelector(teamSelId, playerSelId, hiddenId, role, savedValu
 }
 
 window.saveSpecial=async function(){
-  if(!specialsOpen()){alert('El cofre ya ha sido cerrado.');return;}
+  if(!specialsOpen()){alert('El plazo para especiales ya ha cerrado.');return;}
   if(!STATE.players[currentUser])return;
   if(!STATE.players[currentUser].special)STATE.players[currentUser].special={};
+  // Read champion from selector
   const champSel = document.getElementById('pv-champ');
   const rawChamp = champSel ? champSel.value : '';
+  // Fallback: if selector is empty but we have a pending value, use that
   const finalChamp = rawChamp || STATE.players[currentUser].special?._champPending || '';
   STATE.players[currentUser].special.champion = finalChamp;
-  if(STATE.players[currentUser].special._champPending) delete STATE.players[currentUser].special._champPending;
+  // Clear pending
+  if(STATE.players[currentUser].special._champPending) 
+    delete STATE.players[currentUser].special._champPending;
   STATE.players[currentUser].special.scorer=document.getElementById('pv-scorer')?.value||document.getElementById('pv-scorer-sel')?.value||'';
   STATE.players[currentUser].special.keeper=document.getElementById('pv-keeper')?.value||document.getElementById('pv-keeper-sel')?.value||'';
   STATE.players[currentUser].special.mvp=document.getElementById('pv-mvp')?.value||document.getElementById('pv-mvp-sel')?.value||'';
   await savePlayer(currentUser);toast('✅ Especiales guardados');renderPlayer();
 };
 
+function renderRanking(containerId){
+  const ranking=getRanking();
+  const el=document.getElementById(containerId);if(!ranking.length){el.innerHTML='<p class="muted">Sin participantes.</p>';return;}
+  const maxPts=Math.max(ranking[0].total,1);
+  let html='';
+  ranking.forEach((r,i)=>{
+    const cls=i===0?'rank-1':i===1?'rank-2':i===2?'rank-3':'';
+    const medal=i===0?'🥇':i===1?'🥈':i===2?'🥉':'#'+(i+1);
+    const pct=Math.round((r.total/maxPts)*100);
+    const isCurrent=r.name===currentUser;
+    html+=`<div class="rank-row ${cls}" ${isCurrent?'style="border-color:var(--red) !important"':''}>
+      <div class="rank-num">${medal}</div>
+      <div class="av" style="font-size:11px;${isCurrent?'background:var(--red);color:#fff':''}">${r.name.slice(0,2).toUpperCase()}</div>
+      <div class="rank-bar-wrap">
+        <div class="rank-name">${r.name}${isCurrent?' <span style="font-size:10px;color:var(--text2)">(tú)</span>':''}</div>
+        <div class="rank-detail">${r.exact} exactos · ${r.winners} ganadores</div>
+        <div class="rank-bar-bg" style="margin-top:4px"><div class="rank-bar-fill" style="width:${pct}%"></div></div>
+      </div>
+      <div class="rank-pts">${r.total}<span style="font-size:11px;font-weight:400;color:var(--text2)"> pts</span></div>
+    </div>`;
+  });
+  el.innerHTML=html;
+}
+
 function renderAdmin(){
-  renderAdminMatches();renderPlayersList();renderRankingAll();
+  renderAdminMatches();renderPlayersList();renderRanking('ad-rkl');
   const sel=document.getElementById('ad-rc');if(sel.options.length<=1)ALL_TEAMS.forEach(t=>sel.add(new Option(`${flag(t)} ${t}`,t)));
   const rs=STATE.realSpecial;sel.value=rs.champion||'';
   document.getElementById('ad-rs').value=rs.scorer||'';document.getElementById('ad-rk2').value=rs.keeper||'';document.getElementById('ad-rm').value=rs.mvp||'';
@@ -1235,6 +1665,7 @@ function renderAdmin(){
 
 function renderAdminMatches(){
   let html='';
+  // ── Grupos: acordeón por día ──
   const groupMs=STATE.matches.filter(m=>m.phase==='Grupos');
   groupMs.sort((a,b)=>{
     const ta=MATCH_TIMES[a.id]?new Date(MATCH_TIMES[a.id]).getTime():0;
@@ -1250,14 +1681,15 @@ function renderAdminMatches(){
     byDay[dayKey].push(m);
   });
   const now=Date.now();
-  html+=`<div class="section-title pirata-font" style="font-size:26px; margin-top:0">Fase de Grupos</div>`;
+  html+=`<div class="section-title" style="margin-top:0">Fase de Grupos</div>`;
   Object.entries(byDay).forEach(([day,ms])=>{
     const dayTs=byDayRaw[day];
     const allPlayed=ms.every(m=>m.played);
     const hasUnplayed=ms.some(m=>!m.played);
-    const dotColor=allPlayed?'var(--s-t)':dayTs<now?'var(--red-pirate)':'var(--text3)';
+    const dotColor=allPlayed?'var(--s-t)':dayTs<now?'var(--red)':'var(--text3)';
     const played=ms.filter(m=>m.played).length;
-    const statusText=allPlayed?'✓ Confirmado':`${played}/${ms.length} confirmados`;
+    const statusText=allPlayed?'✓ Todo confirmado':`${played}/${ms.length} confirmados`;
+    // Auto-open days with unplayed matches that have already started
     const hasStarted=ms.some(m=>MATCH_TIMES[m.id]&&new Date(MATCH_TIMES[m.id]).getTime()<now);
     const openClass=(hasStarted&&hasUnplayed)?'open':'';
     const dayId='adday_'+dayTs;
@@ -1276,7 +1708,8 @@ function renderAdminMatches(){
       </div>
     </div>`;
   });
-  html+=`<div class="section-title pirata-font" style="font-size:26px; margin-top:1rem">Fases Eliminatorias</div>`;
+  // ── KO phases: acordeón por ronda ──
+  html+=`<div class="section-title" style="margin-top:1rem">Fases Eliminatorias</div>`;
   ['Dieciseisavos','Octavos','Cuartos','Semis','Final'].forEach(phase=>{
     const ms=STATE.matches.filter(m=>m.phase===phase);if(!ms.length)return;
     const phaseId='adphase_'+phase;
@@ -1302,41 +1735,42 @@ function renderAdminMatches(){
 
 function adminRow(m){
   const isKO=m.phase!=='Grupos';
-  const hName=isKO?`<input type="text" id="ah-${m.id}" value="${m.home}" style="flex:1;height:34px;font-size:12px;text-align:right" ${m.played?'disabled':''} oninput="updateTeam('${m.id}','home',this.value)">`:`<div style="flex:1;font-size:13px;font-weight:700;text-align:right;">${flag(m.home)} ${m.home}</div>`;
-  const aName=isKO?`<input type="text" id="aa-nm-${m.id}" value="${m.away}" style="flex:1;height:34px;font-size:12px" ${m.played?'disabled':''} oninput="updateTeam('${m.id}','away',this.value)">`:`<div style="flex:1;font-size:13px;font-weight:700;">${flag(m.away)} ${m.away}</div>`;
-  
-  let koQualH='',koQualA='';
-  if(isKO){
-    koQualH=`<button class="btn-sm ${m.actual_qualifier==='h'?'primary':''}" style="margin-right:4px; font-size:10px" onclick="setActualQualifier('${m.id}','h')" ${m.played?'disabled':''}>Q</button>`;
-    koQualA=`<button class="btn-sm ${m.actual_qualifier==='a'?'primary':''}" style="margin-left:4px; font-size:10px" onclick="setActualQualifier('${m.id}','a')" ${m.played?'disabled':''}>Q</button>`;
+  const tl=timeLabel(m.id);const tlStr=tl?`🇪🇸 ${tl.es} · 🇺🇸 ${tl.us} · 🇻🇪 ${tl.ve}`:'';
+  const hName=isKO?`<input type="text" id="ah-${m.id}" value="${m.home}" style="flex:1;height:34px;font-size:12px;text-align:right" ${m.played?'disabled':''} oninput="updateTeam('${m.id}','home',this.value)">`:`<div style="flex:1;font-size:12px;font-weight:500;text-align:right;overflow:hidden;text-overflow:ellipsis">${flag(m.home)} ${m.home}</div>`;
+  const aName=isKO?`<input type="text" id="aa-nm-${m.id}" value="${m.away}" style="flex:1;height:34px;font-size:12px" ${m.played?'disabled':''} oninput="updateTeam('${m.id}','away',this.value)">`:`<div style="flex:1;font-size:12px;font-weight:500;overflow:hidden;text-overflow:ellipsis">${flag(m.away)} ${m.away}</div>`;
+  let advHtml='';
+  if(isKO&&!isKOPH(m)){
+    const advVal=m.advances||'';
+    advHtml=`<div style="margin-top:8px;display:flex;align-items:center;gap:8px">
+      <span style="font-size:11px;color:var(--text2);flex-shrink:0">Pasa:</span>
+      <select id="adv-${m.id}" style="flex:1;height:32px;font-size:12px" ${m.played?'disabled':''} onchange="updateAdvances('${m.id}',this.value)">
+        <option value="">Sin definir</option>
+        <option value="home" ${advVal==='home'?'selected':''}>${m.home}</option>
+        <option value="away" ${advVal==='away'?'selected':''}>${m.away}</option>
+      </select>
+    </div>`;
   }
-
-  return`<div style="background:var(--parchment-dark);border:1px solid var(--border);border-radius:4px;padding:12px 14px;margin-bottom:8px">
+  return`<div style="background:var(--bg);border:0.5px solid var(--border);border-radius:var(--rl);padding:12px 14px;margin-bottom:8px">
+    ${tlStr?`<div style="font-size:10px;color:var(--text3);margin-bottom:6px">${tlStr}</div>`:''}
     <div style="display:flex;align-items:center;gap:8px">
-      ${koQualH}${hName}
+      ${hName}
       <input type="number" min="0" max="20" id="ah-sc-${m.id}" value="${m.homeGoals}" style="width:50px;text-align:center;flex-shrink:0;height:38px;font-size:18px;font-weight:700" ${m.played?'disabled':''} oninput="updateResult('${m.id}')">
       <span style="color:var(--text3);font-size:18px;flex-shrink:0">-</span>
       <input type="number" min="0" max="20" id="aa-sc-${m.id}" value="${m.awayGoals}" style="width:50px;text-align:center;flex-shrink:0;height:38px;font-size:18px;font-weight:700" ${m.played?'disabled':''} oninput="updateResult('${m.id}')">
-      ${aName}${koQualA}
+      ${aName}
       <button class="btn-sm ${m.played?'primary':''}" onclick="togglePlayed('${m.id}')" style="flex-shrink:0">${m.played?'✓ Conf.':'OK'}</button>
     </div>
+    ${advHtml}
   </div>`;
 }
 
-window.setActualQualifier=function(id,q){
-  const m=STATE.matches.find(x=>x.id===id);if(m)m.actual_qualifier=q;renderAdminMatches();
-};
-
 window.updateTeam=function(id,side,val){const m=STATE.matches.find(x=>x.id===id);if(m)m[side]=val;};
+window.updateAdvances=function(id,val){const m=STATE.matches.find(x=>x.id===id);if(m)m.advances=val;};
 window.updateResult=function(id){const m=STATE.matches.find(x=>x.id===id);if(!m)return;m.homeGoals=document.getElementById('ah-sc-'+id)?.value||'';m.awayGoals=document.getElementById('aa-sc-'+id)?.value||'';};
 window.togglePlayed=async function(id){
   const m=STATE.matches.find(x=>x.id===id);if(!m)return;
-  if(!m.played){
-    if(m.homeGoals===''||m.awayGoals===''){alert('Introduce el marcador primero');return;}
-    if(m.phase!=='Grupos'&&!m.actual_qualifier){alert('Elige al clasificado real (Q)');return;}
-    m.played=true;
-  }else{m.played=false;}
-  await saveMatches();toast(m.played?'✅ Resultado confirmado':'Resultado reabierto');renderAdminMatches();renderRankingAll();
+  if(!m.played){if(m.homeGoals===''||m.awayGoals===''){alert('Introduce el marcador primero');return;}m.played=true;}else{m.played=false;}
+  await saveMatches();toast(m.played?'✅ Resultado confirmado':'Resultado reabierto');renderAdminMatches();renderRanking('ad-rkl');
 };
 
 window.addPlayer=async function(){
@@ -1354,19 +1788,24 @@ function renderPlayersList(){
   players.forEach(p=>{
     const picks=Object.keys(STATE.players[p]?.picks||{}).length,pts=calcPts(p).total;
     const hasPin=!!STATE.players[p]?.pin;
-    html+=`<tr><td>${p}</td><td>${picks}</td><td><strong style="color:var(--wood)">${pts}</strong></td><td>${hasPin?'<span class="badge bs">✓</span>':'<span class="badge bi">Sin</span>'}</td><td style="display:flex;gap:4px"><button class="btn-sm" onclick="openPlayerModal('${p}')"><i class="ti ti-eye"></i></button>${hasPin?`<button class="btn-sm" onclick="resetPin('${p}')"><i class="ti ti-key"></i></button>`:''}<button class="btn-sm" onclick="removePlayer('${p}')"><i class="ti ti-trash"></i></button></td></tr>`;
+    html+=`<tr><td>${p}</td><td>${picks}</td><td><strong>${pts}</strong></td><td>${hasPin?'<span class="badge bs">✓</span>':'<span class="badge bi">Sin crear</span>'}</td><td style="display:flex;gap:4px"><button class="btn-sm" onclick="openPlayerModal('${p}')" title="Ver quiniela"><i class="ti ti-eye"></i></button>${hasPin?`<button class="btn-sm" onclick="resetPin('${p}')" title="Restablecer PIN"><i class="ti ti-key"></i></button>`:''}<button class="btn-sm" onclick="removePlayer('${p}')"><i class="ti ti-trash"></i></button></td></tr>`;
   });
   el.innerHTML=html+'</tbody></table>';
 }
 
 window.resetPin=async function(name){
   if(!confirm(`¿Restablecer el PIN de ${name}? Podrá crear uno nuevo la próxima vez que entre.`))return;
-  if(STATE.players[name]){ delete STATE.players[name].pin; await savePlayer(name); toast(`✅ PIN de ${name} restablecido`); renderPlayersList(); }
+  if(STATE.players[name]){
+    delete STATE.players[name].pin;
+    await savePlayer(name);
+    toast(`✅ PIN de ${name} restablecido`);
+    renderPlayersList();
+  }
 };
 window.saveRealSpecial=async function(){
   STATE.realSpecial.champion=document.getElementById('ad-rc').value;STATE.realSpecial.scorer=document.getElementById('ad-rs').value;
   STATE.realSpecial.keeper=document.getElementById('ad-rk2').value;STATE.realSpecial.mvp=document.getElementById('ad-rm').value;
-  await saveSpecialReal();toast('✅ Guardado');renderRankingAll();
+  await saveSpecialReal();toast('✅ Guardado');renderRanking('ad-rkl');
 };
 
 function populateSel(){
@@ -1376,10 +1815,12 @@ function populateSel(){
   if(cur)sel.value=cur;
 }
 
+// ── Player picks modal (admin) ──
 window.openPlayerModal=function(playerName){
   const player=STATE.players[playerName];
   if(!player){return;}
-  document.getElementById('pm-title').textContent=`Picks de ${playerName}`;
+  document.getElementById('pm-title').textContent=`Quiniela de ${playerName}`;
+  
   const picks=player.picks||{};
   const sp=player.special||{};
   const phases=['Grupos','Dieciseisavos','Octavos','Cuartos','Semis','Final'];
@@ -1405,54 +1846,56 @@ window.openPlayerModal=function(playerName){
             let pts=0,cls='bd';
             if(pick.home==m.homeGoals&&pick.away==m.awayGoals){pts=5;cls='bs';}
             else if(rW===pW){pts=3;cls='bw';}
-            ptsHtml=`<span class="badge ${cls} pts-chip">฿ ${pts}</span>`;
+            ptsHtml=`<span class="badge ${cls} pts-chip">${pts}p</span>`;
           }
           grpHtml+=`<div class="pick-row-view">
             <span class="teams">${flag(m.home)} ${m.home} vs ${flag(m.away)} ${m.away}</span>
-            ${hasPick ?`<span class="pick-val">${pick.home}-${pick.away}</span>`:`<span class="pick-empty">Sin rellenar</span>`}
+            ${hasPick
+              ?`<span class="pick-val">${pick.home}-${pick.away}</span>`
+              :`<span class="pick-empty">Sin rellenar</span>`}
             ${ptsHtml}
           </div>`;
         });
-        if(grpHtml) phaseHtml+=`<div class="section-title" style="font-size:12px">Grupo ${g}</div>${grpHtml}`;
+        if(grpHtml) phaseHtml+=`<div class="section-title" style="font-size:10px">Grupo ${g}</div>${grpHtml}`;
       });
     } else {
       ms.forEach(m=>{
         const pick=picks[m.id];
         const hasPick=pick&&pick.home!==''&&pick.away!=='';
-        let qualText = '';
-        if(hasPick && pick.qualifier){
-            let qName = pick.qualifier==='h'?m.home:m.away;
-            qualText = ` <span style="font-size:10px; color:var(--text3)">(Pasa: ${qName})</span>`;
-        }
         phaseHtml+=`<div class="pick-row-view">
           <span class="teams">${m.home} vs ${m.away}</span>
-          ${hasPick?`<span class="pick-val">${pick.home}-${pick.away}${qualText}</span>`:`<span class="pick-empty">Sin rellenar</span>`}
+          ${hasPick?`<span class="pick-val">${pick.home}-${pick.away}</span>`:`<span class="pick-empty">Sin rellenar</span>`}
         </div>`;
       });
     }
-    if(phaseHtml) html+=`<div class="section-title pirata-font" style="font-size:22px">${phase}</div>${phaseHtml}`;
+    if(phaseHtml) html+=`<div class="section-title">${phase}</div>${phaseHtml}`;
   });
 
-  html+=`<div class="section-title pirata-font" style="font-size:22px; margin-top:1rem">Especiales</div>
-  <div class="pick-row-view"><span class="teams">🏆 Campeón</span><span class="${sp.champion?'pick-val':'pick-empty'}">${sp.champion||'—'}</span></div>
-  <div class="pick-row-view"><span class="teams">⚽ Goleador</span><span class="${sp.scorer?'pick-val':'pick-empty'}">${sp.scorer||'—'}</span></div>
-  <div class="pick-row-view"><span class="teams">🧤 Portero</span><span class="${sp.keeper?'pick-val':'pick-empty'}">${sp.keeper||'—'}</span></div>
-  <div class="pick-row-view"><span class="teams">⭐ MVP</span><span class="${sp.mvp?'pick-val':'pick-empty'}">${sp.mvp||'—'}</span></div>`;
+  // Specials
+  html+=`<div class="section-title" style="margin-top:1rem">Especiales</div>
+  <div class="pick-row-view"><span class="teams">🏆 Campeón</span><span class="${sp.champion?'pick-val':'pick-empty'}">${sp.champion||'Sin rellenar'}</span></div>
+  <div class="pick-row-view"><span class="teams">⚽ Goleador</span><span class="${sp.scorer?'pick-val':'pick-empty'}">${sp.scorer||'Sin rellenar'}</span></div>
+  <div class="pick-row-view"><span class="teams">🧤 Portero</span><span class="${sp.keeper?'pick-val':'pick-empty'}">${sp.keeper||'Sin rellenar'}</span></div>
+  <div class="pick-row-view"><span class="teams">⭐ MVP</span><span class="${sp.mvp?'pick-val':'pick-empty'}">${sp.mvp||'Sin rellenar'}</span></div>`;
 
   document.getElementById('pm-content').innerHTML=html;
   document.getElementById('player-modal').classList.add('open');
 };
-window.closePlayerModal=function(){ document.getElementById('player-modal').classList.remove('open'); };
+window.closePlayerModal=function(){
+  document.getElementById('player-modal').classList.remove('open');
+};
 
+// ── Public quinielas tab ──
 function renderQuiniellas(){
   const container=document.getElementById('pv-quiniellas-list');
   if(!container)return;
   const players=Object.keys(STATE.players).filter(p=>p!==currentUser).sort();
   if(!players.length){container.innerHTML='<p class="muted">No hay otros participantes todavía.</p>';return;}
 
+  // Only show picks for matches that are locked or played
   const visibleMatches=STATE.matches.filter(m=>m.played||!canPick(m.id));
 
-  let html='<p class="muted" style="margin-bottom:.75rem;font-size:12px">Solo se muestran los resultados visibles de partidos cerrados.</p>';
+  let html='<p class="muted" style="margin-bottom:.75rem;font-size:12px">Solo se muestran los partidos cerrados o ya jugados para no dar ventaja.</p>';
   players.forEach(p=>{
     const picks=STATE.players[p]?.picks||{};
     const sp=STATE.players[p]?.special||{};
@@ -1461,17 +1904,18 @@ function renderQuiniellas(){
     
     html+=`<div class="qrow" onclick="toggleQrow('qrow-${p.replace(/[^a-z0-9]/gi,'_')}')">
       <div class="qrow-header">
-        <div class="av">${p.slice(0,2).toUpperCase()}</div>
-        <div style="flex:1"><div style="font-weight:700;font-size:14px; color:var(--wood)">${p}</div>
-          <div style="font-size:11px;color:var(--text2)">${filled} resultados visibles</div>
+        <div class="av" style="font-size:11px">${p.slice(0,2).toUpperCase()}</div>
+        <div style="flex:1"><div style="font-weight:600;font-size:13px">${p}</div>
+          <div style="font-size:11px;color:var(--text2)">${filled} partidos cerrados rellenados</div>
         </div>
-        <span class="badge bs">฿ ${pts.total}</span>
-        <i class="ti ti-chevron-down" style="color:var(--wood);font-size:18px"></i>
+        <span class="badge bs">${pts.total} pts</span>
+        <i class="ti ti-chevron-down" style="color:var(--text3);font-size:14px"></i>
       </div>
       <div class="qrow-body" id="qrow-${p.replace(/[^a-z0-9]/gi,'_')}">`;
 
+    // Show visible picks
     if(filled===0){
-      html+=`<p class="muted" style="font-size:12px">Sin resultados visibles aún.</p>`;
+      html+=`<p class="muted" style="font-size:12px">Sin partidos rellenados aún.</p>`;
     } else {
       visibleMatches.forEach(m=>{
         const pick=picks[m.id];
@@ -1481,41 +1925,28 @@ function renderQuiniellas(){
           const rH=parseInt(m.homeGoals),rA=parseInt(m.awayGoals);
           const pH=parseInt(pick.home),pA=parseInt(pick.away);
           const rW=rH>rA?'h':rH<rA?'a':'d',pW=pH>pA?'h':pH<pA?'a':'d';
-          let mpts=0,cls='bd';
-          
-          if(m.phase==='Grupos'){
-            if(pick.home==m.homeGoals&&pick.away==m.awayGoals){mpts=5;cls='bs';}
-            else if(rW===pW){mpts=3;cls='bw';}
-          } else {
-            if(pick.home==m.homeGoals&&pick.away==m.awayGoals){mpts+=15;cls='bs';}
-            else if(rW===pW){mpts+=5;cls='bw';}
-            if(m.actual_qualifier&&pick.qualifier===m.actual_qualifier){mpts+=10;cls='bs';}
-            if(mpts>0 && cls==='bd') cls='bw';
-          }
-          ptsHtml=`<span class="badge ${cls} pts-chip">฿ ${mpts}</span>`;
+          let pts=0,cls='bd';
+          if(pick.home==m.homeGoals&&pick.away==m.awayGoals){pts=5;cls='bs';}
+          else if(rW===pW){pts=3;cls='bw';}
+          ptsHtml=`<span class="badge ${cls} pts-chip">${pts}p</span>`;
         }
-        
-        let qualText = '';
-        if(m.phase!=='Grupos' && pick.qualifier){
-            let qName = pick.qualifier==='h'?m.home:m.away;
-            qualText = ` <span style="font-size:10px; color:var(--text3)">(Pasa: ${qName})</span>`;
-        }
-
         html+=`<div class="pick-row-view">
           <span class="teams" style="font-size:11px">${flag(m.home)} ${m.home} vs ${flag(m.away)} ${m.away}</span>
-          <span class="pick-val">${pick.home}-${pick.away}${qualText}</span>
+          <span class="pick-val">${pick.home}-${pick.away}</span>
           ${ptsHtml}
         </div>`;
       });
     }
 
+    // Show specials if tournament has started
     if(!specialsOpen()){
-      html+=`<div class="section-title pirata-font" style="font-size:18px;margin-top:.75rem">Especiales</div>
+      html+=`<div class="section-title" style="font-size:10px;margin-top:.75rem">Especiales</div>
       <div class="pick-row-view"><span class="teams" style="font-size:11px">🏆 Campeón</span><span class="${sp.champion?'pick-val':'pick-empty'}">${sp.champion||'—'}</span></div>
       <div class="pick-row-view"><span class="teams" style="font-size:11px">⚽ Goleador</span><span class="${sp.scorer?'pick-val':'pick-empty'}">${sp.scorer||'—'}</span></div>
       <div class="pick-row-view"><span class="teams" style="font-size:11px">🧤 Portero</span><span class="${sp.keeper?'pick-val':'pick-empty'}">${sp.keeper||'—'}</span></div>
       <div class="pick-row-view"><span class="teams" style="font-size:11px">⭐ MVP</span><span class="${sp.mvp?'pick-val':'pick-empty'}">${sp.mvp||'—'}</span></div>`;
     }
+
     html+=`</div></div>`;
   });
   container.innerHTML=html;
