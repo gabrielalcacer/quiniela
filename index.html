@@ -511,40 +511,81 @@ td { padding: 9px 10px; border-bottom: 1px solid var(--border); font-weight: 600
     </div>
     
     <div id="ad-gko" class="adp" style="display:none">
-      <div class="card">
-        <div style="font-weight:700;font-size:16px;margin-bottom:.5rem;color:var(--red-pirate)" class="pirata-font">Generador Automático de Eliminatorias</div>
-        <p class="muted" style="margin-bottom:1rem">
-          Calcula la clasificación oficial (basándose únicamente en partidos jugados y confirmados) y empareja los cruces de Dieciseisavos de final.
-        </p>
-        <button class="primary" onclick="generateKOfromOfficial()">Calcular Cruces Provisionales</button>
+      <div class="tabs" style="flex-direction:row; overflow-x:auto; margin-bottom:1rem; border-bottom:2px solid var(--border); padding-bottom:6px; gap:6px;">
+        <button class="tab active" id="gko-btn-dieciseisavos" onclick="gkoTab('dieciseisavos')" style="padding:6px 12px; font-size:12px;">16avos</button>
+        <button class="tab" id="gko-btn-octavos" onclick="gkoTab('octavos')" style="padding:6px 12px; font-size:12px;">Octavos</button>
+        <button class="tab" id="gko-btn-cuartos" onclick="gkoTab('cuartos')" style="padding:6px 12px; font-size:12px;">Cuartos</button>
+        <button class="tab" id="gko-btn-semis" onclick="gkoTab('semis')" style="padding:6px 12px; font-size:12px;">Semis</button>
+        <button class="tab" id="gko-btn-final" onclick="gkoTab('final')" style="padding:6px 12px; font-size:12px;">Final</button>
       </div>
-      
-      <div id="gko-results" style="display:none;">
+
+      <!-- Sección Dieciseisavos -->
+      <div id="gko-sec-dieciseisavos" class="gko-sec">
         <div class="card">
-          <div style="font-weight:700;margin-bottom:.5rem">Clasificados Directos (1º y 2º de Grupo)</div>
-          <div id="gko-direct-list" style="display:grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 8px; font-size:12px;"></div>
+          <div style="font-weight:700;font-size:16px;margin-bottom:.5rem;color:var(--red-pirate)" class="pirata-font">Generador Automático de Eliminatorias</div>
+          <p class="muted" style="margin-bottom:1rem">
+            Calcula la clasificación oficial (basándose únicamente en partidos jugados y confirmados) y empareja los cruces de Dieciseisavos de final.
+          </p>
+          <button class="primary" onclick="generateKOfromOfficial()">Calcular Cruces Provisionales</button>
         </div>
         
-        <div class="card">
-          <div style="font-weight:700;margin-bottom:.5rem">Tabla de Terceros Lugares</div>
-          <table class="gtable" style="font-size:12px;">
-            <thead>
-              <tr><th>Grupo</th><th>Equipo</th><th>Pts</th><th>DG</th><th>GF</th><th>Estado</th></tr>
-            </thead>
-            <tbody id="gko-thirds-table"></tbody>
-          </table>
-        </div>
-
-        <div class="card">
-          <div style="font-weight:700;margin-bottom:.75rem">Emparejamiento de Dieciseisavos (R32)</div>
-          <p class="muted" style="margin-bottom:1rem">Asigna los 3º clasificados a sus cruces oficiales usando los dropdowns:</p>
-          <div id="gko-bracket-matches" style="display:flex; flex-direction:column; gap:10px;"></div>
-          
-          <div style="margin-top:1.5rem; text-align:center;">
-            <button class="primary" onclick="publishKOBracket()" style="width:100%; height:46px; font-size:16px;">
-              📢 Confirmar y Publicar Cruces a Participantes
-            </button>
+        <div id="gko-results" style="display:none;">
+          <div class="card">
+            <div style="font-weight:700;margin-bottom:.5rem">Clasificados Directos (1º y 2º de Grupo)</div>
+            <div id="gko-direct-list" style="display:grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 8px; font-size:12px;"></div>
           </div>
+          
+          <div class="card">
+            <div style="font-weight:700;margin-bottom:.5rem">Tabla de Terceros Lugares</div>
+            <table class="gtable" style="font-size:12px;">
+              <thead>
+                <tr><th>Grupo</th><th>Equipo</th><th>Pts</th><th>DG</th><th>GF</th><th>Estado</th></tr>
+              </thead>
+              <tbody id="gko-thirds-table"></tbody>
+            </table>
+          </div>
+
+          <div class="card">
+            <div style="font-weight:700;margin-bottom:.75rem">Emparejamiento de Dieciseisavos (R32)</div>
+            <p class="muted" style="margin-bottom:1rem">Ajusta los terceros lugares y publica cada cruce de forma individual:</p>
+            <div id="gko-bracket-matches" style="display:flex; flex-direction:column; gap:10px;"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sección Octavos -->
+      <div id="gko-sec-octavos" class="gko-sec" style="display:none;">
+        <div class="card">
+          <div style="font-weight:700;font-size:16px;margin-bottom:.5rem;color:var(--red-pirate)" class="pirata-font">Generador - Octavos de Final</div>
+          <p class="muted" style="margin-bottom:1rem">Publica los cruces de Octavos basados en los ganadores confirmados de Dieciseisavos.</p>
+          <div id="gko-list-octavos" style="display:flex; flex-direction:column; gap:10px;"></div>
+        </div>
+      </div>
+
+      <!-- Sección Cuartos -->
+      <div id="gko-sec-cuartos" class="gko-sec" style="display:none;">
+        <div class="card">
+          <div style="font-weight:700;font-size:16px;margin-bottom:.5rem;color:var(--red-pirate)" class="pirata-font">Generador - Cuartos de Final</div>
+          <p class="muted" style="margin-bottom:1rem">Publica los cruces de Cuartos basados en los ganadores de Octavos.</p>
+          <div id="gko-list-cuartos" style="display:flex; flex-direction:column; gap:10px;"></div>
+        </div>
+      </div>
+
+      <!-- Sección Semis -->
+      <div id="gko-sec-semis" class="gko-sec" style="display:none;">
+        <div class="card">
+          <div style="font-weight:700;font-size:16px;margin-bottom:.5rem;color:var(--red-pirate)" class="pirata-font">Generador - Semifinales</div>
+          <p class="muted" style="margin-bottom:1rem">Publica los cruces de Semifinales basados en los ganadores de Cuartos.</p>
+          <div id="gko-list-semis" style="display:flex; flex-direction:column; gap:10px;"></div>
+        </div>
+      </div>
+
+      <!-- Sección Final -->
+      <div id="gko-sec-final" class="gko-sec" style="display:none;">
+        <div class="card">
+          <div style="font-weight:700;font-size:16px;margin-bottom:.5rem;color:var(--red-pirate)" class="pirata-font">Generador - Gran Final</div>
+          <p class="muted" style="margin-bottom:1rem">Publica el cruce de la Final basado en los ganadores de Semifinales.</p>
+          <div id="gko-list-final" style="display:flex; flex-direction:column; gap:10px;"></div>
         </div>
       </div>
     </div>
@@ -2152,6 +2193,126 @@ let GKO_STATE = {
   matches: {}
 };
 
+const KO_FORMULAS = {
+  O1: { home: { from: 'D2' }, away: { from: 'D5' } },
+  O2: { home: { from: 'D1' }, away: { from: 'D3' } },
+  O3: { home: { from: 'D4' }, away: { from: 'D6' } },
+  O4: { home: { from: 'D7' }, away: { from: 'D8' } },
+  O5: { home: { from: 'D11' }, away: { from: 'D12' } },
+  O6: { home: { from: 'D9' }, away: { from: 'D10' } },
+  O7: { home: { from: 'D14' }, away: { from: 'D16' } },
+  O8: { home: { from: 'D13' }, away: { from: 'D15' } },
+
+  Q1: { home: { from: 'O1' }, away: { from: 'O2' } },
+  Q2: { home: { from: 'O5' }, away: { from: 'O6' } },
+  Q3: { home: { from: 'O3' }, away: { from: 'O4' } },
+  Q4: { home: { from: 'O7' }, away: { from: 'O8' } },
+
+  S1: { home: { from: 'Q1' }, away: { from: 'Q2' } },
+  S2: { home: { from: 'Q3' }, away: { from: 'Q4' } },
+
+  F1: { home: { from: 'S1' }, away: { from: 'S2' } }
+};
+
+window.gkoTab = function(phase) {
+  const parent = document.getElementById('ad-gko');
+  parent.querySelectorAll('.tabs .tab').forEach(btn => btn.classList.remove('active'));
+  document.getElementById('gko-btn-' + phase).classList.add('active');
+
+  parent.querySelectorAll('.gko-sec').forEach(sec => sec.style.display = 'none');
+  document.getElementById('gko-sec-' + phase).style.display = 'block';
+
+  if (phase !== 'dieciseisavos') {
+    renderGKOLaterPhase(phase);
+  }
+};
+
+function getWinnerOfMatch(matchId) {
+  const m = STATE.matches.find(x => x.id === matchId);
+  if (!m) return `Gan. ${matchId}`;
+  if (!m.played || !m.advances) return `Gan. ${matchId}`;
+  return m.advances === 'home' ? m.home : m.away;
+}
+
+function renderGKOLaterPhase(phase) {
+  const phaseMatches = {
+    octavos: ['O1', 'O2', 'O3', 'O4', 'O5', 'O6', 'O7', 'O8'],
+    cuartos: ['Q1', 'Q2', 'Q3', 'Q4'],
+    semis: ['S1', 'S2'],
+    final: ['F1']
+  };
+
+  const listId = 'gko-list-' + phase;
+  const container = document.getElementById(listId);
+  if (!container) return;
+
+  const matchIds = phaseMatches[phase];
+  let html = '';
+
+  matchIds.forEach(id => {
+    const formula = KO_FORMULAS[id];
+    const homeTeam = getWinnerOfMatch(formula.home.from);
+    const awayTeam = getWinnerOfMatch(formula.away.from);
+
+    const canPub = !homeTeam.startsWith('Gan.') && !awayTeam.startsWith('Gan.');
+    const activeMatch = STATE.matches.find(m => m.id === id);
+    const isAlreadyPublished = activeMatch && activeMatch.home === homeTeam && activeMatch.away === awayTeam;
+
+    html += `<div style="background:var(--parchment); border:1px solid var(--border); border-radius:4px; padding:10px; display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:8px;">
+      <div style="font-size:11px; font-weight:bold; color:var(--red-pirate); width:35px;">${id}</div>
+      <div style="flex:1; display:flex; align-items:center; gap:8px; justify-content:flex-end; text-align:right;">
+        <span style="font-weight:bold;">${flag(homeTeam)} ${homeTeam}</span>
+      </div>
+      <div style="font-size:11px; color:var(--text3); font-weight:bold;">VS</div>
+      <div style="flex:1; display:flex; align-items:center; gap:8px; justify-content:flex-start; text-align:left;">
+        <span style="font-weight:bold;">${flag(awayTeam)} ${awayTeam}</span>
+      </div>
+      <div>
+        <button id="gko-pub-btn-${id}" class="btn-sm ${isAlreadyPublished ? '' : 'primary'}" 
+          onclick="publishSingleKOMatch('${id}', '${homeTeam}', '${awayTeam}')" 
+          ${!canPub ? 'disabled style="opacity:0.5; cursor:not-allowed;"' : ''}>
+          ${isAlreadyPublished ? '✓ Publicado' : 'Publicar'}
+        </button>
+      </div>
+    </div>`;
+  });
+
+  container.innerHTML = html;
+}
+
+window.publishSingleKOMatch = async function(matchId, home, away) {
+  if (!home || !away || home.startsWith('Gan.') || away.startsWith('Gan.')) {
+    alert('No se pueden publicar equipos placeholders.');
+    return;
+  }
+  const m = STATE.matches.find(x => x.id === matchId);
+  if (m) {
+    m.home = home;
+    m.away = away;
+    try {
+      await saveMatches();
+      toast(`✅ Partido ${matchId} publicado: ${home} vs ${away}`);
+      
+      const activeTab = document.querySelector('#ad-gko .tabs .tab.active');
+      if (activeTab) {
+        const phase = activeTab.id.replace('gko-btn-', '');
+        if (phase === 'dieciseisavos') {
+          const btn = document.getElementById(`gko-pub-btn-${matchId}`);
+          if (btn) {
+            btn.textContent = '✓ Publicado';
+            btn.className = 'btn-sm';
+          }
+        } else {
+          renderGKOLaterPhase(phase);
+        }
+      }
+      renderAdminMatches();
+    } catch (e) {
+      alert('Error al publicar: ' + e.message);
+    }
+  }
+};
+
 function calcOfficialGroupStandings(g){
   const teams=GROUPS[g],stats={};
   teams.forEach(t=>stats[t]={pts:0,gf:0,ga:0,gd:0,played:0});
@@ -2281,11 +2442,19 @@ window.generateKOfromOfficial = function() {
       }
     }
 
-    matchesHtml += `<div style="background:var(--parchment); border:1px solid var(--border); border-radius:4px; padding:10px; display:flex; align-items:center; justify-content:space-between; gap:12px;">
+    const activeMatch = STATE.matches.find(m => m.id === def.id);
+    const isAlreadyPublished = activeMatch && activeMatch.home === GKO_STATE.matches[def.id].home && activeMatch.away === GKO_STATE.matches[def.id].away;
+
+    const pubButtonHtml = `<button id="gko-pub-btn-${def.id}" class="btn-sm ${isAlreadyPublished ? '' : 'primary'}" onclick="publishSingleKOMatch('${def.id}', GKO_STATE.matches['${def.id}'].home, GKO_STATE.matches['${def.id}'].away)">
+      ${isAlreadyPublished ? '✓ Publicado' : 'Publicar'}
+    </button>`;
+
+    matchesHtml += `<div style="background:var(--parchment); border:1px solid var(--border); border-radius:4px; padding:10px; display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:8px;">
       <div style="font-size:11px; font-weight:bold; color:var(--red-pirate); width:35px;">${def.id}</div>
       <div style="flex:1; display:flex; align-items:center; gap:8px; justify-content:flex-end; text-align:right;">${homeHtml}</div>
       <div style="font-size:11px; color:var(--text3); font-weight:bold;">VS</div>
       <div style="flex:1; display:flex; align-items:center; gap:8px; justify-content:flex-start; text-align:left;">${awayHtml}</div>
+      <div>${pubButtonHtml}</div>
     </div>`;
   });
 
@@ -2297,42 +2466,11 @@ window.generateKOfromOfficial = function() {
 window.updateGKOMatchThird = function(matchId, slot, val) {
   if (GKO_STATE.matches[matchId]) {
     GKO_STATE.matches[matchId][slot] = val;
-  }
-};
-
-window.publishKOBracket = async function() {
-  if (!Object.keys(GKO_STATE.matches).length) {
-    alert('Primero debes calcular los cruces.');
-    return;
-  }
-  
-  let incomplete = false;
-  Object.entries(GKO_STATE.matches).forEach(([id, mTeams]) => {
-    if (!mTeams.home || !mTeams.away) {
-      incomplete = true;
+    const btn = document.getElementById(`gko-pub-btn-${matchId}`);
+    if (btn) {
+      btn.textContent = 'Publicar';
+      btn.className = 'btn-sm primary';
     }
-  });
-  
-  if (incomplete) {
-    if (!confirm('Algunos cruces tienen equipos sin definir. ¿Publicar de todas formas?')) {
-      return;
-    }
-  }
-
-  Object.entries(GKO_STATE.matches).forEach(([id, mTeams]) => {
-    const m = STATE.matches.find(x => x.id === id);
-    if (m) {
-      m.home = mTeams.home;
-      m.away = mTeams.away;
-    }
-  });
-
-  try {
-    await saveMatches();
-    toast('📢 ¡Cruces de Dieciseisavos publicados oficialmente!');
-    renderAdminMatches();
-  } catch (e) {
-    alert('Error al publicar en Firebase: ' + e.message);
   }
 };
 
