@@ -62,11 +62,31 @@ body {
     gap: 24px;
     align-items: start;
   }
-  .sidebar-left { position: sticky; top: 74px; }
-  .sidebar-right { display: block !important; position: sticky; top: 74px; }
+  .sidebar-left { position: sticky; top: 74px; max-height: calc(100vh - 90px); overflow-y: auto; padding-right: 4px; }
+  .sidebar-right { display: block !important; position: sticky; top: 74px; max-height: calc(100vh - 90px); overflow-y: auto; padding-right: 4px; }
   #tab-btn-ranking { display: none !important; } 
 }
 .sidebar-right { display: none; } 
+
+/* Scrollbars personalizados para las barras laterales */
+.sidebar-left::-webkit-scrollbar,
+.sidebar-right::-webkit-scrollbar {
+  width: 6px;
+}
+.sidebar-left::-webkit-scrollbar-track,
+.sidebar-right::-webkit-scrollbar-track {
+  background: var(--parchment-dark);
+  border-radius: 3px;
+}
+.sidebar-left::-webkit-scrollbar-thumb,
+.sidebar-right::-webkit-scrollbar-thumb {
+  background: var(--wood);
+  border-radius: 3px;
+}
+.sidebar-left::-webkit-scrollbar-thumb:hover,
+.sidebar-right::-webkit-scrollbar-thumb:hover {
+  background: var(--wood-light);
+} 
 
 /* ── Sticky header ── */
 #app-header { 
@@ -178,9 +198,12 @@ body {
 .rank-row.rank-1 { border-color: var(--gold); background: #fffbe6; }
 .rank-row.rank-2 { border-color: #a0a0a0; }
 .rank-row.rank-3 { border-color: #cd7f32; }
-.rank-num { font-size: 26px; width: 30px; text-align: center; color: var(--red-pirate); flex-shrink: 0; }
+.rank-num { width: 36px; text-align: center; color: var(--red-pirate); flex-shrink: 0; }
+.rank-num.emoji { font-size: 26px; }
+.rank-num.number { font-size: 18px; font-weight: 800; font-family: 'Pirata One', serif; }
 .rank-bar-wrap { flex: 1; min-width: 0; }
-.rank-name { font-size: 20px; color: var(--text); margin-bottom: 2px; font-weight: 700; font-family: 'Nunito', sans-serif; }
+.rank-name { font-size: 18px; color: var(--text); margin-bottom: 2px; font-weight: 700; font-family: 'Nunito', sans-serif; }
+.rank-row.rank-1 .rank-name { font-size: 20px; }
 .rank-pts { font-size: 22px; color: var(--text); flex-shrink: 0; }
 .rank-detail { font-size: 11px; font-weight: bold; color: var(--text2); }
 .rank-bar-bg { height: 6px; background: var(--border); border-radius: 3px; overflow: hidden; margin-top: 5px; }
@@ -458,6 +481,7 @@ td { padding: 9px 10px; border-bottom: 1px solid var(--border); font-weight: 600
       <button class="tab" onclick="adminTab(this,'ad-pl')"><i class="ti ti-users"></i> Tripulantes</button>
       <button class="tab" onclick="adminTab(this,'ad-sp')"><i class="ti ti-star"></i> Tesoros</button>
       <button class="tab" onclick="adminTab(this,'ad-rk')"><i class="ti ti-skull"></i> Recompensas</button>
+      <button class="tab" onclick="adminTab(this,'ad-gko')"><i class="ti ti-sitemap"></i> Generador KO</button>
     </div>
     
     <div id="ad-res" class="adp"><div id="ad-ml"></div></div>
@@ -484,6 +508,45 @@ td { padding: 9px 10px; border-bottom: 1px solid var(--border); font-weight: 600
     
     <div id="ad-rk" class="adp" style="display:none">
       <div class="wanted-board"><h3 class="pirata-font">WANTED</h3><div id="ad-rkl"></div></div>
+    </div>
+    
+    <div id="ad-gko" class="adp" style="display:none">
+      <div class="card">
+        <div style="font-weight:700;font-size:16px;margin-bottom:.5rem;color:var(--red-pirate)" class="pirata-font">Generador Automático de Eliminatorias</div>
+        <p class="muted" style="margin-bottom:1rem">
+          Calcula la clasificación oficial (basándose únicamente en partidos jugados y confirmados) y empareja los cruces de Dieciseisavos de final.
+        </p>
+        <button class="primary" onclick="generateKOfromOfficial()">Calcular Cruces Provisionales</button>
+      </div>
+      
+      <div id="gko-results" style="display:none;">
+        <div class="card">
+          <div style="font-weight:700;margin-bottom:.5rem">Clasificados Directos (1º y 2º de Grupo)</div>
+          <div id="gko-direct-list" style="display:grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 8px; font-size:12px;"></div>
+        </div>
+        
+        <div class="card">
+          <div style="font-weight:700;margin-bottom:.5rem">Tabla de Terceros Lugares</div>
+          <table class="gtable" style="font-size:12px;">
+            <thead>
+              <tr><th>Grupo</th><th>Equipo</th><th>Pts</th><th>DG</th><th>GF</th><th>Estado</th></tr>
+            </thead>
+            <tbody id="gko-thirds-table"></tbody>
+          </table>
+        </div>
+
+        <div class="card">
+          <div style="font-weight:700;margin-bottom:.75rem">Emparejamiento de Dieciseisavos (R32)</div>
+          <p class="muted" style="margin-bottom:1rem">Asigna los 3º clasificados a sus cruces oficiales usando los dropdowns:</p>
+          <div id="gko-bracket-matches" style="display:flex; flex-direction:column; gap:10px;"></div>
+          
+          <div style="margin-top:1.5rem; text-align:center;">
+            <button class="primary" onclick="publishKOBracket()" style="width:100%; height:46px; font-size:16px;">
+              📢 Confirmar y Publicar Cruces a Participantes
+            </button>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </div>
@@ -691,6 +754,23 @@ const FLAGS = {
   'Panamá': '<img src="https://flagcdn.com/w20/pa.png" width="20" height="15" style="vertical-align:middle;border-radius:2px;margin-right:2px" alt="Panamá">',
 };
 function flag(t){return FLAGS[t]||'🏳️';}
+
+const EMOJI_FLAGS = {
+  'México': '🇲🇽', 'Sudáfrica': '🇿🇦', 'Corea del Sur': '🇰🇷', 'Rep. Checa': '🇨🇿',
+  'Canadá': '🇨🇦', 'Bosnia-Herz.': '🇧🇦', 'Qatar': '🇶🇦', 'Suiza': '🇨🇭',
+  'Brasil': '🇧🇷', 'Marruecos': '🇲🇦', 'Haití': '🇭🇹', 'Escocia': '🏴󠁧󠁢󠁳󠁣󠁴󠁿',
+  'EE.UU.': '🇺🇸', 'EE.UU': '🇺🇸', 'Paraguay': '🇵🇾', 'Australia': '🇦🇺',
+  'Turquía': '🇹🇷', 'Alemania': '🇩🇪', 'Curazao': '🇨🇼', 'Costa de Marfil': '🇨🇮',
+  'Ecuador': '🇪🇨', 'Países Bajos': '🇳🇱', 'Japón': '🇯🇵', 'Túnez': '🇹🇳',
+  'Suecia': '🇸🇪', 'Bélgica': '🇧🇪', 'Egipto': '🇪🇬', 'Irán': '🇮🇷',
+  'Nueva Zelanda': '🇳🇿', 'España': '🇪🇸', 'Cabo Verde': '🇨🇻', 'Arabia Saudita': '🇸🇦',
+  'Uruguay': '🇺🇾', 'Francia': '🇫🇷', 'Senegal': '🇸🇳', 'Noruega': '🇳🇴',
+  'Irak': '🇮🇶', 'Argentina': '🇦🇷', 'Argelia': '🇩🇿', 'Austria': '🇦🇹',
+  'Jordania': '🇯🇴', 'Portugal': '🇵🇹', 'Colombia': '🇨🇴', 'Uzbekistán': '🇺🇿',
+  'R.D. Congo': '🇨🇩', 'Inglaterra': '🏴󠁧󠁢󠁥󠁮󠁧󠁿', 'Croacia': '🇭🇷', 'Ghana': '🇬🇭',
+  'Panamá': '🇵🇦'
+};
+function flagEmoji(t){return EMOJI_FLAGS[t]||EMOJI_FLAGS[t?.replace(/\.$/,'')]||'🏳️';}
 
 const SQUADS = {
   // ── GRUPO A ──
@@ -1631,14 +1711,14 @@ function populateTeamSelectors(){
   ids.forEach(id=>{
     const sel = document.getElementById(id);
     if(!sel || sel.options.length > 1) return;
-    teams.forEach(t => sel.add(new Option(flag(t)+' '+t, t)));
+    teams.forEach(t => sel.add(new Option(flagEmoji(t)+' '+t, t)));
   });
   // Champion selector: always rebuild to ensure correct options
   const champSel = document.getElementById('pv-champ');
   if(champSel){
     const currentVal = champSel.value;
     champSel.innerHTML = '<option value="">Selecciona un equipo...</option>';
-    teams.forEach(t => champSel.add(new Option(flag(t)+' '+t, t)));
+    teams.forEach(t => champSel.add(new Option(flagEmoji(t)+' '+t, t)));
     if(currentVal) champSel.value = currentVal;
   }
 }
@@ -1733,11 +1813,12 @@ function renderRanking(containerId){
   let html='';
   ranking.forEach((r,i)=>{
     const cls=i===0?'rank-1':i===1?'rank-2':i===2?'rank-3':'';
+    const isEmoji=i<3;
     const medal=i===0?'🥇':i===1?'🥈':i===2?'🥉':'#'+(i+1);
     const pct=Math.round((r.total/maxPts)*100);
     const isCurrent=r.name===currentUser;
     html+=`<div class="rank-row ${cls}" ${isCurrent?'style="border-color:var(--red) !important"':''}>
-      <div class="rank-num">${medal}</div>
+      <div class="rank-num ${isEmoji?'emoji':'number'}">${medal}</div>
       <div class="av" style="font-size:11px;${isCurrent?'background:var(--red);color:#fff':''}">${r.name.slice(0,2).toUpperCase()}</div>
       <div class="rank-bar-wrap">
         <div class="rank-name">${r.name}${isCurrent?' <span style="font-size:10px;color:var(--text2)">(tú)</span>':''}</div>
@@ -1752,7 +1833,7 @@ function renderRanking(containerId){
 
 function renderAdmin(){
   renderAdminMatches();renderPlayersList();renderRanking('ad-rkl');
-  const sel=document.getElementById('ad-rc');if(sel.options.length<=1)ALL_TEAMS.forEach(t=>sel.add(new Option(`${flag(t)} ${t}`,t)));
+  const sel=document.getElementById('ad-rc');if(sel.options.length<=1)ALL_TEAMS.forEach(t=>sel.add(new Option(`${flagEmoji(t)} ${t}`,t)));
   const rs=STATE.realSpecial;sel.value=rs.champion||'';
   document.getElementById('ad-rs').value=rs.scorer||'';document.getElementById('ad-rk2').value=rs.keeper||'';document.getElementById('ad-rm').value=rs.mvp||'';
 }
@@ -2062,6 +2143,197 @@ function renderQuiniellas(){
 window.toggleQrow=function(id){
   const el=document.getElementById(id);
   if(el) el.classList.toggle('open');
+};
+
+let GKO_STATE = {
+  direct: {},
+  thirds: [],
+  qualifiedThirds: [],
+  matches: {}
+};
+
+function calcOfficialGroupStandings(g){
+  const teams=GROUPS[g],stats={};
+  teams.forEach(t=>stats[t]={pts:0,gf:0,ga:0,gd:0,played:0});
+  STATE.matches.filter(m=>m.group===g&&m.phase==='Grupos'&&m.played).forEach(m=>{
+    const hg=parseInt(m.homeGoals),ag=parseInt(m.awayGoals);
+    if(isNaN(hg)||isNaN(ag))return;
+    stats[m.home].played++;stats[m.away].played++;
+    stats[m.home].gf+=hg;stats[m.home].ga+=ag;stats[m.home].gd+=hg-ag;
+    stats[m.away].gf+=ag;stats[m.away].ga+=hg;stats[m.away].gd+=ag-hg;
+    if(hg>ag)stats[m.home].pts+=3;else if(hg<ag)stats[m.away].pts+=3;else{stats[m.home].pts+=1;stats[m.away].pts+=1;}
+  });
+  return Object.entries(stats).map(([name,s])=>({name,...s})).sort((a,b)=>b.pts-a.pts||b.gd-a.gd||b.gf-a.gf);
+}
+
+function getOfficialThirds(){
+  const thirds = [];
+  Object.keys(GROUPS).forEach(g => {
+    const standings = calcOfficialGroupStandings(g);
+    if(standings[2]){
+      thirds.push({ group: g, ...standings[2] });
+    }
+  });
+  return thirds.sort((a,b)=>b.pts-a.pts||b.gd-a.gd||b.gf-a.gf);
+}
+
+window.generateKOfromOfficial = function() {
+  const direct = {};
+  const groupNames = Object.keys(GROUPS);
+  groupNames.forEach(g => {
+    const s = calcOfficialGroupStandings(g);
+    direct[g] = {
+      first: s[0] ? s[0].name : `1º ${g}`,
+      second: s[1] ? s[1].name : `2º ${g}`
+    };
+  });
+  
+  const thirds = getOfficialThirds();
+  const qualifiedThirds = thirds.slice(0, 8).map(t => t.name);
+  
+  GKO_STATE.direct = direct;
+  GKO_STATE.thirds = thirds;
+  GKO_STATE.qualifiedThirds = qualifiedThirds;
+  GKO_STATE.matches = {};
+
+  const directEl = document.getElementById('gko-direct-list');
+  directEl.innerHTML = groupNames.map(g => {
+    return `<div style="background:var(--parchment-dark); padding:6px; border:1px solid var(--border); border-radius:4px; text-align:center;">
+      <strong>Grupo ${g}</strong><br>
+      1º: ${flag(direct[g].first)} ${direct[g].first}<br>
+      2º: ${flag(direct[g].second)} ${direct[g].second}
+    </div>`;
+  }).join('');
+
+  const thirdsEl = document.getElementById('gko-thirds-table');
+  thirdsEl.innerHTML = thirds.map((t, idx) => {
+    const isQual = idx < 8;
+    return `<tr style="${isQual ? 'background:rgba(45,106,10,.08);' : ''}">
+      <td>Grupo ${t.group}</td>
+      <td>${flag(t.name)} ${t.name}</td>
+      <td><strong>${t.pts}</strong></td>
+      <td>${t.gd>0?'+'+t.gd:t.gd}</td>
+      <td>${t.gf}</td>
+      <td><span class="badge ${isQual?'bs':'bd'}">${isQual?'Clasifica':'Eliminado'}</span></td>
+    </tr>`;
+  }).join('');
+
+  const r32Defs = [
+    { id: 'D1', home: '2º A', away: '2º B' },
+    { id: 'D2', home: '1º E', away: '3º A/B/C/D/F', thirdSlot: 'away' },
+    { id: 'D3', home: '1º F', away: '2º C' },
+    { id: 'D4', home: '1º C', away: '2º F' },
+    { id: 'D5', home: '1º I', away: '3º C/D/F/G/H', thirdSlot: 'away' },
+    { id: 'D6', home: '2º E', away: '2º I' },
+    { id: 'D7', home: '1º A', away: '3º C/E/F/H/I', thirdSlot: 'away' },
+    { id: 'D8', home: '1º L', away: '3º E/H/I/J/K', thirdSlot: 'away' },
+    { id: 'D9', home: '1º D', away: '3º B/E/F/I/J', thirdSlot: 'away' },
+    { id: 'D10', home: '1º G', away: '3º A/E/H/I/J', thirdSlot: 'away' },
+    { id: 'D11', home: '2º K', away: '2º L' },
+    { id: 'D12', home: '1º H', away: '2º J' },
+    { id: 'D13', home: '1º B', away: '3º E/F/G/I/J', thirdSlot: 'away' },
+    { id: 'D14', home: '1º J', away: '2º H' },
+    { id: 'D15', home: '1º K', away: '3º D/E/I/J/L', thirdSlot: 'away' },
+    { id: 'D16', home: '2º D', away: '2º G' }
+  ];
+
+  const resolveDirect = (placeholder) => {
+    const match = placeholder.match(/^([12])º\s*([A-L])$/);
+    if(match) {
+      const pos = match[1];
+      const grp = match[2];
+      return pos === '1' ? direct[grp].first : direct[grp].second;
+    }
+    return placeholder;
+  };
+
+  let thirdIdx = 0;
+  let matchesHtml = '';
+
+  r32Defs.forEach(def => {
+    let homeTeam = resolveDirect(def.home);
+    let awayTeam = resolveDirect(def.away);
+    
+    GKO_STATE.matches[def.id] = { home: homeTeam, away: awayTeam };
+
+    let homeHtml = `<span style="font-weight:bold;">${flag(homeTeam)} ${homeTeam}</span>`;
+    let awayHtml = `<span style="font-weight:bold;">${flag(awayTeam)} ${awayTeam}</span>`;
+
+    if (def.thirdSlot) {
+      const suggestedThird = qualifiedThirds[thirdIdx] || '';
+      thirdIdx++;
+      
+      GKO_STATE.matches[def.id][def.thirdSlot] = suggestedThird;
+
+      const selectId = `gko-select-${def.id}`;
+      let selectHtml = `<select id="${selectId}" onchange="updateGKOMatchThird('${def.id}', '${def.thirdSlot}', this.value)" style="height:34px; font-size:12px; padding:4px 8px;">`;
+      selectHtml += `<option value="">Selecciona 3º...</option>`;
+      qualifiedThirds.forEach(t => {
+        const isSel = t === suggestedThird;
+        selectHtml += `<option value="${t}" ${isSel?'selected':''}>${flagEmoji(t)} ${t}</option>`;
+      });
+      selectHtml += `</select>`;
+
+      if (def.thirdSlot === 'home') {
+        homeHtml = selectHtml;
+      } else {
+        awayHtml = selectHtml;
+      }
+    }
+
+    matchesHtml += `<div style="background:var(--parchment); border:1px solid var(--border); border-radius:4px; padding:10px; display:flex; align-items:center; justify-content:space-between; gap:12px;">
+      <div style="font-size:11px; font-weight:bold; color:var(--red-pirate); width:35px;">${def.id}</div>
+      <div style="flex:1; display:flex; align-items:center; gap:8px; justify-content:flex-end; text-align:right;">${homeHtml}</div>
+      <div style="font-size:11px; color:var(--text3); font-weight:bold;">VS</div>
+      <div style="flex:1; display:flex; align-items:center; gap:8px; justify-content:flex-start; text-align:left;">${awayHtml}</div>
+    </div>`;
+  });
+
+  document.getElementById('gko-bracket-matches').innerHTML = matchesHtml;
+  document.getElementById('gko-results').style.display = 'block';
+  toast('Cruces calculados provisoriamente. Revisa y pulsa Publicar.');
+};
+
+window.updateGKOMatchThird = function(matchId, slot, val) {
+  if (GKO_STATE.matches[matchId]) {
+    GKO_STATE.matches[matchId][slot] = val;
+  }
+};
+
+window.publishKOBracket = async function() {
+  if (!Object.keys(GKO_STATE.matches).length) {
+    alert('Primero debes calcular los cruces.');
+    return;
+  }
+  
+  let incomplete = false;
+  Object.entries(GKO_STATE.matches).forEach(([id, mTeams]) => {
+    if (!mTeams.home || !mTeams.away) {
+      incomplete = true;
+    }
+  });
+  
+  if (incomplete) {
+    if (!confirm('Algunos cruces tienen equipos sin definir. ¿Publicar de todas formas?')) {
+      return;
+    }
+  }
+
+  Object.entries(GKO_STATE.matches).forEach(([id, mTeams]) => {
+    const m = STATE.matches.find(x => x.id === id);
+    if (m) {
+      m.home = mTeams.home;
+      m.away = mTeams.away;
+    }
+  });
+
+  try {
+    await saveMatches();
+    toast('📢 ¡Cruces de Dieciseisavos publicados oficialmente!');
+    renderAdminMatches();
+  } catch (e) {
+    alert('Error al publicar en Firebase: ' + e.message);
+  }
 };
 
 loadFromFirebase();
