@@ -2214,6 +2214,43 @@ const KO_FORMULAS = {
   F1: { home: { from: 'S1' }, away: { from: 'S2' } }
 };
 
+function getDefaultPlaceholders(matchId) {
+  const defaults = {
+    D1: { home: '2º A', away: '2º B' },
+    D2: { home: '1º E', away: '3º A/B/C/D/F' },
+    D3: { home: '1º F', away: '2º C' },
+    D4: { home: '1º C', away: '2º F' },
+    D5: { home: '1º I', away: '3º C/D/F/G/H' },
+    D6: { home: '2º E', away: '2º I' },
+    D7: { home: '1º A', away: '3º C/E/F/H/I' },
+    D8: { home: '1º L', away: '3º E/H/I/J/K' },
+    D9: { home: '1º D', away: '3º B/E/F/I/J' },
+    D10: { home: '1º G', away: '3º A/E/H/I/J' },
+    D11: { home: '2º K', away: '2º L' },
+    D12: { home: '1º H', away: '2º J' },
+    D13: { home: '1º B', away: '3º E/F/G/I/J' },
+    D14: { home: '1º J', away: '2º H' },
+    D15: { home: '1º K', away: '3º D/E/I/J/L' },
+    D16: { home: '2º D', away: '2º G' },
+    O1: { home: 'Gan. D2', away: 'Gan. D5' },
+    O2: { home: 'Gan. D1', away: 'Gan. D3' },
+    O3: { home: 'Gan. D4', away: 'Gan. D6' },
+    O4: { home: 'Gan. D7', away: 'Gan. D8' },
+    O5: { home: 'Gan. D11', away: 'Gan. D12' },
+    O6: { home: 'Gan. D9', away: 'Gan. D10' },
+    O7: { home: 'Gan. D14', away: 'Gan. D16' },
+    O8: { home: 'Gan. D13', away: 'Gan. D15' },
+    Q1: { home: 'Gan. O1', away: 'Gan. O2' },
+    Q2: { home: 'Gan. O5', away: 'Gan. O6' },
+    Q3: { home: 'Gan. O3', away: 'Gan. O4' },
+    Q4: { home: 'Gan. O7', away: 'Gan. O8' },
+    S1: { home: 'Gan. Q1', away: 'Gan. Q2' },
+    S2: { home: 'Gan. Q3', away: 'Gan. Q4' },
+    F1: { home: 'Gan. S1', away: 'Gan. S2' }
+  };
+  return defaults[matchId];
+}
+
 window.gkoTab = function(phase) {
   const parent = document.getElementById('ad-gko');
   parent.querySelectorAll('.tabs .tab').forEach(btn => btn.classList.remove('active'));
@@ -2232,6 +2269,21 @@ function getWinnerOfMatch(matchId) {
   if (!m) return `Gan. ${matchId}`;
   if (!m.played || !m.advances) return `Gan. ${matchId}`;
   return m.advances === 'home' ? m.home : m.away;
+}
+
+function renderGKOMatchButton(matchId, isPublished) {
+  if (isPublished) {
+    return `<div style="display:flex; align-items:center; gap:4px;">
+      <span class="badge bs" style="padding: 6px 10px;">✓ Publicado</span>
+      <button class="btn-sm" style="color:var(--red-pirate); border-color:var(--red-pirate); padding: 4px 6px; height: 32px;" onclick="unpublishSingleKOMatch('${matchId}')" title="Revertir a provisional">
+        <i class="ti ti-arrow-back-up"></i>
+      </button>
+    </div>`;
+  } else {
+    return `<button id="gko-pub-btn-${matchId}" class="btn-sm primary" style="height: 32px;" onclick="publishSingleKOMatch('${matchId}')">
+      Publicar
+    </button>`;
+  }
 }
 
 function renderGKOLaterPhase(phase) {
@@ -2258,6 +2310,19 @@ function renderGKOLaterPhase(phase) {
     const activeMatch = STATE.matches.find(m => m.id === id);
     const isAlreadyPublished = activeMatch && activeMatch.home === homeTeam && activeMatch.away === awayTeam;
 
+    const pubButtonHtml = isAlreadyPublished
+      ? `<div style="display:flex; align-items:center; gap:4px;">
+          <span class="badge bs" style="padding: 6px 10px;">✓ Publicado</span>
+          <button class="btn-sm" style="color:var(--red-pirate); border-color:var(--red-pirate); padding: 4px 6px; height: 32px;" onclick="unpublishSingleKOMatch('${id}')" title="Revertir a provisional">
+            <i class="ti ti-arrow-back-up"></i>
+          </button>
+         </div>`
+      : `<button id="gko-pub-btn-${id}" class="btn-sm primary" style="height: 32px;"
+          onclick="publishSingleKOMatch('${id}')" 
+          ${!canPub ? 'disabled style="opacity:0.5; cursor:not-allowed;"' : ''}>
+          Publicar
+         </button>`;
+
     html += `<div style="background:var(--parchment); border:1px solid var(--border); border-radius:4px; padding:10px; display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:8px;">
       <div style="font-size:11px; font-weight:bold; color:var(--red-pirate); width:35px;">${id}</div>
       <div style="flex:1; display:flex; align-items:center; gap:8px; justify-content:flex-end; text-align:right;">
@@ -2267,24 +2332,37 @@ function renderGKOLaterPhase(phase) {
       <div style="flex:1; display:flex; align-items:center; gap:8px; justify-content:flex-start; text-align:left;">
         <span style="font-weight:bold;">${flag(awayTeam)} ${awayTeam}</span>
       </div>
-      <div>
-        <button id="gko-pub-btn-${id}" class="btn-sm ${isAlreadyPublished ? '' : 'primary'}" 
-          onclick="publishSingleKOMatch('${id}', '${homeTeam}', '${awayTeam}')" 
-          ${!canPub ? 'disabled style="opacity:0.5; cursor:not-allowed;"' : ''}>
-          ${isAlreadyPublished ? '✓ Publicado' : 'Publicar'}
-        </button>
-      </div>
+      <div>${pubButtonHtml}</div>
     </div>`;
   });
 
   container.innerHTML = html;
 }
 
-window.publishSingleKOMatch = async function(matchId, home, away) {
+window.publishSingleKOMatch = async function(matchId) {
+  let home, away;
+  const isR32 = matchId.startsWith('D');
+  if (isR32) {
+    if (GKO_STATE.matches[matchId]) {
+      home = GKO_STATE.matches[matchId].home;
+      away = GKO_STATE.matches[matchId].away;
+    }
+  } else {
+    const formula = KO_FORMULAS[matchId];
+    if (formula) {
+      home = getWinnerOfMatch(formula.home.from);
+      away = getWinnerOfMatch(formula.away.from);
+    }
+  }
+
   if (!home || !away || home.startsWith('Gan.') || away.startsWith('Gan.')) {
-    alert('No se pueden publicar equipos placeholders.');
+    alert('No se pueden publicar equipos placeholders o vacíos.');
     return;
   }
+
+  const conf = confirm(`¿Estás seguro de que deseas publicar el cruce oficial para el partido ${matchId}?\n\n⚽ ${flagEmoji(home)} ${home} vs ${flagEmoji(away)} ${away}\n\nLos participantes podrán rellenar sus picks de inmediato.`);
+  if (!conf) return;
+
   const m = STATE.matches.find(x => x.id === matchId);
   if (m) {
     m.home = home;
@@ -2297,11 +2375,8 @@ window.publishSingleKOMatch = async function(matchId, home, away) {
       if (activeTab) {
         const phase = activeTab.id.replace('gko-btn-', '');
         if (phase === 'dieciseisavos') {
-          const btn = document.getElementById(`gko-pub-btn-${matchId}`);
-          if (btn) {
-            btn.textContent = '✓ Publicado';
-            btn.className = 'btn-sm';
-          }
+          const wrap = document.getElementById(`gko-pub-wrap-${matchId}`);
+          if (wrap) wrap.innerHTML = renderGKOMatchButton(matchId, true);
         } else {
           renderGKOLaterPhase(phase);
         }
@@ -2309,6 +2384,36 @@ window.publishSingleKOMatch = async function(matchId, home, away) {
       renderAdminMatches();
     } catch (e) {
       alert('Error al publicar: ' + e.message);
+    }
+  }
+};
+
+window.unpublishSingleKOMatch = async function(matchId) {
+  const conf = confirm(`¿Estás seguro de que deseas despublicar el partido ${matchId}?\n\nEsto restablecerá los equipos a sus nombres provisionales y bloqueará de nuevo las predicciones de los participantes.`);
+  if (!conf) return;
+
+  const m = STATE.matches.find(x => x.id === matchId);
+  const defaults = getDefaultPlaceholders(matchId);
+  if (m && defaults) {
+    m.home = defaults.home;
+    m.away = defaults.away;
+    try {
+      await saveMatches();
+      toast(`Revertido partido ${matchId} a su estado provisional`);
+      
+      const activeTab = document.querySelector('#ad-gko .tabs .tab.active');
+      if (activeTab) {
+        const phase = activeTab.id.replace('gko-btn-', '');
+        if (phase === 'dieciseisavos') {
+          const wrap = document.getElementById(`gko-pub-wrap-${matchId}`);
+          if (wrap) wrap.innerHTML = renderGKOMatchButton(matchId, false);
+        } else {
+          renderGKOLaterPhase(phase);
+        }
+      }
+      renderAdminMatches();
+    } catch (e) {
+      alert('Error al despublicar: ' + e.message);
     }
   }
 };
@@ -2445,9 +2550,7 @@ window.generateKOfromOfficial = function() {
     const activeMatch = STATE.matches.find(m => m.id === def.id);
     const isAlreadyPublished = activeMatch && activeMatch.home === GKO_STATE.matches[def.id].home && activeMatch.away === GKO_STATE.matches[def.id].away;
 
-    const pubButtonHtml = `<button id="gko-pub-btn-${def.id}" class="btn-sm ${isAlreadyPublished ? '' : 'primary'}" onclick="publishSingleKOMatch('${def.id}', GKO_STATE.matches['${def.id}'].home, GKO_STATE.matches['${def.id}'].away)">
-      ${isAlreadyPublished ? '✓ Publicado' : 'Publicar'}
-    </button>`;
+    const pubButtonHtml = `<div id="gko-pub-wrap-${def.id}">${renderGKOMatchButton(def.id, isAlreadyPublished)}</div>`;
 
     matchesHtml += `<div style="background:var(--parchment); border:1px solid var(--border); border-radius:4px; padding:10px; display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:8px;">
       <div style="font-size:11px; font-weight:bold; color:var(--red-pirate); width:35px;">${def.id}</div>
