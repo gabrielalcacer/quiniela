@@ -1539,7 +1539,7 @@ function renderPlayerMatches(){
 
   html+=`<div class="section-title" style="margin-top:0">Fase de Grupos</div>`;
   const now=Date.now();
-  Object.entries(byDay).forEach(([day,ms],idx)=>{
+  Object.entries(byDay).sort((a,b)=>byDayRaw[a[0]]-byDayRaw[b[0]]).forEach(([day,ms],idx)=>{
     const dayTs=byDayRaw[day];
     // Determine status of this day
     const allPlayed=ms.every(m=>m.played);
@@ -1574,6 +1574,11 @@ function renderPlayerMatches(){
   html+=`<div class="section-title" style="margin-top:1rem">Fases Eliminatorias</div>`;
   koPhases.forEach(phase=>{
     const ms=STATE.matches.filter(m=>m.phase===phase);if(!ms.length)return;
+    ms.sort((a,b)=>{
+      const ta=MATCH_TIMES[a.id]?new Date(MATCH_TIMES[a.id]).getTime():0;
+      const tb=MATCH_TIMES[b.id]?new Date(MATCH_TIMES[b.id]).getTime():0;
+      return ta-tb||a.id.localeCompare(b.id);
+    });
     const phaseId='phase_'+phase;
     const allDefined=ms.every(m=>!isKOPH(m));
     const allPlayed=ms.every(m=>m.played);
@@ -1940,7 +1945,7 @@ function renderAdminMatches(){
   });
   const now=Date.now();
   html+=`<div class="section-title" style="margin-top:0">Fase de Grupos</div>`;
-  Object.entries(byDay).forEach(([day,ms])=>{
+  Object.entries(byDay).sort((a,b)=>byDayRaw[a[0]]-byDayRaw[b[0]]).forEach(([day,ms])=>{
     const dayTs=byDayRaw[day];
     const allPlayed=ms.every(m=>m.played);
     const hasUnplayed=ms.some(m=>!m.played);
@@ -1970,6 +1975,11 @@ function renderAdminMatches(){
   html+=`<div class="section-title" style="margin-top:1rem">Fases Eliminatorias</div>`;
   ['Dieciseisavos','Octavos','Cuartos','Semis','Final'].forEach(phase=>{
     const ms=STATE.matches.filter(m=>m.phase===phase);if(!ms.length)return;
+    ms.sort((a,b)=>{
+      const ta=MATCH_TIMES[a.id]?new Date(MATCH_TIMES[a.id]).getTime():0;
+      const tb=MATCH_TIMES[b.id]?new Date(MATCH_TIMES[b.id]).getTime():0;
+      return ta-tb||a.id.localeCompare(b.id);
+    });
     const phaseId='adphase_'+phase;
     const played=ms.filter(m=>m.played).length;
     const allPlayed=played===ms.length;
@@ -2165,6 +2175,11 @@ function renderQuiniellas(){
 
   // Only show picks for matches that are locked or played
   const visibleMatches=STATE.matches.filter(m=>m.played||!canPick(m.id));
+  visibleMatches.sort((a,b)=>{
+    const ta=MATCH_TIMES[a.id]?new Date(MATCH_TIMES[a.id]).getTime():0;
+    const tb=MATCH_TIMES[b.id]?new Date(MATCH_TIMES[b.id]).getTime():0;
+    return ta-tb||a.id.localeCompare(b.id);
+  });
 
   let html='<p class="muted" style="margin-bottom:.75rem;font-size:12px">Solo se muestran los partidos cerrados o ya jugados para no dar ventaja.</p>';
   players.forEach(p=>{
