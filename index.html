@@ -1564,16 +1564,11 @@ function calcPts(player){
     const rW=rH>rA?'h':rH<rA?'a':'d',pW=pH>pA?'h':pH<pA?'a':'d';
     const isKO=m.phase!=='Grupos';
     if(isKO){
-      const resolvedHome=resolveTeamNameForPlayer(m.home,picks,STATE.matches);
-      const resolvedAway=resolveTeamNameForPlayer(m.away,picks,STATE.matches);
-      const correctMatchup = (resolvedHome === m.home && resolvedAway === m.away);
-      if(correctMatchup){
-        if(pick.home==m.homeGoals&&pick.away==m.awayGoals){total+=15;exact++;winners++;}
-        else if(rW===pW){total+=5;winners++;}
-      }
-      const predictedAdvancing = pick.advances === 'home' ? resolvedHome : pick.advances === 'away' ? resolvedAway : '';
-      const actualAdvancing = m.advances === 'home' ? m.home : m.advances === 'away' ? m.away : '';
-      if(actualAdvancing && predictedAdvancing && predictedAdvancing === actualAdvancing){total+=10;}
+      // KO scoring: 15 exact, 5 right type, 10 who advances
+      if(pick.home==m.homeGoals&&pick.away==m.awayGoals){total+=15;exact++;winners++;}
+      else if(rW===pW){total+=5;winners++;}
+      // Who advances bonus
+      if(m.advances&&pick.advances&&pick.advances===m.advances){total+=10;}
     }else{
       // Group scoring: 5 exact, 3 right type
       if(pick.home==m.homeGoals&&pick.away==m.awayGoals){total+=5;exact++;winners++;}
@@ -1591,17 +1586,7 @@ function getRanking(){return Object.keys(STATE.players).map(p=>({name:p,...calcP
 
 function pendingCount(){
   const picks=STATE.players[currentUser]?.picks||{};
-  return STATE.matches.filter(m=>{
-    if(m.played) return false;
-    if(m.phase==='Grupos'){
-      return canPick(m.id) && (!picks[m.id] || picks[m.id].home==='');
-    } else {
-      const resolvedHome=resolveTeamNameForPlayer(m.home,picks,STATE.matches);
-      const resolvedAway=resolveTeamNameForPlayer(m.away,picks,STATE.matches);
-      const koph=resolvedHome.includes('Gan.')||resolvedHome.includes('º')||resolvedAway.includes('Gan.')||resolvedAway.includes('º');
-      return !koph && canPick(m.id) && (!picks[m.id] || picks[m.id].home==='');
-    }
-  }).length;
+  return STATE.matches.filter(m=>!m.played&&canPick(m.id)&&!isKOPH(m)&&(!picks[m.id]||picks[m.id].home==='')).length;
 }
 
 function nextMatch(){
@@ -1650,7 +1635,7 @@ function renderPlayerMatches(){
   const picks=STATE.players[currentUser]?.picks||{};
   let html='';
 
-  // ── Fase de Grupos: listado directo (unificado sin acordeones por día) ──
+  // ── Fase de Grupos: un solo acordeón con todos los partidos ──
   const groupMs=STATE.matches.filter(m=>m.phase==='Grupos');
   if(groupMs.length){
     groupMs.sort((a,b)=>{
@@ -1658,13 +1643,32 @@ function renderPlayerMatches(){
       const tb=MATCH_TIMES[b.id]?new Date(MATCH_TIMES[b.id]).getTime():0;
       return ta-tb||a.id.localeCompare(b.id);
     });
-    html+=`<div class="section-title" style="margin-top:0">Fase de Grupos</div>`;
-    html+=`<div class="group-phase-container" style="display:flex;flex-direction:column;gap:0.75rem;margin-bottom:2rem">
-      ${groupMs.map(m=>matchRow(m,picks)).join('')}
+    
+    const allPlayed=groupMs.every(m=>m.played);
+    const hasOpen=groupMs.some(m=>!m.played&&canPick(m.id));
+    const filled=groupMs.filter(m=>picks[m.id]&&picks[m.id].home!=='').length;
+    const dotColor=allPlayed?'var(--s-t)':hasOpen?'var(--red)':'var(--text3)';
+    const statusText=allPlayed?'Finalizado':hasOpen?`${filled}/${groupMs.length} rellenados`:'Cerrado';
+
+    html+=`<div class="accord">
+      <div class="accord-header" onclick="toggleAccord('accord_groups',this)">
+        <div class="accord-dot" style="background:${dotColor}"></div>
+        <div class="accord-title">Fase de Grupos</div>
+        <div class="accord-meta">
+          <span>${groupMs.length} partidos</span>
+          <span class="badge ${allPlayed?'bs':hasOpen?'bw':'bi'}" style="font-size:10px">${statusText}</span>
+        </div>
+        <i class="ti ti-chevron-down accord-chevron"></i>
+      </div>
+      <div class="accord-body" id="accord_groups">
+        <div style="display:flex;flex-direction:column;gap:0.75rem">
+          ${groupMs.map(m=>matchRow(m,picks)).join('')}
+        </div>
+      </div>
     </div>`;
   }
 
-  // ── Fases eliminatorias: listado directo (unificado sin acordeones por ronda) ──
+  // ── Fases eliminatorias: acordeón por ronda ──
   const koPhases=['Dieciseisavos','Octavos','Cuartos','Semis','Final'];
   koPhases.forEach(phase=>{
     const ms=STATE.matches.filter(m=>m.phase===phase);if(!ms.length)return;
@@ -1673,10 +1677,29 @@ function renderPlayerMatches(){
       const tb=MATCH_TIMES[b.id]?new Date(MATCH_TIMES[b.id]).getTime():0;
       return ta-tb||a.id.localeCompare(b.id);
     });
+    
+    const phaseId='phase_'+phase;
+    const allDefined=ms.every(m=>!isKOPH(m));
+    const allPlayed=ms.every(m=>m.played);
+    const dotColor=!allDefined?'var(--text3)':allPlayed?'var(--s-t)':'var(--w-t)';
+    const statusText=!allDefined?'Por definir':allPlayed?'Finalizado':'En juego';
+    const openClass=phase==='Dieciseisavos'?'open':'';
 
-    html+=`<div class="section-title" style="margin-top:1.5rem">${phase}</div>`;
-    html+=`<div class="ko-phase-container" style="display:flex;flex-direction:column;gap:0.75rem">
-      ${ms.map(m=>matchRow(m,picks)).join('')}
+    html+=`<div class="accord">
+      <div class="accord-header ${openClass}" onclick="toggleAccord('${phaseId}',this)">
+        <div class="accord-dot" style="background:${dotColor}"></div>
+        <div class="accord-title">${phase}</div>
+        <div class="accord-meta">
+          <span>${ms.length} partidos</span>
+          <span class="badge ${!allDefined?'bi':allPlayed?'bs':'bw'}" style="font-size:10px">${statusText}</span>
+        </div>
+        <i class="ti ti-chevron-down accord-chevron"></i>
+      </div>
+      <div class="accord-body ${openClass}" id="${phaseId}">
+        <div style="display:flex;flex-direction:column;gap:0.75rem">
+          ${ms.map(m=>matchRow(m,picks)).join('')}
+        </div>
+      </div>
     </div>`;
   });
 
@@ -1692,10 +1715,7 @@ window.toggleAccord=function(id,header){
 
 function matchRow(m,picks){
   const pick=picks[m.id]||{home:'',away:''};
-  const resolvedHome=resolveTeamNameForPlayer(m.home,picks,STATE.matches);
-  const resolvedAway=resolveTeamNameForPlayer(m.away,picks,STATE.matches);
-  const koph=m.phase!=='Grupos' && (resolvedHome.includes('Gan.')||resolvedHome.includes('º')||resolvedAway.includes('Gan.')||resolvedAway.includes('º'));
-  const locked=!canPick(m.id),tl=timeLabel(m.id);
+  const koph=isKOPH(m),locked=!canPick(m.id),tl=timeLabel(m.id);
   let statusHtml='';
   if(koph)statusHtml=`<span class="badge bi">Por definir</span>`;
   else if(m.played)statusHtml=`<span class="badge bs">Finalizado</span>`;
@@ -1709,21 +1729,10 @@ function matchRow(m,picks){
     const isKOMatch=m.phase!=='Grupos';
     let pts=0,cls='bd';
     if(isKOMatch){
-      const correctMatchup = (resolvedHome === m.home && resolvedAway === m.away);
-      if(correctMatchup){
-        if(pick.home==m.homeGoals&&pick.away==m.awayGoals){pts+=15;cls='bs';scoreClass='won';}
-        else if(rW===pW){pts+=5;cls='bw';scoreClass='won';}
-        else{scoreClass='lost';}
-      } else {
-        scoreClass='lost';
-      }
-      const predictedAdvancing = pick.advances === 'home' ? resolvedHome : pick.advances === 'away' ? resolvedAway : '';
-      const actualAdvancing = m.advances === 'home' ? m.home : m.advances === 'away' ? m.away : '';
-      if(actualAdvancing && predictedAdvancing && predictedAdvancing === actualAdvancing){
-        pts+=10;
-        if(!cls||cls==='bd')cls='bw';
-        scoreClass='won';
-      }
+      if(pick.home==m.homeGoals&&pick.away==m.awayGoals){pts+=15;cls='bs';scoreClass='won';}
+      else if(rW===pW){pts+=5;cls='bw';scoreClass='won';}
+      else{scoreClass='lost';}
+      if(m.advances&&pick.advances&&pick.advances===m.advances){pts+=10;if(!cls||cls==='bd')cls='bw';if(scoreClass==='lost')scoreClass='won';}
     }else{
       if(pick.home==m.homeGoals&&pick.away==m.awayGoals){pts=5;cls='bs';scoreClass='won';}
       else if(rW===pW){pts=3;cls='bw';scoreClass='won';}
@@ -1735,13 +1744,13 @@ function matchRow(m,picks){
   const official=m.played?`${m.homeGoals} - ${m.awayGoals}`:'Pendiente';
   const editBtn=!koph&&!m.played&&!locked?`<button class="btn-sm primary" onclick="openPickModal('${m.id}')" style="margin-left:auto"><i class="ti ti-edit"></i> Editar</button>`:'';
   const timeHtml=tl?`<div class="match-times-block"><span><em>🇪🇸 España</em>${tl.es}</span><span><em>🇺🇸 EE.UU. (ET)</em>${tl.us}</span></div>`:'';
-  const hFlag=flag(resolvedHome),aFlag=flag(resolvedAway);
+  const hFlag=flag(m.home),aFlag=flag(m.away);
   return`<div class="match-card-big">
     <div class="mcb-header">
       <div class="mcb-teams">
-        <span class="mcb-team">${hFlag} ${resolvedHome}</span>
+        <span class="mcb-team">${hFlag} ${m.home}</span>
         <span class="mcb-vs">vs</span>
-        <span class="mcb-team">${aFlag} ${resolvedAway}</span>
+        <span class="mcb-team">${aFlag} ${m.away}</span>
       </div>
       <div style="display:flex;align-items:center;gap:6px;flex-shrink:0">${statusHtml}${ptsHtml}</div>
     </div>
@@ -1759,7 +1768,7 @@ function matchRow(m,picks){
     </div>
     ${m.phase!=='Grupos'&&!koph?`<div style="display:flex;align-items:center;gap:8px;margin-top:8px;padding:8px 12px;background:var(--bg2);border-radius:var(--r);font-size:12px">
       <span style="color:var(--text2)">Pasa:</span>
-      <span style="font-weight:600">${pick.advances==='home'?flag(resolvedHome)+' '+resolvedHome:pick.advances==='away'?flag(resolvedAway)+' '+resolvedAway:'<em style="color:var(--text3)">Sin elegir</em>'}</span>
+      <span style="font-weight:600">${pick.advances==='home'?flag(m.home)+' '+m.home:pick.advances==='away'?flag(m.away)+' '+m.away:'<em style="color:var(--text3)">Sin elegir</em>'}</span>
       ${m.played&&m.advances?`<span style="margin-left:auto" class="badge ${pick.advances===m.advances?'bs':'bd'}">${pick.advances===m.advances?'+10 pts':'✗'}</span>`:''}
     </div>`:''}
   </div>`;
@@ -1767,19 +1776,14 @@ function matchRow(m,picks){
 
 window.openPickModal=function(id){
   const m=STATE.matches.find(x=>x.id===id);if(!m||m.played)return;
-  const picks=STATE.players[currentUser]?.picks||{};
-  const resolvedHome=resolveTeamNameForPlayer(m.home,picks,STATE.matches);
-  const resolvedAway=resolveTeamNameForPlayer(m.away,picks,STATE.matches);
-  const koph=m.phase!=='Grupos' && (resolvedHome.includes('Gan.')||resolvedHome.includes('º')||resolvedAway.includes('Gan.')||resolvedAway.includes('º'));
-
   if(m.phase==='Grupos'&&!canPick(id))return;
-  if(m.phase!=='Grupos'&&koph)return;
+  if(m.phase!=='Grupos'&&isKOPH(m))return;
   editingMatchId=id;
-  const pick=picks[id]||{home:'',away:'',advances:''};
+  const pick=STATE.players[currentUser]?.picks?.[id]||{home:'',away:'',advances:''};
   const tl=timeLabel(id);
-  document.getElementById('mo-t').innerHTML=`${flag(resolvedHome)} ${resolvedHome} vs ${resolvedAway} ${flag(resolvedAway)}`;
-  document.getElementById('mo-h').innerHTML=`${flag(resolvedHome)} ${resolvedHome}`;
-  document.getElementById('mo-a').innerHTML=`${flag(resolvedAway)} ${resolvedAway}`;
+  document.getElementById('mo-t').innerHTML=`${flag(m.home)} ${m.home} vs ${m.away} ${flag(m.away)}`;
+  document.getElementById('mo-h').innerHTML=`${flag(m.home)} ${m.home}`;
+  document.getElementById('mo-a').innerHTML=`${flag(m.away)} ${m.away}`;
   document.getElementById('mo-time').innerHTML=tl?`🇪🇸 ${tl.es}<br>🇺🇸 ${tl.us}`:'';
   document.getElementById('pm-h').value=pick.home;
   document.getElementById('pm-a').value=pick.away;
@@ -1787,8 +1791,8 @@ window.openPickModal=function(id){
   const koSec=document.getElementById('mo-ko-section');
   if(m.phase!=='Grupos'){
     koSec.style.display='block';
-    document.getElementById('ko-adv-home-label').innerHTML=`${flag(resolvedHome)} ${resolvedHome}`;
-    document.getElementById('ko-adv-away-label').innerHTML=`${flag(resolvedAway)} ${resolvedAway}`;
+    document.getElementById('ko-adv-home-label').innerHTML=`${flag(m.home)} ${m.home}`;
+    document.getElementById('ko-adv-away-label').innerHTML=`${flag(m.away)} ${m.away}`;
     document.getElementById('ko-advances-val').value=pick.advances||'';
     if(pick.advances==='home')selectAdvances('home');
     else if(pick.advances==='away')selectAdvances('away');
