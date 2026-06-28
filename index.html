@@ -318,6 +318,104 @@ td { padding: 9px 10px; border-bottom: 1px solid var(--border); font-weight: 600
 .player-selector select{width:100%}
 
 
+
+/* ── Bracket Styles ── */
+.bracket-scroll-container {
+  overflow-x: auto;
+  width: 100%;
+  padding: 1rem 0;
+  -webkit-overflow-scrolling: touch;
+}
+.bracket-tree {
+  display: flex;
+  gap: 1.5rem;
+  min-width: 1100px;
+  min-height: 1250px;
+}
+.bracket-column {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+.bracket-column-header {
+  text-align: center;
+  font-size: 20px;
+  color: var(--gold);
+  margin-bottom: 1rem;
+  border-bottom: 2px solid var(--border);
+  padding-bottom: 0.5rem;
+}
+.bracket-column-matches {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  gap: 0.5rem;
+}
+.bracket-match-card {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  padding: 0.5rem 0.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  position: relative;
+}
+.bracket-match-card:hover {
+  border-color: var(--gold);
+  background: var(--bg3);
+  transform: scale(1.02);
+}
+.bracket-match-card.played {
+  opacity: 0.9;
+  cursor: default;
+}
+.bracket-match-card.locked {
+  cursor: default;
+}
+.bracket-match-id {
+  font-size: 9px;
+  color: var(--text3);
+  font-weight: bold;
+  position: absolute;
+  top: 4px;
+  right: 6px;
+}
+.bracket-team {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  color: var(--text2);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.bracket-team.advances {
+  color: var(--gold);
+  font-weight: 700;
+}
+.bracket-score {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text1);
+  text-align: center;
+  margin: 2px 0;
+  border-top: 1px dashed var(--border);
+  border-bottom: 1px dashed var(--border);
+  padding: 2px 0;
+}
+.bracket-match-card.played .bracket-score {
+  color: var(--s-t);
+}
+.flag-span img {
+  vertical-align: middle;
+  border-radius: 2px;
+}
+
 #login-screen.active { display: flex; }
 </style>
 </head>
@@ -389,7 +487,7 @@ td { padding: 9px 10px; border-bottom: 1px solid var(--border); font-weight: 600
 
       <div class="tabs">
         <button class="tab active" onclick="pvTab(this,'pv-picks')"><i class="ti ti-map"></i> Mapa de Picks</button>
-        <button class="tab" onclick="pvTab(this,'pv-groups')"><i class="ti ti-layout-grid"></i> Mar de Grupos</button>
+        <button class="tab" onclick="pvTab(this,'pv-groups')"><i class="ti ti-sitemap"></i> Mar de Eliminatorias</button>
         <button class="tab" id="tab-btn-ranking" onclick="pvTab(this,'pv-ranking')"><i class="ti ti-skull"></i> Recompensas (Ranking)</button>
         <button class="tab" onclick="pvTab(this,'pv-quiniellas')"><i class="ti ti-telescope"></i> Espiar Rivales</button>
         <button class="tab" onclick="pvTab(this,'pv-special')"><i class="ti ti-star"></i> Tesoros Especiales</button>
@@ -405,8 +503,8 @@ td { padding: 9px 10px; border-bottom: 1px solid var(--border); font-weight: 600
       </div>
       
       <div id="pv-groups" class="pvp" style="display:none">
-        <div class="section-title pirata-font" style="font-size:26px; margin-top:0;">Clasificación de Grupos</div>
-        <div id="pv-gl" class="card"></div>
+        <div class="section-title pirata-font" style="font-size:26px; margin-top:0;">Mar de Eliminatorias</div>
+        <div id="pv-gl" style="background:transparent; border:none; padding:0; box-shadow:none;"></div>
       </div>
       
       <div id="pv-quiniellas" class="pvp quiniellas-tab" style="display:none">
@@ -1382,7 +1480,7 @@ async function loadFromFirebase(){
 }
 
 function subscribeRT(){
-  unsubs.push(onSnapshot(doc(db,'quiniela','matches'),s=>{if(s.exists())STATE.matches=s.data().list;if(currentUser&&!isAdmin){renderPlayer();renderGroupStandings();}if(isAdmin)renderAdminMatches();}));
+  unsubs.push(onSnapshot(doc(db,'quiniela','matches'),s=>{if(s.exists())STATE.matches=s.data().list;if(currentUser&&!isAdmin){renderPlayer();renderKnockoutBracket();}if(isAdmin)renderAdminMatches();}));
   unsubs.push(onSnapshot(collection(db,'players'),s=>{s.forEach(d=>STATE.players[d.id]=d.data());populateSel();if(currentUser&&!isAdmin)renderPlayer();if(isAdmin){renderPlayersList();renderRanking('ad-rkl');}}));
   unsubs.push(onSnapshot(doc(db,'quiniela','special'),s=>{if(s.exists())STATE.realSpecial={...STATE.realSpecial,...s.data()};if(currentUser&&!isAdmin)renderSpecialPlayer();}));
 }
@@ -1430,7 +1528,7 @@ window.doLogin=function(){
   document.getElementById('app-footer').style.display='block';
   document.getElementById('header-user').style.display='flex';
   document.getElementById('header-user').textContent='👤 '+currentUser;
-  renderPlayer();renderGroupStandings();subscribeRT();startCountdown();
+  renderPlayer();renderKnockoutBracket();subscribeRT();startCountdown();
   showAnnounce();
 };
 window.logout=function(){
@@ -1449,7 +1547,7 @@ function showView(v){
 window.pvTab=function(btn,id){
   btn.closest('#player-view').querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));btn.classList.add('active');
   document.querySelectorAll('.pvp').forEach(p=>p.style.display='none');document.getElementById(id).style.display='block';
-  if(id==='pv-groups')renderGroupStandings();
+  if(id==='pv-groups')renderKnockoutBracket();
   if(id==='pv-quiniellas')renderQuiniellas();
 };
 window.adminTab=function(btn,id){
@@ -1545,12 +1643,26 @@ function renderPlayer(){
   document.getElementById('footer-rank').textContent='#'+rank;
   const nm=nextMatch();
   document.getElementById('footer-next').innerHTML=nm?`Próximo: ${flag(nm.home)} vs ${flag(nm.away)}`:'';
-  renderPlayerMatches();renderRanking('pv-rl');renderRanking('pv-rl-desktop');renderSpecialPlayer();
+  renderPlayerMatches();renderKnockoutBracket();renderRanking('pv-rl');renderRanking('pv-rl-desktop');renderSpecialPlayer();
 }
 
 function renderPlayerMatches(){
   const picks=STATE.players[currentUser]?.picks||{};
   let html='';
+
+  // ── Fase de Grupos: listado directo (unificado sin acordeones por día) ──
+  const groupMs=STATE.matches.filter(m=>m.phase==='Grupos');
+  if(groupMs.length){
+    groupMs.sort((a,b)=>{
+      const ta=MATCH_TIMES[a.id]?new Date(MATCH_TIMES[a.id]).getTime():0;
+      const tb=MATCH_TIMES[b.id]?new Date(MATCH_TIMES[b.id]).getTime():0;
+      return ta-tb||a.id.localeCompare(b.id);
+    });
+    html+=`<div class="section-title" style="margin-top:0">Fase de Grupos</div>`;
+    html+=`<div class="group-phase-container" style="display:flex;flex-direction:column;gap:0.75rem;margin-bottom:2rem">
+      ${groupMs.map(m=>matchRow(m,picks)).join('')}
+    </div>`;
+  }
 
   // ── Fases eliminatorias: listado directo (unificado sin acordeones por ronda) ──
   const koPhases=['Dieciseisavos','Octavos','Cuartos','Semis','Final'];
@@ -1721,16 +1833,81 @@ function calcGroupStandings(g){
   return Object.entries(stats).map(([name,s])=>({name,...s})).sort((a,b)=>b.pts-a.pts||b.gd-a.gd||b.gf-a.gf);
 }
 
-function renderGroupStandings(){
-  const c=document.getElementById('pv-gl');if(!c)return;
-  let html='<p class="muted" style="margin-bottom:.75rem">Verde = clasificado (provisional). Basado en tus picks + resultados confirmados.</p>';
-  Object.keys(GROUPS).forEach(g=>{
-    const s=calcGroupStandings(g);
-    html+=`<div class="section-title">Grupo ${g}</div><table class="gtable"><thead><tr><th>Equipo</th><th>J</th><th>Pts</th><th>GF</th><th>GC</th><th>DG</th></tr></thead><tbody>`;
-    s.forEach((t,i)=>{html+=`<tr class="${i<2?'qualify':''}"><td>${flag(t.name)} ${t.name}</td><td>${t.played}</td><td><strong>${t.pts}</strong></td><td>${t.gf}</td><td>${t.ga}</td><td>${t.gd>0?'+'+t.gd:t.gd}</td></tr>`;});
-    html+='</tbody></table><div style="height:.75rem"></div>';
+function renderKnockoutBracket() {
+  const container = document.getElementById('pv-gl');
+  if (!container) return;
+
+  const picks = STATE.players[currentUser]?.picks || {};
+
+  const col1 = ['D2', 'D5', 'D1', 'D3', 'D4', 'D6', 'D7', 'D8', 'D11', 'D12', 'D9', 'D10', 'D14', 'D16', 'D13', 'D15'];
+  const col2 = ['O1', 'O2', 'O3', 'O4', 'O5', 'O6', 'O7', 'O8'];
+  const col3 = ['Q1', 'Q2', 'Q3', 'Q4'];
+  const col4 = ['S1', 'S2'];
+  const col5 = ['F1'];
+
+  const columns = [
+    { title: '16avos', matches: col1 },
+    { title: 'Octavos', matches: col2 },
+    { title: 'Cuartos', matches: col3 },
+    { title: 'Semis', matches: col4 },
+    { title: 'Final', matches: col5 }
+  ];
+
+  let html = `<div class="bracket-scroll-container">
+    <div class="bracket-tree">`;
+
+  columns.forEach(col => {
+    html += `<div class="bracket-column">
+      <div class="bracket-column-header pirata-font">${col.title}</div>
+      <div class="bracket-column-matches">`;
+
+    col.matches.forEach(matchId => {
+      const m = STATE.matches.find(x => x.id === matchId);
+      if (!m) return;
+
+      const pick = picks[matchId] || { home: '', away: '', advances: '' };
+      const resolvedHome = resolveTeamNameForPlayer(m.home, picks, STATE.matches);
+      const resolvedAway = resolveTeamNameForPlayer(m.away, picks, STATE.matches);
+      
+      const homeFlag = flag(resolvedHome);
+      const awayFlag = flag(resolvedAway);
+
+      const isHomeAdv = pick.advances === 'home';
+      const isAwayAdv = pick.advances === 'away';
+
+      const hasPick = pick.home !== '' && pick.away !== '';
+      const scoreText = hasPick ? `${pick.home} - ${pick.away}` : 'vs';
+
+      const locked = !canPick(matchId);
+      const played = m.played;
+
+      // Class names
+      let cardClass = 'bracket-match-card';
+      if (played) cardClass += ' played';
+      else if (locked) cardClass += ' locked';
+
+      const koph = m.phase !== 'Grupos' && (resolvedHome.includes('Gan.') || resolvedHome.includes('º') || resolvedAway.includes('Gan.') || resolvedAway.includes('º'));
+      const onClickAttr = (!played && !locked && !koph) ? `onclick="openPickModal('${matchId}')"` : '';
+
+      html += `<div class="${cardClass}" ${onClickAttr}>
+        <div class="bracket-match-id">${matchId}</div>
+        <div class="bracket-team ${isHomeAdv ? 'advances' : ''}">
+          <span class="flag-span">${homeFlag}</span>
+          <span class="team-name" title="${resolvedHome}">${resolvedHome}</span>
+        </div>
+        <div class="bracket-score">${scoreText}</div>
+        <div class="bracket-team ${isAwayAdv ? 'advances' : ''}">
+          <span class="flag-span">${awayFlag}</span>
+          <span class="team-name" title="${resolvedAway}">${resolvedAway}</span>
+        </div>
+      </div>`;
+    });
+
+    html += `</div></div>`;
   });
-  c.innerHTML=html;
+
+  html += `</div></div>`;
+  container.innerHTML = html;
 }
 
 function renderSpecialPlayer(){
