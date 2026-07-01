@@ -1409,7 +1409,11 @@ function resolveTeamNameForPlayer(teamStr, playerPicks = {}, matches = []) {
   return `Gan. ${parentMatchId}`;
 }
 
-function canPick(id){const t=MATCH_TIMES[id];if(!t)return true;return Date.now()<new Date(t).getTime()-60*60*1000;}
+function canPick(id){
+  const t=MATCH_TIMES[id];if(!t)return true;
+  if(id==='D10'&&currentUser==='Maca'){return Date.now()<new Date(t).getTime()-5*60*1000;}
+  return Date.now()<new Date(t).getTime()-60*60*1000;
+}
 function isKOPH(m){return m.phase!=='Grupos'&&(m.home.includes('º')||m.home.includes('Gan.')||m.away.includes('º')||m.away.includes('Gan.'));}
 const SPECIALS_DEADLINE=new Date('2026-06-11T18:00:00Z');
 // Excepciones: estas personas pueden rellenar/editar especiales sin límite de tiempo
@@ -1808,7 +1812,7 @@ window.savePick=async function(){
   const h=document.getElementById('pm-h').value,a=document.getElementById('pm-a').value;
   if(h===''||a===''){alert('Rellena ambos marcadores');return;}
   const m=STATE.matches.find(x=>x.id===editingMatchId);
-  if(m&&m.phase==='Grupos'&&!canPick(editingMatchId)){alert('Este partido ya está cerrado.');closePick();return;}
+  if(m&&!canPick(editingMatchId)){alert('Este partido ya está cerrado.');closePick();return;}
   const pickData={home:h,away:a};
   // KO: require advances selection
   if(m&&m.phase!=='Grupos'){
