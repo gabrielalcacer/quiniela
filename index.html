@@ -1504,9 +1504,37 @@ window.checkAdvancesVisibility = function() {
 
 window.showFinalAnnounce=function(){
   if(localStorage.getItem('hideAnnounceFinalKO') === 'true') return;
-  const ranking = getRanking().slice(0, 5);
+  const ranking = getRanking();
+  if(!ranking.length) return;
+  const topTotal = ranking[0].total;
+
+  const chances = ranking.filter(r => {
+    let maxPotential = r.total;
+    const pName = r.name;
+    const picks = STATE.players[pName]?.picks || {};
+    const sp = STATE.players[pName]?.special || {};
+    const rs = STATE.realSpecial || {};
+    
+    STATE.matches.forEach(m => {
+      if(!m.played) {
+        const canStillPick = canPick(m.id);
+        const hasPick = picks[m.id] && picks[m.id].home !== '';
+        if(canStillPick || hasPick) {
+           maxPotential += (m.id === 'F1' ? 40 : 25);
+        }
+      }
+    });
+
+    if(!rs.champion && (sp.champion || specialsOpen())) maxPotential += 20;
+    if(!rs.scorer && (sp.scorer || specialsOpen())) maxPotential += 10;
+    if(!rs.keeper && (sp.keeper || specialsOpen())) maxPotential += 10;
+    if(!rs.mvp && (sp.mvp || specialsOpen())) maxPotential += 10;
+
+    return maxPotential >= topTotal;
+  });
+
   let html = '';
-  ranking.forEach((r, i) => {
+  chances.forEach((r, i) => {
     html += `<div style="display:flex;justify-content:space-between;padding:10px;background:var(--parchment-dark);border:1px solid var(--border);border-radius:4px;">
       <span style="font-weight:bold;color:var(--wood);font-size:14px;">#${i+1} ${r.name}</span>
       <span style="font-weight:bold;color:var(--red-pirate);font-size:14px;">${r.total} pts</span>
@@ -1563,9 +1591,18 @@ window.selectAdvances=function(side){
 };
 
 
+function mergeMatches(fbMatches) {
+  const base = makeMatches();
+  base.forEach(bm => {
+    const existing = fbMatches.find(x => x.id === bm.id);
+    if(existing) Object.assign(bm, existing);
+  });
+  return base;
+}
+
 async function loadFromFirebase(){
   try{
-    const ms=await getDoc(doc(db,'quiniela','matches'));if(ms.exists())STATE.matches=ms.data().list;
+    const ms=await getDoc(doc(db,'quiniela','matches'));if(ms.exists())STATE.matches=mergeMatches(ms.data().list);
     const sp=await getDoc(doc(db,'quiniela','special'));if(sp.exists())STATE.realSpecial={...STATE.realSpecial,...sp.data()};
     const ps=await getDocs(collection(db,'players'));STATE.players={};ps.forEach(d=>STATE.players[d.id]=d.data());
     document.getElementById('lmsg').style.display='none';populateSel();
@@ -1573,7 +1610,7 @@ async function loadFromFirebase(){
 }
 
 function subscribeRT(){
-  unsubs.push(onSnapshot(doc(db,'quiniela','matches'),s=>{if(s.exists())STATE.matches=s.data().list;if(currentUser&&!isAdmin){renderPlayer();renderKnockoutBracket();}if(isAdmin)renderAdminMatches();}));
+  unsubs.push(onSnapshot(doc(db,'quiniela','matches'),s=>{if(s.exists())STATE.matches=mergeMatches(s.data().list);if(currentUser&&!isAdmin){renderPlayer();renderKnockoutBracket();}if(isAdmin)renderAdminMatches();}));
   unsubs.push(onSnapshot(collection(db,'players'),s=>{s.forEach(d=>STATE.players[d.id]=d.data());populateSel();if(currentUser&&!isAdmin)renderPlayer();if(isAdmin){renderPlayersList();renderRanking('ad-rkl');}}));
   unsubs.push(onSnapshot(doc(db,'quiniela','special'),s=>{if(s.exists())STATE.realSpecial={...STATE.realSpecial,...s.data()};if(currentUser&&!isAdmin)renderSpecialPlayer();}));
 }
@@ -1772,9 +1809,42 @@ function renderPlayerMatches(){
     </div>`;
   }
 
-  // ── Fases eliminatorias: acordeón por ronda ──
-  const koPhases=['Dieciseisavos','Octavos','Cuartos','Semis','Tercer Puesto','Final'];
-  koPhases.forEach(phase=>{
+  // ── Fases eliminatorias previas: 16avos a Semis ──
+  const prevKoPhases = ['Dieciseisavos','Octavos','Cuartos','Semis'];
+  const prevKoMs = STATE.matches.filter(m => prevKoPhases.includes(m.phase));
+  if(prevKoMs.length) {
+    prevKoMs.sort((a,b)=>{
+      const ta=MATCH_TIMES[a.id]?new Date(MATCH_TIMES[a.id]).getTime():0;
+      const tb=MATCH_TIMES[b.id]?new Date(MATCH_TIMES[b.id]).getTime():0;
+      return ta-tb||a.id.localeCompare(b.id);
+    });
+    
+    const allDefined=prevKoMs.every(m=>!isKOPH(m));
+    const allPlayed=prevKoMs.every(m=>m.played);
+    const dotColor=!allDefined?'var(--text3)':allPlayed?'var(--s-t)':'var(--w-t)';
+    const statusText=!allDefined?'Por definir':allPlayed?'Finalizado':'En juego';
+
+    html+=`<div class="accord">
+      <div class="accord-header open" onclick="toggleAccord('phase_eliminatorias',this)">
+        <div class="accord-dot" style="background:${dotColor}"></div>
+        <div class="accord-title">Eliminatorias (Hasta Semis)</div>
+        <div class="accord-meta">
+          <span>${prevKoMs.length} partidos</span>
+          <span class="badge ${!allDefined?'bi':allPlayed?'bs':'bw'}" style="font-size:10px">${statusText}</span>
+        </div>
+        <i class="ti ti-chevron-down accord-chevron"></i>
+      </div>
+      <div class="accord-body open" id="phase_eliminatorias">
+        <div style="display:flex;flex-direction:column;gap:0.75rem">
+          ${prevKoMs.map(m=>matchRow(m,picks)).join('')}
+        </div>
+      </div>
+    </div>`;
+  }
+
+  // ── Tercer Puesto y Final ──
+  const finalPhases=['Tercer Puesto','Final'];
+  finalPhases.forEach(phase=>{
     const ms=STATE.matches.filter(m=>m.phase===phase);if(!ms.length)return;
     ms.sort((a,b)=>{
       const ta=MATCH_TIMES[a.id]?new Date(MATCH_TIMES[a.id]).getTime():0;
@@ -1782,12 +1852,12 @@ function renderPlayerMatches(){
       return ta-tb||a.id.localeCompare(b.id);
     });
     
-    const phaseId='phase_'+phase;
+    const phaseId='phase_'+phase.replace(' ', '_');
     const allDefined=ms.every(m=>!isKOPH(m));
     const allPlayed=ms.every(m=>m.played);
     const dotColor=!allDefined?'var(--text3)':allPlayed?'var(--s-t)':'var(--w-t)';
     const statusText=!allDefined?'Por definir':allPlayed?'Finalizado':'En juego';
-    const openClass=phase==='Dieciseisavos'?'open':'';
+    const openClass='open';
 
     html+=`<div class="accord">
       <div class="accord-header ${openClass}" onclick="toggleAccord('${phaseId}',this)">
