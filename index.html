@@ -425,7 +425,7 @@ td { padding: 9px 10px; border-bottom: 1px solid var(--border); font-weight: 600
 <div id="app-header" style="display:none">
   <div class="header-inner">
     <div class="header-logo">
-      <span class="header-logo-ball">🏴‍☠️</span>
+      <span class="header-logo-ball">🏴☠️</span>
       <div class="header-logo-text">
         <strong class="pirata-font">Grand Line 2026</strong>
         <small>EE.UU · México · Canadá</small>
@@ -570,7 +570,7 @@ td { padding: 9px 10px; border-bottom: 1px solid var(--border); font-weight: 600
 <div id="admin-view" class="view">
   <div class="inner" style="max-width: 800px;">
     <div style="display:flex;align-items:center;gap:10px;margin-bottom:1.25rem; background:var(--parchment); padding:15px; border:2px solid var(--wood); border-radius:8px;">
-      <div style="font-size:30px">🏴‍☠️</div>
+      <div style="font-size:30px">🏴☠️</div>
       <div><div style="font-weight:700;font-size:18px; color:var(--red-pirate)" class="pirata-font">Camarote del Capitán (Admin)</div><div class="muted">Control absoluto del torneo</div></div>
       <div style="margin-left:auto"><button class="btn-sm" onclick="logout()">Abandonar</button></div>
     </div>
@@ -705,16 +705,17 @@ td { padding: 9px 10px; border-bottom: 1px solid var(--border); font-weight: 600
     <p id="mo-time" class="muted" style="text-align:center; margin-bottom:15px; font-weight:bold;"></p>
     <div style="display:flex;align-items:center;gap:10px;margin-bottom:1.5rem">
       <div style="flex:1;text-align:right;font-size:14px;font-weight:700" id="mo-h">-</div>
-      <input type="number" min="0" max="20" id="pm-h" style="width:60px;text-align:center;height:50px;font-size:24px;font-weight:700">
+      <input type="number" min="0" max="20" id="pm-h" style="width:60px;text-align:center;height:50px;font-size:24px;font-weight:700" oninput="checkAdvancesVisibility()">
       <span style="color:var(--text3);font-size:24px">-</span>
-      <input type="number" min="0" max="20" id="pm-a" style="width:60px;text-align:center;height:50px;font-size:24px;font-weight:700">
+      <input type="number" min="0" max="20" id="pm-a" style="width:60px;text-align:center;height:50px;font-size:24px;font-weight:700" oninput="checkAdvancesVisibility()">
       <div style="flex:1;font-size:14px;font-weight:700" id="mo-a">-</div>
     </div>
     
     
     <!-- KO: Quien pasa? -->
     <div id="mo-ko-section" style="display:none;margin-bottom:1.25rem;text-align:center;background:var(--parchment-dark);border:2px dashed var(--border);border-radius:4px;padding:1rem;margin-top:1rem;">
-      <strong style="display:block;margin-bottom:.75rem;color:var(--wood);font-family:'Nunito',sans-serif;font-size:14px;font-weight:700">¿Quién pasa la eliminatoria?</strong>
+      <strong id="ko-adv-title" style="display:block;margin-bottom:.75rem;color:var(--wood);font-family:'Nunito',sans-serif;font-size:14px;font-weight:700">¿Quién pasa la eliminatoria?</strong>
+      <p id="ko-adv-msg" style="display:none;font-size:12px;color:var(--s-t);font-weight:bold;margin-top:0;margin-bottom:10px;"></p>
       <div class="ko-advances" style="display:flex;gap:8px;justify-content:center">
         <button class="ko-adv-btn" id="ko-adv-home" onclick="selectAdvances('home')" style="flex:1;padding:12px;font-size:13px;font-weight:bold;border:2px solid var(--border);background:var(--parchment-dark);color:var(--wood);cursor:pointer;font-family:'Nunito',sans-serif;">
           <span id="ko-adv-home-label">Local</span>
@@ -746,6 +747,7 @@ td { padding: 9px 10px; border-bottom: 1px solid var(--border); font-weight: 600
     
     <div class="section-title" style="font-size:14px; margin-top:15px;">Fase Eliminatoria (KO)</div>
     <div class="rules-row"><div class="desc"><strong>Marcador exacto (90 min)</strong></div><div class="pts bs">฿ 15</div></div>
+    <div class="rules-row"><div class="desc"><strong>Pleno Final (Marcador exacto F1)</strong></div><div class="pts bs" style="background:var(--red-pirate);color:var(--gold)">฿ 30</div></div>
     <div class="rules-row"><div class="desc"><strong>Acierto tipo resultado (90 min)</strong></div><div class="pts bw">฿ 5</div></div>
     <div class="rules-row"><div class="desc"><strong>Acertar quién clasifica</strong></div><div class="pts bi" style="background:var(--i-bg); color:var(--i-t)">฿ 10</div></div>
     
@@ -839,6 +841,26 @@ td { padding: 9px 10px; border-bottom: 1px solid var(--border); font-weight: 600
   </div>
 </div>
 
+<!-- ANNOUNCEMENT POPUP (FINAL) -->
+<div class="announce-overlay" id="announce-final-popup" onclick="if(event.target===this)closeFinalAnnounce()">
+  <div class="announce-box" style="border-color: var(--gold);">
+    <div class="announce-header" style="background:linear-gradient(135deg,var(--red-pirate),#5a0000);">
+      <h2 class="pirata-font">🔥 ¡EL GRAN FINAL! 🔥</h2>
+      <p style="color:var(--gold);">Solo quedan dos partidos que lo cambiarán todo</p>
+    </div>
+    <div class="announce-body">
+      <p style="font-size:14px;color:var(--text);margin-bottom:1rem;line-height:1.6;text-align:center;">
+        Para hacer esto más interesante, quien acierte el resultado exacto de la final se llevará <strong style="color:var(--red-pirate);font-size:18px;">30 puntos</strong>. ¡Aún hay esperanza!
+      </p>
+      <div style="font-size:12px;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;text-align:center;">Top Piratas con opciones</div>
+      <div id="final-top-players" style="display:flex;flex-direction:column;gap:8px;margin-bottom:1.5rem;"></div>
+      <button class="primary" style="width:100%;height:44px;font-size:15px;font-weight:700" onclick="closeFinalAnnounce()">
+        ¡A por el One Piece! 🏴‍☠️
+      </button>
+    </div>
+  </div>
+</div>
+
 <script type="module">
 
 import{initializeApp}from'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
@@ -902,7 +924,7 @@ function flag(t){return FLAGS[t]||'🏳️';}
 const EMOJI_FLAGS = {
   'México': '🇲🇽', 'Sudáfrica': '🇿🇦', 'Corea del Sur': '🇰🇷', 'Rep. Checa': '🇨🇿',
   'Canadá': '🇨🇦', 'Bosnia-Herz.': '🇧🇦', 'Qatar': '🇶🇦', 'Suiza': '🇨🇭',
-  'Brasil': '🇧🇷', 'Marruecos': '🇲🇦', 'Haití': '🇭🇹', 'Escocia': '🏴󠁧󠁢󠁳󠁣󠁴󠁿',
+  'Brasil': '🇧🇷', 'Marruecos': '🇲🇦', 'Haití': '🇭🇹', 'Escocia': '🏴',
   'EE.UU.': '🇺🇸', 'EE.UU': '🇺🇸', 'Paraguay': '🇵🇾', 'Australia': '🇦🇺',
   'Turquía': '🇹🇷', 'Alemania': '🇩🇪', 'Curazao': '🇨🇼', 'Costa de Marfil': '🇨🇮',
   'Ecuador': '🇪🇨', 'Países Bajos': '🇳🇱', 'Japón': '🇯🇵', 'Túnez': '🇹🇳',
@@ -911,7 +933,7 @@ const EMOJI_FLAGS = {
   'Uruguay': '🇺🇾', 'Francia': '🇫🇷', 'Senegal': '🇸🇳', 'Noruega': '🇳🇴',
   'Irak': '🇮🇶', 'Argentina': '🇦🇷', 'Argelia': '🇩🇿', 'Austria': '🇦🇹',
   'Jordania': '🇯🇴', 'Portugal': '🇵🇹', 'Colombia': '🇨🇴', 'Uzbekistán': '🇺🇿',
-  'R.D. Congo': '🇨🇩', 'Inglaterra': '🏴󠁧󠁢󠁥󠁮󠁧󠁿', 'Croacia': '🇭🇷', 'Ghana': '🇬🇭',
+  'R.D. Congo': '🇨🇩', 'Inglaterra': '🏴', 'Croacia': '🇭🇷', 'Ghana': '🇬🇭',
   'Panamá': '🇵🇦'
 };
 function flagEmoji(t){return EMOJI_FLAGS[t]||EMOJI_FLAGS[t?.replace(/\.$/,'')]||'🏳️';}
@@ -1341,6 +1363,8 @@ const MATCH_TIMES={
   // SEMIFINALES
   'S1': '2026-07-14T19:00:00Z', // ES 21:00 14jul · US 15:00 14jul
   'S2': '2026-07-15T19:00:00Z', // ES 21:00 15jul · US 15:00 15jul
+  // TERCER PUESTO
+  'T1': '2026-07-18T20:00:00Z', // ES 22:00 18jul · US 16:00 18jul
   // FINAL
   'F1': '2026-07-19T19:00:00Z', // ES 21:00 19jul · US 15:00 19jul
 };
@@ -1386,27 +1410,37 @@ function makeMatches(){
     {id:'S1',phase:'Semis',home:'Gan. Q1',away:'Gan. Q2'},
     {id:'S2',phase:'Semis',home:'Gan. Q3',away:'Gan. Q4'},
 
+    {id:'T1',phase:'Tercer Puesto',home:'Perd. S1',away:'Perd. S2'},
     {id:'F1',phase:'Final',home:'Gan. S1',away:'Gan. S2'},
   ]);
 }
 
 function resolveTeamNameForPlayer(teamStr, playerPicks = {}, matches = []) {
   if (!teamStr) return '';
-  if (!teamStr.startsWith('Gan. ')) {
-    return teamStr;
+  if (teamStr.startsWith('Gan. ')) {
+    const parentMatchId = teamStr.substring(5).trim();
+    const parentMatch = matches.find(m => m.id === parentMatchId);
+    if (!parentMatch) return teamStr;
+    const parentHomeResolved = resolveTeamNameForPlayer(parentMatch.home, playerPicks, matches);
+    const parentAwayResolved = resolveTeamNameForPlayer(parentMatch.away, playerPicks, matches);
+    const pick = playerPicks[parentMatchId];
+    if (pick && pick.advances) {
+      return pick.advances === 'home' ? parentHomeResolved : parentAwayResolved;
+    }
+    return `Gan. ${parentMatchId}`;
+  } else if (teamStr.startsWith('Perd. ')) {
+    const parentMatchId = teamStr.substring(6).trim();
+    const parentMatch = matches.find(m => m.id === parentMatchId);
+    if (!parentMatch) return teamStr;
+    const parentHomeResolved = resolveTeamNameForPlayer(parentMatch.home, playerPicks, matches);
+    const parentAwayResolved = resolveTeamNameForPlayer(parentMatch.away, playerPicks, matches);
+    const pick = playerPicks[parentMatchId];
+    if (pick && pick.advances) {
+      return pick.advances === 'home' ? parentAwayResolved : parentHomeResolved;
+    }
+    return `Perd. ${parentMatchId}`;
   }
-  const parentMatchId = teamStr.substring(5).trim();
-  const parentMatch = matches.find(m => m.id === parentMatchId);
-  if (!parentMatch) return teamStr;
-  
-  const parentHomeResolved = resolveTeamNameForPlayer(parentMatch.home, playerPicks, matches);
-  const parentAwayResolved = resolveTeamNameForPlayer(parentMatch.away, playerPicks, matches);
-  
-  const pick = playerPicks[parentMatchId];
-  if (pick && pick.advances) {
-    return pick.advances === 'home' ? parentHomeResolved : parentAwayResolved;
-  }
-  return `Gan. ${parentMatchId}`;
+  return teamStr;
 }
 
 function canPick(id){
@@ -1414,7 +1448,7 @@ function canPick(id){
   if(id==='D10'&&currentUser==='Maca'){return Date.now()<new Date(t).getTime()-5*60*1000;}
   return Date.now()<new Date(t).getTime()-60*60*1000;
 }
-function isKOPH(m){return m.phase!=='Grupos'&&(m.home.includes('º')||m.home.includes('Gan.')||m.away.includes('º')||m.away.includes('Gan.'));}
+function isKOPH(m){return m.phase!=='Grupos'&&(m.home.includes('º')||m.home.includes('Gan.')||m.home.includes('Perd.')||m.away.includes('º')||m.away.includes('Gan.')||m.away.includes('Perd.'));}
 const SPECIALS_DEADLINE=new Date('2026-06-11T18:00:00Z');
 // Excepciones: estas personas pueden rellenar/editar especiales sin límite de tiempo
 const SPECIALS_EXCEPTIONS=['Jose Luis','Marco','Ale','Raul'];
@@ -1436,6 +1470,61 @@ let currentUser=null,isAdmin=false,editingMatchId=null,unsubs=[],cdInterval=null
 function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.style.display='block';setTimeout(()=>t.style.display='none',2200);}
 let announceShown=false;
 window.openRules=function(){document.getElementById('rules-modal').classList.add('open');}
+
+window.checkAdvancesVisibility = function() {
+  const hVal = document.getElementById('pm-h').value;
+  const aVal = document.getElementById('pm-a').value;
+  const koSec = document.getElementById('mo-ko-section');
+  if(!koSec || koSec.style.display === 'none') return;
+  
+  if(hVal !== '' && aVal !== '') {
+    const h = parseInt(hVal);
+    const a = parseInt(aVal);
+    if(h > a) {
+      document.getElementById('ko-advances-val').value = 'home';
+      koSec.querySelector('.ko-advances').style.display = 'none';
+      document.getElementById('ko-adv-msg').textContent = 'Se asigna automáticamente al ganador en los 90 min.';
+      document.getElementById('ko-adv-msg').style.display = 'block';
+    } else if (a > h) {
+      document.getElementById('ko-advances-val').value = 'away';
+      koSec.querySelector('.ko-advances').style.display = 'none';
+      document.getElementById('ko-adv-msg').textContent = 'Se asigna automáticamente al ganador en los 90 min.';
+      document.getElementById('ko-adv-msg').style.display = 'block';
+    } else {
+      koSec.querySelector('.ko-advances').style.display = 'flex';
+      document.getElementById('ko-adv-msg').style.display = 'none';
+      const curr = document.getElementById('ko-advances-val').value;
+      selectAdvances(curr === 'home' || curr === 'away' ? curr : ''); 
+    }
+  } else {
+    koSec.querySelector('.ko-advances').style.display = 'flex';
+    document.getElementById('ko-adv-msg').style.display = 'none';
+  }
+};
+
+window.showFinalAnnounce=function(){
+  if(localStorage.getItem('hideAnnounceFinalKO') === 'true') return;
+  const ranking = getRanking().slice(0, 5);
+  let html = '';
+  ranking.forEach((r, i) => {
+    html += `<div style="display:flex;justify-content:space-between;padding:10px;background:var(--parchment-dark);border:1px solid var(--border);border-radius:4px;">
+      <span style="font-weight:bold;color:var(--wood);font-size:14px;">#${i+1} ${r.name}</span>
+      <span style="font-weight:bold;color:var(--red-pirate);font-size:14px;">${r.total} pts</span>
+    </div>`;
+  });
+  document.getElementById('final-top-players').innerHTML = html;
+  
+  setTimeout(()=>{
+    const el=document.getElementById('announce-final-popup');
+    if(el)el.classList.add('open');
+  }, 600);
+};
+
+window.closeFinalAnnounce=function(){
+  localStorage.setItem('hideAnnounceFinalKO', 'true');
+  document.getElementById('announce-final-popup').classList.remove('open');
+};
+
 window.closeAnnounce=function(){
   const dontShow = document.getElementById('dont-show-announce')?.checked;
   if(dontShow) {
@@ -1533,7 +1622,7 @@ window.doLogin=function(){
   document.getElementById('header-user').style.display='flex';
   document.getElementById('header-user').textContent='👤 '+currentUser;
   renderPlayer();renderKnockoutBracket();subscribeRT();startCountdown();
-  showAnnounce();
+  showFinalAnnounce();
 };
 window.logout=function(){
   unsubs.forEach(u=>u());unsubs=[];currentUser=null;isAdmin=false;
@@ -1570,8 +1659,9 @@ function calcPts(player){
     const rW=rH>rA?'h':rH<rA?'a':'d',pW=pH>pA?'h':pH<pA?'a':'d';
     const isKO=m.phase!=='Grupos';
     if(isKO){
+      const exactPts = m.id === 'F1' ? 30 : 15;
       // KO scoring: 15 exact, 5 right type, 10 who advances
-      if(pick.home==m.homeGoals&&pick.away==m.awayGoals){total+=15;koExact++;koWinners++;}
+      if(pick.home==m.homeGoals&&pick.away==m.awayGoals){total+=exactPts;koExact++;koWinners++;}
       else if(rW===pW){total+=5;koWinners++;}
       // Who advances bonus
       if(m.advances&&pick.advances&&pick.advances===m.advances){total+=10;}
@@ -1683,7 +1773,7 @@ function renderPlayerMatches(){
   }
 
   // ── Fases eliminatorias: acordeón por ronda ──
-  const koPhases=['Dieciseisavos','Octavos','Cuartos','Semis','Final'];
+  const koPhases=['Dieciseisavos','Octavos','Cuartos','Semis','Tercer Puesto','Final'];
   koPhases.forEach(phase=>{
     const ms=STATE.matches.filter(m=>m.phase===phase);if(!ms.length)return;
     ms.sort((a,b)=>{
@@ -1743,7 +1833,8 @@ function matchRow(m,picks){
     const isKOMatch=m.phase!=='Grupos';
     let pts=0,cls='bd';
     if(isKOMatch){
-      if(pick.home==m.homeGoals&&pick.away==m.awayGoals){pts+=15;cls='bs';scoreClass='won';}
+      const exactPts = m.id === 'F1' ? 30 : 15;
+      if(pick.home==m.homeGoals&&pick.away==m.awayGoals){pts+=exactPts;cls='bs';scoreClass='won';}
       else if(rW===pW){pts+=5;cls='bw';scoreClass='won';}
       else{scoreClass='lost';}
       if(m.advances&&pick.advances&&pick.advances===m.advances){pts+=10;if(!cls||cls==='bd')cls='bw';if(scoreClass==='lost')scoreClass='won';}
@@ -1795,7 +1886,8 @@ window.openPickModal=function(id){
   editingMatchId=id;
   const pick=STATE.players[currentUser]?.picks?.[id]||{home:'',away:'',advances:''};
   const tl=timeLabel(id);
-  document.getElementById('mo-t').innerHTML=`${flag(m.home)} ${m.home} vs ${m.away} ${flag(m.away)}`;
+  const titleHtml = m.id === 'F1' ? `<span style="font-family:'Pirata One',serif; color:var(--gold); font-size:26px;">👑 GRAN FINAL 👑</span><br>` : '';
+  document.getElementById('mo-t').innerHTML=`${titleHtml}${flag(m.home)} ${m.home} vs ${m.away} ${flag(m.away)}`;
   document.getElementById('mo-h').innerHTML=`${flag(m.home)} ${m.home}`;
   document.getElementById('mo-a').innerHTML=`${flag(m.away)} ${m.away}`;
   document.getElementById('mo-time').innerHTML=tl?`🇪🇸 ${tl.es}<br>🇺🇸 ${tl.us}`:'';
@@ -1805,6 +1897,13 @@ window.openPickModal=function(id){
   const koSec=document.getElementById('mo-ko-section');
   if(m.phase!=='Grupos'){
     koSec.style.display='block';
+    if(m.id==='F1'){
+      document.getElementById('ko-adv-title').textContent='¿Quién gana el Mundial?';
+    } else if(m.id==='T1') {
+      document.getElementById('ko-adv-title').textContent='¿Quién queda tercero?';
+    } else {
+      document.getElementById('ko-adv-title').textContent='¿Quién pasa la eliminatoria?';
+    }
     document.getElementById('ko-adv-home-label').innerHTML=`${flag(m.home)} ${m.home}`;
     document.getElementById('ko-adv-away-label').innerHTML=`${flag(m.away)} ${m.away}`;
     document.getElementById('ko-advances-val').value=pick.advances||'';
@@ -2165,7 +2264,7 @@ function renderAdminMatches(){
   });
   // ── KO phases: acordeón por ronda ──
   html+=`<div class="section-title" style="margin-top:1rem">Fases Eliminatorias</div>`;
-  ['Dieciseisavos','Octavos','Cuartos','Semis','Final'].forEach(phase=>{
+  ['Dieciseisavos','Octavos','Cuartos','Semis','Tercer Puesto','Final'].forEach(phase=>{
     const ms=STATE.matches.filter(m=>m.phase===phase);if(!ms.length)return;
     ms.sort((a,b)=>{
       const ta=MATCH_TIMES[a.id]?new Date(MATCH_TIMES[a.id]).getTime():0;
@@ -2296,7 +2395,7 @@ window.openPlayerModal=function(playerName){
   
   const picks=player.picks||{};
   const sp=player.special||{};
-  const phases=['Grupos','Dieciseisavos','Octavos','Cuartos','Semis','Final'];
+  const phases=['Grupos','Dieciseisavos','Octavos','Cuartos','Semis','Tercer Puesto','Final'];
   let html='';
 
   phases.forEach(phase=>{
@@ -2464,6 +2563,7 @@ const KO_FORMULAS = {
   S1: { home: { from: 'Q1' }, away: { from: 'Q2' } },
   S2: { home: { from: 'Q3' }, away: { from: 'Q4' } },
 
+  T1: { home: { from: 'S1', loser: true }, away: { from: 'S2', loser: true } },
   F1: { home: { from: 'S1' }, away: { from: 'S2' } }
 };
 
@@ -2499,6 +2599,7 @@ function getDefaultPlaceholders(matchId) {
     Q4: { home: 'Gan. O7', away: 'Gan. O8' },
     S1: { home: 'Gan. Q1', away: 'Gan. Q2' },
     S2: { home: 'Gan. Q3', away: 'Gan. Q4' },
+    T1: { home: 'Perd. S1', away: 'Perd. S2' },
     F1: { home: 'Gan. S1', away: 'Gan. S2' }
   };
   return defaults[matchId];
@@ -2517,10 +2618,13 @@ window.gkoTab = function(phase) {
   }
 };
 
-function getWinnerOfMatch(matchId) {
+function getTeamFromMatch(matchId, isLoser = false) {
   const m = STATE.matches.find(x => x.id === matchId);
-  if (!m) return `Gan. ${matchId}`;
-  if (!m.played || !m.advances) return `Gan. ${matchId}`;
+  if (!m) return (isLoser ? `Perd. ` : `Gan. `) + matchId;
+  if (!m.played || !m.advances) return (isLoser ? `Perd. ` : `Gan. `) + matchId;
+  if(isLoser) {
+    return m.advances === 'home' ? m.away : m.home;
+  }
   return m.advances === 'home' ? m.home : m.away;
 }
 
@@ -2544,7 +2648,7 @@ function renderGKOLaterPhase(phase) {
     octavos: ['O1', 'O2', 'O3', 'O4', 'O5', 'O6', 'O7', 'O8'],
     cuartos: ['Q1', 'Q2', 'Q3', 'Q4'],
     semis: ['S1', 'S2'],
-    final: ['F1']
+    final: ['T1', 'F1']
   };
 
   const listId = 'gko-list-' + phase;
@@ -2556,10 +2660,10 @@ function renderGKOLaterPhase(phase) {
 
   matchIds.forEach(id => {
     const formula = KO_FORMULAS[id];
-    const homeTeam = getWinnerOfMatch(formula.home.from);
-    const awayTeam = getWinnerOfMatch(formula.away.from);
+    const homeTeam = getTeamFromMatch(formula.home.from, formula.home.loser);
+    const awayTeam = getTeamFromMatch(formula.away.from, formula.away.loser);
 
-    const canPub = !homeTeam.startsWith('Gan.') && !awayTeam.startsWith('Gan.');
+    const canPub = !homeTeam.startsWith('Gan.') && !homeTeam.startsWith('Perd.') && !awayTeam.startsWith('Gan.') && !awayTeam.startsWith('Perd.');
     const activeMatch = STATE.matches.find(m => m.id === id);
     const isAlreadyPublished = activeMatch && activeMatch.home === homeTeam && activeMatch.away === awayTeam;
 
@@ -2603,12 +2707,12 @@ window.publishSingleKOMatch = async function(matchId) {
   } else {
     const formula = KO_FORMULAS[matchId];
     if (formula) {
-      home = getWinnerOfMatch(formula.home.from);
-      away = getWinnerOfMatch(formula.away.from);
+      home = getTeamFromMatch(formula.home.from, formula.home.loser);
+      away = getTeamFromMatch(formula.away.from, formula.away.loser);
     }
   }
 
-  if (!home || !away || home.startsWith('Gan.') || away.startsWith('Gan.')) {
+  if (!home || !away || home.startsWith('Gan.') || away.startsWith('Gan.') || home.startsWith('Perd.') || away.startsWith('Perd.')) {
     alert('No se pueden publicar equipos placeholders o vacíos.');
     return;
   }
