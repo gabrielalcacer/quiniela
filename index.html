@@ -861,6 +861,31 @@ td { padding: 9px 10px; border-bottom: 1px solid var(--border); font-weight: 600
   </div>
 </div>
 
+<!-- TOURNAMENT WINNER POPUP -->
+<div class="announce-overlay" id="tournament-winner-popup" onclick="if(event.target===this)closeWinnerAnnounce()">
+  <div class="announce-box" style="border-color: var(--gold); border-width: 4px; box-shadow: 0 0 25px rgba(212, 175, 55, 0.5);">
+    <div class="announce-header" style="background:linear-gradient(135deg,var(--gold),#a67c00); color: var(--wood);">
+      <h2 class="pirata-font" style="color:var(--wood);">🏆 ¡EL REY DE LOS PIRATAS! 🏆</h2>
+      <p style="color:var(--wood); font-weight:bold;">El torneo ha concluido y tenemos a los ganadores</p>
+    </div>
+    <div class="announce-body" style="text-align:center;">
+      <h3 style="color:var(--red-pirate); font-size:24px; margin-bottom:10px; font-family:'Pirata One', serif;" id="twp-winner-name"></h3>
+      <p style="font-size:14px;color:var(--text);margin-bottom:1rem;line-height:1.6;">
+        ¡Felicidades! Has navegado mejor que nadie y te llevas la gloria del <strong>Grand Line 2026</strong>.
+      </p>
+      
+      <div style="background:var(--parchment-dark); border:1px solid var(--border); border-radius:4px; padding:10px; margin-bottom:1.5rem; text-align:left;">
+        <div style="font-size:12px;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;text-align:center;">El Podio Final</div>
+        <div id="twp-podium"></div>
+      </div>
+      
+      <button class="primary" style="width:100%;height:44px;font-size:15px;font-weight:700" onclick="closeWinnerAnnounce()">
+        ¡Celebrar! 🍻
+      </button>
+    </div>
+  </div>
+</div>
+
 <script type="module">
 
 import{initializeApp}from'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
@@ -1560,6 +1585,58 @@ window.closeAnnounce=function(){
   }
   document.getElementById('announce-popup').classList.remove('open');
   announceShown=true;
+};
+
+window.checkTournamentOver = function() {
+  if (localStorage.getItem('hideWinnerAnnounce') === 'true') return;
+  
+  const allMatchesPlayed = STATE.matches.length > 0 && STATE.matches.every(m => m.played);
+  const f1 = STATE.matches.find(m => m.id === 'F1');
+  const t1 = STATE.matches.find(m => m.id === 'T1');
+  if (allMatchesPlayed && f1 && f1.played && t1 && t1.played) {
+    const ranking = getRanking();
+    if (!ranking.length) return;
+    
+    const winner = ranking[0];
+    const second = ranking[1];
+    const third = ranking[2];
+    
+    document.getElementById('twp-winner-name').textContent = `👑 ${winner.name} 👑`;
+    
+    let podHtml = `
+      <div style="display:flex; justify-content:space-between; margin-bottom:6px; font-size:15px;">
+        <span style="color:var(--wood); font-weight:bold;">🥇 1º ${winner.name}</span>
+        <span style="color:var(--red-pirate); font-weight:bold;">${winner.total} pts</span>
+      </div>
+    `;
+    if (second) {
+      podHtml += `
+        <div style="display:flex; justify-content:space-between; margin-bottom:6px; font-size:14px;">
+          <span style="color:#666; font-weight:bold;">🥈 2º ${second.name}</span>
+          <span style="color:var(--red-pirate); font-weight:bold;">${second.total} pts</span>
+        </div>
+      `;
+    }
+    if (third) {
+      podHtml += `
+        <div style="display:flex; justify-content:space-between; font-size:13px;">
+          <span style="color:#8b4513; font-weight:bold;">🥉 3º ${third.name}</span>
+          <span style="color:var(--red-pirate); font-weight:bold;">${third.total} pts</span>
+        </div>
+      `;
+    }
+    document.getElementById('twp-podium').innerHTML = podHtml;
+    
+    setTimeout(() => {
+      const el = document.getElementById('tournament-winner-popup');
+      if (el) el.classList.add('open');
+    }, 1000);
+  }
+};
+
+window.closeWinnerAnnounce = function() {
+  localStorage.setItem('hideWinnerAnnounce', 'true');
+  document.getElementById('tournament-winner-popup').classList.remove('open');
 };
 window.showAnnounce=function(){
   if(localStorage.getItem('hideAnnounceKO') === 'true') return;
@@ -2278,6 +2355,10 @@ function renderRanking(containerId){
     </div>`;
   });
   el.innerHTML=html;
+
+  if(!isAdmin && containerId === 'pv-rkl') {
+     checkTournamentOver();
+  }
 }
 
 function renderAdmin(){
